@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 440" role="img" aria-label="Public Domain Synergistic Mashup Worlds architecture showing the 3-gate U.S. 2026 copyright, renewal, and trademark filter feeding a 4-axis remix matrix across 15 game-ready world blueprints.">
+  <defs>
+    <style>
+    :where(:root) { color-scheme: light dark; }
+    .sd-bg { fill: #f8fafc; fill: light-dark(#f8fafc, #0b0f17); }
+    .sd-card { fill: #ffffff; fill: light-dark(#ffffff, #131a26); stroke: #cbd5e1; stroke: light-dark(#cbd5e1, #334155); stroke-width: 1.5; }
+    .sd-card-accent { fill: #ffffff; fill: light-dark(#ffffff, #131a26); stroke: #2563eb; stroke: light-dark(#2563eb, #3b82f6); stroke-width: 1.75; }
+    .sd-divider { stroke: #e2e8f0; stroke: light-dark(#e2e8f0, #1e293b); stroke-width: 1; }
+    .sd-accent-bar { fill: #2563eb; fill: light-dark(#2563eb, #3b82f6); }
+    .sd-badge { fill: #2563eb; fill: light-dark(#2563eb, #3b82f6); }
+    .sd-badge-ok { fill: #15803d; fill: light-dark(#15803d, #16a34a); }
+    .sd-badge-text { fill: #ffffff; font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .sd-pill { fill: #eff6ff; fill: light-dark(#eff6ff, #172554); stroke: #bfdbfe; stroke: light-dark(#bfdbfe, #1e40af); stroke-width: 1; }
+    .sd-pill-text { fill: #1d4ed8; fill: light-dark(#1d4ed8, #93c5fd); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 600; font-variant-numeric: tabular-nums; }
+    .sd-pill-ok { fill: #f0fdf4; fill: light-dark(#f0fdf4, #052e16); stroke: #86efac; stroke: light-dark(#86efac, #166534); stroke-width: 1; }
+    .sd-pill-ok-text { fill: #166534; fill: light-dark(#166534, #86efac); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .sd-hdr-title { fill: #0f172a; fill: light-dark(#0f172a, #f8fafc); font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 15px; font-weight: 700; }
+    .sd-title { fill: #0f172a; fill: light-dark(#0f172a, #f8fafc); font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 13px; font-weight: 700; }
+    .sd-sub { fill: #475569; fill: light-dark(#475569, #94a3b8); font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 11.5px; font-weight: 500; }
+    .sd-sub-sm { fill: #475569; fill: light-dark(#475569, #94a3b8); font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 11px; font-weight: 500; }
+    .sd-arrow { fill: none; stroke: #2563eb; fill: light-dark(#2563eb, #3b82f6); stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+    .sd-arrow-head { fill: #2563eb; fill: light-dark(#2563eb, #3b82f6); }
+    </style>
+    <marker id="arr-public-domain-mashup-worlds" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 1 1.5 L 9 5 L 1 8.5 z" class="sd-arrow-head"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="960" height="440" rx="12" class="sd-bg"/>
+  <rect x="20" y="20" width="4" height="20" rx="2" class="sd-accent-bar"/>
+  <text x="32" y="35" class="sd-hdr-title">Public-Domain Lore Synthesis — Legal Hygiene Filter to Systems-Driven Worlds</text>
+  <rect x="638" y="17" width="302" height="25" rx="12.5" class="sd-pill"/>
+  <text x="789" y="33.5" text-anchor="middle" class="sd-pill-text">15 Mashup Worlds · 4-Axis Remix Matrix</text>
+  <line x1="20" y1="52" x2="940" y2="52" class="sd-divider"/>
+
+  <!-- Stage 1: Legal Hygiene Gate -->
+  <rect x="24" y="74" width="272" height="338" rx="10" class="sd-card"/>
+  <rect x="36" y="86" width="28" height="22" rx="6" class="sd-badge"/>
+  <text x="50" y="100.8" text-anchor="middle" class="sd-badge-text">01</text>
+  <text x="72" y="101.5" class="sd-title">2026 IP Clearance Filter</text>
+  <text x="36" y="122" class="sd-sub-sm">Zero Licensing Fees · Clean Chain</text>
+  <line x1="36" y1="133" x2="284" y2="133" class="sd-divider"/>
+  <text x="36" y="155" class="sd-sub">• Pre-1931 U.S. Works (1930 &amp; older):</text>
+  <text x="36" y="173" class="sd-sub">  Hodgson, Zamyatin, Čapek, Stapledon,</text>
+  <text x="36" y="191" class="sd-sub">  Hammett (1930 novel), Merritt, Verne</text>
+  <text x="36" y="216" class="sd-sub">• Unrenewed 1923–1963 Texts:</text>
+  <text x="36" y="234" class="sd-sub">  H. Beam Piper, Andre Norton, Leinster,</text>
+  <text x="36" y="252" class="sd-sub">  Golden Age Comics (Fantomah, Stardust)</text>
+  <text x="36" y="277" class="sd-sub">• Trademark Separation Guard:</text>
+  <text x="36" y="295" class="sd-sub">  Use 1928 Anthony Rogers / 1929 Valusia</text>
+  <text x="36" y="313" class="sd-sub">  lore; keep titles clear of active TMs</text>
+  <rect x="36" y="372" width="248" height="24" rx="12" class="sd-pill-ok"/>
+  <text x="160" y="387.8" text-anchor="middle" class="sd-pill-ok-text">40+ Vetted Source Canons</text>
+
+  <!-- Stage 2: 4-Axis Remix Engine -->
+  <rect x="344" y="74" width="272" height="338" rx="10" class="sd-card-accent"/>
+  <rect x="356" y="86" width="28" height="22" rx="6" class="sd-badge"/>
+  <text x="370" y="100.8" text-anchor="middle" class="sd-badge-text">02</text>
+  <text x="392" y="101.5" class="sd-title">4-Axis Remix Matrix</text>
+  <text x="356" y="122" class="sd-sub-sm">Combinatorial World-Building Engine</text>
+  <line x1="356" y1="133" x2="604" y2="133" class="sd-divider"/>
+  <text x="356" y="157" class="sd-sub">1. World Chassis (Macro Ecology):</text>
+  <text x="356" y="175" class="sd-sub-sm">   Last Redoubt · OneState · Junkyard</text>
+  <text x="356" y="202" class="sd-sub">2. Protagonist Archetype:</text>
+  <text x="356" y="220" class="sd-sub-sm">   Carnacki · D-Spade · Nemo · Lupin</text>
+  <text x="356" y="247" class="sd-sub">3. Systemic Antagonist Pressure:</text>
+  <text x="356" y="265" class="sd-sub-sm">   Metal Polyhedra · Serpent Court · Han</text>
+  <text x="356" y="292" class="sd-sub">4. Core Gameplay Loop:</text>
+  <text x="356" y="310" class="sd-sub-sm">   Light-as-Aggro · Schedule Panopticon</text>
+  <text x="356" y="328" class="sd-sub-sm">   Sensory Organ Shaders · Sutra Wards</text>
+  <rect x="356" y="372" width="248" height="24" rx="12" class="sd-pill"/>
+  <text x="480" y="387.8" text-anchor="middle" class="sd-pill-text">Mechanics Derived From Lore</text>
+
+  <!-- Stage 3: 15 Game & Story Blueprints -->
+  <rect x="664" y="74" width="272" height="338" rx="10" class="sd-card"/>
+  <rect x="676" y="86" width="28" height="22" rx="6" class="sd-badge-ok"/>
+  <text x="690" y="100.8" text-anchor="middle" class="sd-badge-text">03</text>
+  <text x="712" y="101.5" class="sd-title">15 Ready World Bibles</text>
+  <text x="676" y="122" class="sd-sub-sm">Shared Studio Lore Repository</text>
+  <line x1="676" y1="133" x2="924" y2="133" class="sd-divider"/>
+  <text x="676" y="155" class="sd-sub">• Immersive Sims &amp; Survival:</text>
+  <text x="676" y="173" class="sd-sub-sm">  Redoubt Protocol · Cell-Block Zero</text>
+  <text x="676" y="198" class="sd-sub">• Systemic CRPGs &amp; Intrigue:</text>
+  <text x="676" y="216" class="sd-sub-sm">  War of the Glass Wall · City of Brass</text>
+  <text x="676" y="234" class="sd-sub-sm">  Serpent Court of Valusia</text>
+  <text x="676" y="259" class="sd-sub">• Tactical, Salvage &amp; Action:</text>
+  <text x="676" y="277" class="sd-sub-sm">  Junkyard Vikings · Eternal Mercury</text>
+  <text x="676" y="295" class="sd-sub-sm">  Carcosa in 2419 · Arcturus: Sensoria</text>
+  <text x="676" y="320" class="sd-sub">• Deep-Time 4X &amp; Weird Myth:</text>
+  <text x="676" y="338" class="sd-sub-sm">  Eighteen Men (2B-Yr) · Singing Sampo</text>
+  <rect x="676" y="372" width="248" height="24" rx="12" class="sd-pill"/>
+  <text x="800" y="387.8" text-anchor="middle" class="sd-pill-text">_Shared_Library/storytelling_ideas</text>
+
+  <!-- Arrows -->
+  <path d="M 296 243 L 342 243" class="sd-arrow" marker-end="url(#arr-public-domain-mashup-worlds)"/>
+  <path d="M 616 243 L 662 243" class="sd-arrow" marker-end="url(#arr-public-domain-mashup-worlds)"/>
+</svg>

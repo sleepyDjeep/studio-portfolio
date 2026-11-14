@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 440" role="img" aria-label="Workstation Storage and Flash Forensics diagram showing 3 parallel diagnostic investigations: +356.32 GB storage reclamation, 7.3M kernel handle leak fix, and raw byte-offset NAND probe catching a 44.38 GiB counterfeit flash cutoff.">
+  <defs>
+    <style>
+    :where(:root) { color-scheme: light dark; }
+    .sd-bg { fill: #f8fafc; fill: light-dark(#f8fafc, #0b0f17); }
+    .sd-zone { fill: #f1f5f9; fill: light-dark(#f1f5f9, #0f1623); stroke: #cbd5e1; stroke: light-dark(#cbd5e1, #334155); stroke-width: 1.25; stroke-dasharray: 5 4; }
+    .sd-card { fill: #ffffff; fill: light-dark(#ffffff, #131a26); stroke: #cbd5e1; stroke: light-dark(#cbd5e1, #334155); stroke-width: 1.5; }
+    .sd-card-accent { fill: #ffffff; fill: light-dark(#ffffff, #131a26); stroke: #2563eb; stroke: light-dark(#2563eb, #3b82f6); stroke-width: 1.75; }
+    .sd-card-subtle { fill: #f1f5f9; fill: light-dark(#f1f5f9, #182234); stroke: #cbd5e1; stroke: light-dark(#cbd5e1, #334155); stroke-width: 1.25; }
+    .sd-card-warn { fill: #fffbeb; fill: light-dark(#fffbeb, #261405); stroke: #d97706; stroke: light-dark(#d97706, #f59e0b); stroke-width: 1.5; stroke-dasharray: 5 3; }
+    .sd-divider { stroke: #e2e8f0; stroke: light-dark(#e2e8f0, #1e293b); stroke-width: 1; }
+    .sd-accent-bar { fill: #2563eb; fill: light-dark(#2563eb, #3b82f6); }
+    .sd-badge { fill: #2563eb; fill: light-dark(#2563eb, #3b82f6); }
+    .sd-badge-warn { fill: #d97706; fill: light-dark(#d97706, #f59e0b); }
+    .sd-badge-ok { fill: #15803d; fill: light-dark(#15803d, #16a34a); }
+    .sd-badge-text { fill: #ffffff; font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .sd-pill { fill: #eff6ff; fill: light-dark(#eff6ff, #172554); stroke: #bfdbfe; stroke: light-dark(#bfdbfe, #1e40af); stroke-width: 1; }
+    .sd-pill-text { fill: #1d4ed8; fill: light-dark(#1d4ed8, #93c5fd); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 600; font-variant-numeric: tabular-nums; }
+    .sd-pill-neutral { fill: #f1f5f9; fill: light-dark(#f1f5f9, #1e293b); stroke: #cbd5e1; stroke: light-dark(#cbd5e1, #334155); stroke-width: 1; }
+    .sd-pill-neutral-text { fill: #334155; fill: light-dark(#334155, #cbd5e1); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 600; font-variant-numeric: tabular-nums; }
+    .sd-pill-ok { fill: #f0fdf4; fill: light-dark(#f0fdf4, #052e16); stroke: #86efac; stroke: light-dark(#86efac, #166534); stroke-width: 1; }
+    .sd-pill-ok-text { fill: #166534; fill: light-dark(#166534, #86efac); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .sd-pill-warn { fill: #fffbeb; fill: light-dark(#fffbeb, #451a03); stroke: #fcd34d; stroke: light-dark(#fcd34d, #92400e); stroke-width: 1; }
+    .sd-pill-warn-text { fill: #92400e; fill: light-dark(#92400e, #fcd34d); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .sd-hdr-title { fill: #0f172a; fill: light-dark(#0f172a, #f8fafc); font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 15px; font-weight: 700; }
+    .sd-title { fill: #0f172a; fill: light-dark(#0f172a, #f8fafc); font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 13px; font-weight: 700; }
+    .sd-title-sm { fill: #0f172a; fill: light-dark(#0f172a, #f8fafc); font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 12px; font-weight: 700; }
+    .sd-sub { fill: #475569; fill: light-dark(#475569, #94a3b8); font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 11.5px; font-weight: 500; }
+    .sd-sub-sm { fill: #475569; fill: light-dark(#475569, #94a3b8); font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 11px; font-weight: 500; }
+    .sd-mono { fill: #334155; fill: light-dark(#334155, #cbd5e1); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 500; font-variant-numeric: tabular-nums; }
+    .sd-mono-bold { fill: #0f172a; fill: light-dark(#0f172a, #f8fafc); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .sd-zone-lbl { fill: #475569; fill: light-dark(#475569, #94a3b8); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 700; }
+    .sd-arrow { fill: none; stroke: #2563eb; stroke: light-dark(#2563eb, #3b82f6); stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+    .sd-arrow-dashed { fill: none; stroke: #2563eb; stroke: light-dark(#2563eb, #3b82f6); stroke-width: 1.5; stroke-dasharray: 5 4; stroke-linecap: round; stroke-linejoin: round; }
+    .sd-arrow-muted { fill: none; stroke: #64748b; fill: light-dark(#64748b, #94a3b8); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+    .sd-arrow-head { fill: #2563eb; fill: light-dark(#2563eb, #3b82f6); }
+    .sd-arrow-head-muted { fill: #64748b; fill: light-dark(#64748b, #94a3b8); }
+    .sd-edge-box { fill: #f8fafc; fill: light-dark(#f8fafc, #0b0f17); stroke: #cbd5e1; stroke: light-dark(#cbd5e1, #334155); stroke-width: 1; }
+    .sd-edge-lbl { fill: #475569; fill: light-dark(#475569, #94a3b8); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10px; font-weight: 600; font-variant-numeric: tabular-nums; }
+    .sd-bar-track { fill: #e2e8f0; fill: light-dark(#e2e8f0, #1e293b); }
+    .sd-bar-fill { fill: #2563eb; fill: light-dark(#2563eb, #3b82f6); }
+    .sd-bar-warn { fill: #d97706; fill: light-dark(#d97706, #f59e0b); }
+    </style>
+    <marker id="arr-workstation-storage-and-flash-forensics" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 1 1.5 L 9 5 L 1 8.5 z" class="sd-arrow-head"/>
+    </marker>
+    <marker id="arr-m-workstation-storage-and-flash-forensics" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 1 1.5 L 9 5 L 1 8.5 z" class="sd-arrow-head-muted"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="960" height="440" rx="12" class="sd-bg"/>
+  <rect x="20" y="20" width="4" height="20" rx="2" class="sd-accent-bar"/>
+  <text x="32" y="35" class="sd-hdr-title">Workstation Forensics — Disk Prune, Kernel Leak &amp; NAND Probe</text>
+  <rect x="634" y="17" width="306" height="25" rx="12.5" class="sd-pill"/>
+  <text x="787.0" y="33.5" text-anchor="middle" class="sd-pill-text">+356.32 GB · 7.3M Handles · 44.38 GiB Cutoff</text>
+  <line x1="20" y1="52" x2="940" y2="52" class="sd-divider"/>
+  <rect x="24" y="68" width="266" height="106" rx="10" class="sd-card"/>
+  <rect x="36" y="80" width="25" height="22" rx="6" class="sd-badge"/>
+  <text x="48.5" y="94.8" text-anchor="middle" class="sd-badge-text">01</text>
+  <text x="69" y="95.5" class="sd-title">Disk Exhaustion Alert</text>
+  <text x="36" y="115" class="sd-sub-sm">Orphaned Caches, Pip/UV &amp; Temp Models</text>
+  <rect x="36" y="142" width="242" height="22" rx="11.0" class="sd-pill-neutral"/>
+  <text x="157.0" y="156.8" text-anchor="middle" class="sd-pill-neutral-text">C:/ &amp; D:/ Near Full</text>
+  <rect x="326" y="68" width="290" height="106" rx="10" class="sd-card"/>
+  <rect x="338" y="80" width="25" height="22" rx="6" class="sd-badge"/>
+  <text x="350.5" y="94.8" text-anchor="middle" class="sd-badge-text">P1</text>
+  <text x="371" y="95.5" class="sd-title">Deterministic Tree Audit</text>
+  <text x="338" y="115" class="sd-sub-sm">Safe Cache Prune Preserving Live Projects</text>
+  <rect x="338" y="142" width="266" height="22" rx="11.0" class="sd-pill"/>
+  <text x="471.0" y="156.8" text-anchor="middle" class="sd-pill-text">Zero Active Env Breakage</text>
+  <rect x="652" y="68" width="284" height="106" rx="10" class="sd-card-accent"/>
+  <rect x="664" y="80" width="25" height="22" rx="6" class="sd-badge-ok"/>
+  <text x="676.5" y="94.8" text-anchor="middle" class="sd-badge-text">OK</text>
+  <text x="697" y="95.5" class="sd-title">+356.32 GB Reclaimed</text>
+  <text x="664" y="115" class="sd-sub-sm">Verified Free Space Restored Across SSDs</text>
+  <rect x="664" y="142" width="260" height="22" rx="11.0" class="sd-pill-ok"/>
+  <text x="794.0" y="156.8" text-anchor="middle" class="sd-pill-ok-text">+356.32 GB Freed</text>
+  <rect x="24" y="184" width="266" height="106" rx="10" class="sd-card"/>
+  <rect x="36" y="196" width="25" height="22" rx="6" class="sd-badge"/>
+  <text x="48.5" y="210.8" text-anchor="middle" class="sd-badge-text">02</text>
+  <text x="69" y="211.5" class="sd-title">System Stall &amp; Nonpaged Pool</text>
+  <text x="36" y="231" class="sd-sub-sm">Severe OS Lag Under Uptime Load</text>
+  <rect x="36" y="258" width="242" height="22" rx="11.0" class="sd-pill-warn"/>
+  <text x="157.0" y="272.8" text-anchor="middle" class="sd-pill-warn-text">7,300,000+ Open Handles</text>
+  <rect x="326" y="184" width="290" height="106" rx="10" class="sd-card"/>
+  <rect x="338" y="196" width="25" height="22" rx="6" class="sd-badge"/>
+  <text x="350.5" y="210.8" text-anchor="middle" class="sd-badge-text">P2</text>
+  <text x="371" y="211.5" class="sd-title">NT Kernel Handle Inspector</text>
+  <text x="338" y="231" class="sd-sub-sm">Pinpointed Runaway Background Leak</text>
+  <rect x="338" y="258" width="266" height="22" rx="11.0" class="sd-pill"/>
+  <text x="471.0" y="272.8" text-anchor="middle" class="sd-pill-text">PID &amp; Handle Type Isolated</text>
+  <rect x="652" y="184" width="284" height="106" rx="10" class="sd-card-accent"/>
+  <rect x="664" y="196" width="25" height="22" rx="6" class="sd-badge-ok"/>
+  <text x="676.5" y="210.8" text-anchor="middle" class="sd-badge-text">OK</text>
+  <text x="697" y="211.5" class="sd-title">7.3M Handle Leak Fixed</text>
+  <text x="664" y="231" class="sd-sub-sm">Culprit Patched · Kernel Table Nominal</text>
+  <rect x="664" y="258" width="260" height="22" rx="11.0" class="sd-pill-ok"/>
+  <text x="794.0" y="272.8" text-anchor="middle" class="sd-pill-ok-text">Stable &lt;65k Handles</text>
+  <rect x="24" y="300" width="266" height="106" rx="10" class="sd-card"/>
+  <rect x="36" y="312" width="25" height="22" rx="6" class="sd-badge"/>
+  <text x="48.5" y="326.8" text-anchor="middle" class="sd-badge-text">03</text>
+  <text x="69" y="327.5" class="sd-title">Suspect USB Flash Drive</text>
+  <text x="36" y="347" class="sd-sub-sm">Controller Firmware Reports Fake Capacity</text>
+  <rect x="36" y="374" width="242" height="22" rx="11.0" class="sd-pill-warn"/>
+  <text x="157.0" y="388.8" text-anchor="middle" class="sd-pill-warn-text">Silent Corruption Risk</text>
+  <rect x="326" y="300" width="290" height="106" rx="10" class="sd-card-accent"/>
+  <rect x="338" y="312" width="25" height="22" rx="6" class="sd-badge"/>
+  <text x="350.5" y="326.8" text-anchor="middle" class="sd-badge-text">P3</text>
+  <text x="371" y="327.5" class="sd-title">Raw Byte-Offset NAND Probe</text>
+  <text x="338" y="347" class="sd-sub-sm">Binary-Search Entropy Write/Read Verify</text>
+  <rect x="338" y="374" width="266" height="22" rx="11.0" class="sd-pill"/>
+  <text x="471.0" y="388.8" text-anchor="middle" class="sd-pill-text">Bypasses Fake FAT/exFAT</text>
+  <rect x="652" y="300" width="284" height="106" rx="10" class="sd-card-warn"/>
+  <rect x="664" y="312" width="25" height="22" rx="6" class="sd-badge-warn"/>
+  <text x="676.5" y="326.8" text-anchor="middle" class="sd-badge-text">!!</text>
+  <text x="697" y="327.5" class="sd-title">44.38 GiB Physical Cutoff</text>
+  <text x="664" y="347" class="sd-sub-sm">Exact Silicon Die Boundary Proven</text>
+  <rect x="664" y="374" width="260" height="22" rx="11.0" class="sd-pill-warn"/>
+  <text x="794.0" y="388.8" text-anchor="middle" class="sd-pill-warn-text">44.38 GiB True NAND Limit</text>
+  <path d="M 290.0 121.0 L 324.0 121.0" class="sd-arrow" marker-end="url(#arr-workstation-storage-and-flash-forensics)"/>
+  <path d="M 616.0 121.0 L 650.0 121.0" class="sd-arrow" marker-end="url(#arr-workstation-storage-and-flash-forensics)"/>
+  <path d="M 290.0 237.0 L 324.0 237.0" class="sd-arrow" marker-end="url(#arr-workstation-storage-and-flash-forensics)"/>
+  <path d="M 616.0 237.0 L 650.0 237.0" class="sd-arrow" marker-end="url(#arr-workstation-storage-and-flash-forensics)"/>
+  <path d="M 290.0 353.0 L 324.0 353.0" class="sd-arrow" marker-end="url(#arr-workstation-storage-and-flash-forensics)"/>
+  <path d="M 616.0 353.0 L 650.0 353.0" class="sd-arrow" marker-end="url(#arr-workstation-storage-and-flash-forensics)"/>
+</svg>

@@ -1,0 +1,131 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 440" role="img" aria-label="MechWarrior 2 Modern Godot architecture diagram showing 1995 MW2.PRJ archive parsed by native GDScript binary decoders for WTB meshes, BWD missions, SHP sprites, and 479 SMK FMVs into a Tri-Mode visual switcher and HOTAS/touch cockpit with 172,200 assertions.">
+  <defs>
+    <style>
+    :where(:root) { color-scheme: light dark; }
+    .sd-bg { fill: #f8fafc; fill: light-dark(#f8fafc, #0b0f17); }
+    .sd-zone { fill: #f1f5f9; fill: light-dark(#f1f5f9, #0f1623); stroke: #cbd5e1; stroke: light-dark(#cbd5e1, #334155); stroke-width: 1.25; stroke-dasharray: 5 4; }
+    .sd-card { fill: #ffffff; fill: light-dark(#ffffff, #131a26); stroke: #cbd5e1; stroke: light-dark(#cbd5e1, #334155); stroke-width: 1.5; }
+    .sd-card-accent { fill: #ffffff; fill: light-dark(#ffffff, #131a26); stroke: #2563eb; stroke: light-dark(#2563eb, #3b82f6); stroke-width: 1.75; }
+    .sd-card-subtle { fill: #f1f5f9; fill: light-dark(#f1f5f9, #182234); stroke: #cbd5e1; stroke: light-dark(#cbd5e1, #334155); stroke-width: 1.25; }
+    .sd-card-warn { fill: #fffbeb; fill: light-dark(#fffbeb, #261405); stroke: #d97706; stroke: light-dark(#d97706, #f59e0b); stroke-width: 1.5; stroke-dasharray: 5 3; }
+    .sd-divider { stroke: #e2e8f0; stroke: light-dark(#e2e8f0, #1e293b); stroke-width: 1; }
+    .sd-accent-bar { fill: #2563eb; fill: light-dark(#2563eb, #3b82f6); }
+    .sd-badge { fill: #2563eb; fill: light-dark(#2563eb, #3b82f6); }
+    .sd-badge-warn { fill: #d97706; fill: light-dark(#d97706, #f59e0b); }
+    .sd-badge-ok { fill: #15803d; fill: light-dark(#15803d, #16a34a); }
+    .sd-badge-text { fill: #ffffff; font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .sd-pill { fill: #eff6ff; fill: light-dark(#eff6ff, #172554); stroke: #bfdbfe; stroke: light-dark(#bfdbfe, #1e40af); stroke-width: 1; }
+    .sd-pill-text { fill: #1d4ed8; fill: light-dark(#1d4ed8, #93c5fd); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 600; font-variant-numeric: tabular-nums; }
+    .sd-pill-neutral { fill: #f1f5f9; fill: light-dark(#f1f5f9, #1e293b); stroke: #cbd5e1; stroke: light-dark(#cbd5e1, #334155); stroke-width: 1; }
+    .sd-pill-neutral-text { fill: #334155; fill: light-dark(#334155, #cbd5e1); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 600; font-variant-numeric: tabular-nums; }
+    .sd-pill-ok { fill: #f0fdf4; fill: light-dark(#f0fdf4, #052e16); stroke: #86efac; stroke: light-dark(#86efac, #166534); stroke-width: 1; }
+    .sd-pill-ok-text { fill: #166534; fill: light-dark(#166534, #86efac); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .sd-pill-warn { fill: #fffbeb; fill: light-dark(#fffbeb, #451a03); stroke: #fcd34d; stroke: light-dark(#fcd34d, #92400e); stroke-width: 1; }
+    .sd-pill-warn-text { fill: #92400e; fill: light-dark(#92400e, #fcd34d); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .sd-hdr-title { fill: #0f172a; fill: light-dark(#0f172a, #f8fafc); font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 15px; font-weight: 700; }
+    .sd-title { fill: #0f172a; fill: light-dark(#0f172a, #f8fafc); font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 13px; font-weight: 700; }
+    .sd-title-sm { fill: #0f172a; fill: light-dark(#0f172a, #f8fafc); font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 12px; font-weight: 700; }
+    .sd-sub { fill: #475569; fill: light-dark(#475569, #94a3b8); font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 11.5px; font-weight: 500; }
+    .sd-sub-sm { fill: #475569; fill: light-dark(#475569, #94a3b8); font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 11px; font-weight: 500; }
+    .sd-mono { fill: #334155; fill: light-dark(#334155, #cbd5e1); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 500; font-variant-numeric: tabular-nums; }
+    .sd-mono-bold { fill: #0f172a; fill: light-dark(#0f172a, #f8fafc); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .sd-zone-lbl { fill: #475569; fill: light-dark(#475569, #94a3b8); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 700; }
+    .sd-arrow { fill: none; stroke: #2563eb; stroke: light-dark(#2563eb, #3b82f6); stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+    .sd-arrow-dashed { fill: none; stroke: #2563eb; stroke: light-dark(#2563eb, #3b82f6); stroke-width: 1.5; stroke-dasharray: 5 4; stroke-linecap: round; stroke-linejoin: round; }
+    .sd-arrow-muted { fill: none; stroke: #64748b; fill: light-dark(#64748b, #94a3b8); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+    .sd-arrow-head { fill: #2563eb; fill: light-dark(#2563eb, #3b82f6); }
+    .sd-arrow-head-muted { fill: #64748b; fill: light-dark(#64748b, #94a3b8); }
+    .sd-edge-box { fill: #f8fafc; fill: light-dark(#f8fafc, #0b0f17); stroke: #cbd5e1; stroke: light-dark(#cbd5e1, #334155); stroke-width: 1; }
+    .sd-edge-lbl { fill: #475569; fill: light-dark(#475569, #94a3b8); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10px; font-weight: 600; font-variant-numeric: tabular-nums; }
+    .sd-bar-track { fill: #e2e8f0; fill: light-dark(#e2e8f0, #1e293b); }
+    .sd-bar-fill { fill: #2563eb; fill: light-dark(#2563eb, #3b82f6); }
+    .sd-bar-warn { fill: #d97706; fill: light-dark(#d97706, #f59e0b); }
+    </style>
+    <marker id="arr-mechwarrior2-modern-godot" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 1 1.5 L 9 5 L 1 8.5 z" class="sd-arrow-head"/>
+    </marker>
+    <marker id="arr-m-mechwarrior2-modern-godot" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 1 1.5 L 9 5 L 1 8.5 z" class="sd-arrow-head-muted"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="960" height="440" rx="12" class="sd-bg"/>
+  <rect x="20" y="20" width="4" height="20" rx="2" class="sd-accent-bar"/>
+  <text x="32" y="35" class="sd-hdr-title">MechWarrior 2 Modern Godot — Binary Parsers &amp; Tri-Mode Sim</text>
+  <rect x="641" y="17" width="299" height="25" rx="12.5" class="sd-pill"/>
+  <text x="790.5" y="33.5" text-anchor="middle" class="sd-pill-text">MW2.PRJ · 479 SMK FMVs · 172,200 Assertions</text>
+  <line x1="20" y1="52" x2="940" y2="52" class="sd-divider"/>
+  <rect x="24" y="72" width="182" height="340" rx="10" class="sd-card"/>
+  <rect x="36" y="84" width="25" height="20" rx="5" class="sd-badge"/>
+  <text x="48.5" y="97.8" text-anchor="middle" class="sd-badge-text">01</text>
+  <text x="67" y="98" class="sd-mono">MW2.PRJ Archive</text>
+  <text x="36" y="121" class="sd-title">1995 Retail Data</text>
+  <line x1="36" y1="134" x2="194" y2="134" class="sd-divider"/>
+  <text x="36" y="151" class="sd-sub-sm">• User&#x27;s Original Disc</text>
+  <text x="36" y="167.5" class="sd-sub-sm">• MW2.PRJ Index Table</text>
+  <text x="36" y="184.0" class="sd-sub-sm">• Raw Little-Endian</text>
+  <text x="36" y="200.5" class="sd-sub-sm">  Binary Chunks</text>
+  <text x="36" y="217.0" class="sd-sub-sm">• Zero Redistributed</text>
+  <text x="36" y="233.5" class="sd-sub-sm">  Copyrighted Assets</text>
+  <rect x="36" y="380" width="158" height="22" rx="11.0" class="sd-pill"/>
+  <text x="115.0" y="394.8" text-anchor="middle" class="sd-pill-text">Clean-Room Reader</text>
+  <rect x="236" y="72" width="244" height="340" rx="10" class="sd-card-accent"/>
+  <rect x="248" y="84" width="25" height="22" rx="6" class="sd-badge"/>
+  <text x="260.5" y="98.8" text-anchor="middle" class="sd-badge-text">02</text>
+  <text x="281" y="99.5" class="sd-title">GDScript Binary Parsers</text>
+  <text x="248" y="119" class="sd-sub-sm">Native Godot 4.7 Byte Decoders</text>
+  <rect x="248" y="380" width="220" height="22" rx="11.0" class="sd-pill"/>
+  <text x="358.0" y="394.8" text-anchor="middle" class="sd-pill-text">4 Binary Formats Decoded</text>
+  <rect x="250" y="140" width="216" height="50" rx="7" class="sd-card-subtle"/>
+  <rect x="425" y="147" width="33" height="19" rx="9.5" class="sd-pill"/>
+  <text x="441.5" y="160.3" text-anchor="middle" class="sd-pill-text">WTB</text>
+  <text x="260" y="159" class="sd-title-sm">WTB Geometry Parser</text>
+  <text x="260" y="176" class="sd-sub-sm">3D Mech Limb &amp; Cockpit Meshes</text>
+  <rect x="250" y="198" width="216" height="50" rx="7" class="sd-card-subtle"/>
+  <rect x="425" y="205" width="33" height="19" rx="9.5" class="sd-pill"/>
+  <text x="441.5" y="218.3" text-anchor="middle" class="sd-pill-text">BWD</text>
+  <text x="260" y="217" class="sd-title-sm">BWD World &amp; Mission</text>
+  <text x="260" y="234" class="sd-sub-sm">Terrain, NavPoints &amp; Spawns</text>
+  <rect x="250" y="256" width="216" height="50" rx="7" class="sd-card-subtle"/>
+  <rect x="425" y="263" width="33" height="19" rx="9.5" class="sd-pill"/>
+  <text x="441.5" y="276.3" text-anchor="middle" class="sd-pill-text">SHP</text>
+  <text x="260" y="275" class="sd-title-sm">SHP Sprite &amp; Font</text>
+  <text x="260" y="292" class="sd-sub-sm">Indexed Palettes &amp; HUD Art</text>
+  <rect x="250" y="314" width="216" height="50" rx="7" class="sd-card-subtle"/>
+  <rect x="425" y="321" width="33" height="19" rx="9.5" class="sd-pill"/>
+  <text x="441.5" y="334.3" text-anchor="middle" class="sd-pill-text">479</text>
+  <text x="260" y="333" class="sd-title-sm">SMK Video Decoder</text>
+  <text x="260" y="350" class="sd-sub-sm">Streams All 479 Smacker FMVs</text>
+  <rect x="510" y="72" width="218" height="340" rx="10" class="sd-card-accent"/>
+  <rect x="522" y="84" width="25" height="22" rx="6" class="sd-badge"/>
+  <text x="534.5" y="98.8" text-anchor="middle" class="sd-badge-text">03</text>
+  <text x="555" y="99.5" class="sd-title">Tri-Mode Switcher</text>
+  <text x="522" y="119" class="sd-sub-sm">Live Runtime Era Toggle</text>
+  <rect x="522" y="380" width="194" height="22" rx="11.0" class="sd-pill"/>
+  <text x="619.0" y="394.8" text-anchor="middle" class="sd-pill-text">Instant Shader Swap</text>
+  <rect x="524" y="144" width="190" height="64" rx="7" class="sd-card-subtle"/>
+  <text x="534" y="163" class="sd-title-sm">1995 DOS Software</text>
+  <text x="534" y="180" class="sd-sub-sm">Unfiltered Flat Polygon Shade</text>
+  <rect x="524" y="218" width="190" height="64" rx="7" class="sd-card-subtle"/>
+  <text x="534" y="237" class="sd-title-sm">1997 3dfx Glide</text>
+  <text x="534" y="254" class="sd-sub-sm">Bilinear Filter + Horizon Fog</text>
+  <rect x="524" y="292" width="190" height="64" rx="7" class="sd-card-subtle"/>
+  <text x="534" y="311" class="sd-title-sm">Modern Stylized Cel</text>
+  <text x="534" y="328" class="sd-sub-sm">Crisp Ink Outlines + Rim Lit</text>
+  <rect x="758" y="72" width="178" height="340" rx="10" class="sd-card-accent"/>
+  <rect x="770" y="84" width="25" height="20" rx="5" class="sd-badge-ok"/>
+  <text x="782.5" y="97.8" text-anchor="middle" class="sd-badge-text">04</text>
+  <text x="801" y="98" class="sd-mono">HOTAS + Test Gate</text>
+  <text x="770" y="121" class="sd-title">Cockpit &amp; QA</text>
+  <line x1="770" y1="134" x2="924" y2="134" class="sd-divider"/>
+  <text x="770" y="151" class="sd-sub-sm">• Full HOTAS Axes</text>
+  <text x="770" y="167.5" class="sd-sub-sm">• Touch Glass Cockpit</text>
+  <text x="770" y="184.0" class="sd-sub-sm">• Torso Twist + Heat</text>
+  <text x="770" y="200.5" class="sd-sub-sm">• Weapon Group Fire</text>
+  <text x="770" y="217.0" class="sd-sub-sm">• Headless Parse Suite</text>
+  <text x="770" y="233.5" class="sd-sub-sm">• Zero Memory Leaks</text>
+  <rect x="770" y="380" width="154" height="22" rx="11.0" class="sd-pill-ok"/>
+  <text x="847.0" y="394.8" text-anchor="middle" class="sd-pill-ok-text">172,200 Assertions</text>
+  <path d="M 206.0 242.0 L 234.0 242.0" class="sd-arrow" marker-end="url(#arr-mechwarrior2-modern-godot)"/>
+  <path d="M 480.0 242.0 L 508.0 242.0" class="sd-arrow" marker-end="url(#arr-mechwarrior2-modern-godot)"/>
+  <path d="M 728.0 242.0 L 756.0 242.0" class="sd-arrow" marker-end="url(#arr-mechwarrior2-modern-godot)"/>
+</svg>

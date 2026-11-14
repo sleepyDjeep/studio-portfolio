@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 440" role="img" aria-label="Orange Pi Zero 2W Retro E-Dab Rig architecture connecting a removable 2S 18650 Star-Ground battery rail, RP2040-Zero independent PID heater safety and 4x4 diode gamepad co-processor, machined PEEK ceramic bucket hot well, and Orange Pi Zero 2W 24-pin CVBS display and RetroArch UDP OSD daemon.">
+  <defs>
+    <style>
+    :where(:root) { color-scheme: light dark; }
+    .sd-bg { fill: #f8fafc; fill: light-dark(#f8fafc, #0b0f17); }
+    .sd-card { fill: #ffffff; fill: light-dark(#ffffff, #131a26); stroke: #cbd5e1; stroke: light-dark(#cbd5e1, #334155); stroke-width: 1.5; }
+    .sd-card-accent { fill: #ffffff; fill: light-dark(#ffffff, #131a26); stroke: #2563eb; stroke: light-dark(#2563eb, #3b82f6); stroke-width: 1.75; }
+    .sd-card-warn { fill: #fffbeb; fill: light-dark(#fffbeb, #261405); stroke: #d97706; stroke: light-dark(#d97706, #f59e0b); stroke-width: 1.5; stroke-dasharray: 5 3; }
+    .sd-divider { stroke: #e2e8f0; stroke: light-dark(#e2e8f0, #1e293b); stroke-width: 1; }
+    .sd-accent-bar { fill: #2563eb; fill: light-dark(#2563eb, #3b82f6); }
+    .sd-badge { fill: #2563eb; fill: light-dark(#2563eb, #3b82f6); }
+    .sd-badge-warn { fill: #d97706; fill: light-dark(#d97706, #f59e0b); }
+    .sd-badge-ok { fill: #15803d; fill: light-dark(#15803d, #16a34a); }
+    .sd-badge-text { fill: #ffffff; font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .sd-pill { fill: #eff6ff; fill: light-dark(#eff6ff, #172554); stroke: #bfdbfe; stroke: light-dark(#bfdbfe, #1e40af); stroke-width: 1; }
+    .sd-pill-text { fill: #1d4ed8; fill: light-dark(#1d4ed8, #93c5fd); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 600; font-variant-numeric: tabular-nums; }
+    .sd-pill-warn { fill: #fffbeb; fill: light-dark(#fffbeb, #451a03); stroke: #fcd34d; stroke: light-dark(#fcd34d, #92400e); stroke-width: 1; }
+    .sd-pill-warn-text { fill: #92400e; fill: light-dark(#92400e, #fcd34d); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .sd-pill-ok { fill: #f0fdf4; fill: light-dark(#f0fdf4, #052e16); stroke: #86efac; stroke: light-dark(#86efac, #166534); stroke-width: 1; }
+    .sd-pill-ok-text { fill: #166534; fill: light-dark(#166534, #86efac); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .sd-hdr-title { fill: #0f172a; fill: light-dark(#0f172a, #f8fafc); font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 15px; font-weight: 700; }
+    .sd-title { fill: #0f172a; fill: light-dark(#0f172a, #f8fafc); font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 13px; font-weight: 700; }
+    .sd-sub { fill: #475569; fill: light-dark(#475569, #94a3b8); font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 11.5px; font-weight: 500; }
+    .sd-sub-sm { fill: #475569; fill: light-dark(#475569, #94a3b8); font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 11px; font-weight: 500; }
+    .sd-arrow { fill: none; stroke: #2563eb; stroke: light-dark(#2563eb, #3b82f6); stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+    .sd-arrow-muted { fill: none; stroke: #64748b; fill: light-dark(#64748b, #94a3b8); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+    .sd-arrow-head { fill: #2563eb; fill: light-dark(#2563eb, #3b82f6); }
+    .sd-arrow-head-muted { fill: #64748b; fill: light-dark(#64748b, #94a3b8); }
+    .sd-edge-box { fill: #f8fafc; fill: light-dark(#f8fafc, #0b0f17); stroke: #cbd5e1; stroke: light-dark(#cbd5e1, #334155); stroke-width: 1; }
+    .sd-edge-lbl { fill: #475569; fill: light-dark(#475569, #94a3b8); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10px; font-weight: 600; font-variant-numeric: tabular-nums; }
+    </style>
+    <marker id="arr-orangepi-retro-edab-rig" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 1 1.5 L 9 5 L 1 8.5 z" class="sd-arrow-head"/>
+    </marker>
+    <marker id="arr-m-orangepi-retro-edab-rig" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 1 1.5 L 9 5 L 1 8.5 z" class="sd-arrow-head-muted"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="960" height="440" rx="12" class="sd-bg"/>
+  <rect x="20" y="20" width="4" height="20" rx="2" class="sd-accent-bar"/>
+  <text x="32" y="35" class="sd-hdr-title">Orange Pi Zero 2W Retro E-Dab Rig — Modular Sled &amp; Independent PID Architecture</text>
+  <rect x="614" y="17" width="326" height="25" rx="12.5" class="sd-pill"/>
+  <text x="777" y="33.5" text-anchor="middle" class="sd-pill-text">192×114×38 mm Sled · 2S 18650 · 380°F–580°F PID</text>
+  <line x1="20" y1="52" x2="940" y2="52" class="sd-divider"/>
+
+  <!-- Left Column: Power & Controls -->
+  <rect x="24" y="68" width="268" height="162" rx="10" class="sd-card"/>
+  <rect x="36" y="80" width="28" height="22" rx="6" class="sd-badge"/>
+  <text x="50" y="94.8" text-anchor="middle" class="sd-badge-text">P1</text>
+  <text x="72" y="95.5" class="sd-title">2S 18650 Star-Ground Rail</text>
+  <text x="36" y="116" class="sd-sub-sm">2× Keystone 1042 Bays (6.2V–8.4V)</text>
+  <line x1="36" y1="126" x2="280" y2="126" class="sd-divider"/>
+  <text x="36" y="144" class="sd-sub">• 15A Main + 10A Heater Thermal Fuse</text>
+  <text x="36" y="162" class="sd-sub">• 5V / 3A+ Buck Isolates H618 SoC</text>
+  <text x="36" y="180" class="sd-sub">• Zero 5V Rail Sag Under Heater PWM</text>
+  <rect x="36" y="196" width="244" height="22" rx="11" class="sd-pill"/>
+  <text x="158" y="210.8" text-anchor="middle" class="sd-pill-text">16 AWG Silicone Power Path</text>
+
+  <rect x="24" y="246" width="268" height="170" rx="10" class="sd-card"/>
+  <rect x="36" y="258" width="28" height="22" rx="6" class="sd-badge"/>
+  <text x="50" y="272.8" text-anchor="middle" class="sd-badge-text">IN</text>
+  <text x="72" y="273.5" class="sd-title">Arcade &amp; Analog Controls</text>
+  <text x="36" y="294" class="sd-sub-sm">4×4 1N4148 Diode Matrix (8 GPIOs)</text>
+  <line x1="36" y1="304" x2="280" y2="304" class="sd-divider"/>
+  <text x="36" y="322" class="sd-sub">• Clicky Microswitch Stick + 6 Face</text>
+  <text x="36" y="340" class="sd-sub">• L/R Shoulders + Start/Select/Home</text>
+  <text x="36" y="358" class="sd-sub">• Side Temp Wheel + Arm/Lock Slide</text>
+  <rect x="36" y="380" width="244" height="22" rx="11" class="sd-pill"/>
+  <text x="158" y="394.8" text-anchor="middle" class="sd-pill-text">Recessed GP14 Fire Trigger</text>
+
+  <!-- Center Column: RP2040 Co-Processor -->
+  <rect x="342" y="96" width="252" height="292" rx="10" class="sd-card-accent"/>
+  <rect x="354" y="108" width="36" height="22" rx="6" class="sd-badge"/>
+  <text x="372" y="122.8" text-anchor="middle" class="sd-badge-text">MCU</text>
+  <text x="398" y="123.5" class="sd-title">RP2040-Zero Co-MCU</text>
+  <text x="354" y="144" class="sd-sub-sm">Linux-Independent Safety &amp; HID</text>
+  <line x1="354" y1="155" x2="582" y2="155" class="sd-divider"/>
+  <text x="354" y="175" class="sd-sub">• 100% Edge-Castellated Pinout</text>
+  <text x="354" y="194" class="sd-sub">• USB Composite: Gamepad HID</text>
+  <text x="354" y="213" class="sd-sub">  + 115200 USB-CDC JSON Stream</text>
+  <text x="354" y="232" class="sd-sub">• SPI1 MAX31855 K-Type Loop</text>
+  <text x="354" y="251" class="sd-sub">• 2S RMS Voltage Clamp (≤4.2V)</text>
+  <text x="354" y="270" class="sd-sub">• 2s Hardware Watchdog + 60s</text>
+  <text x="354" y="289" class="sd-sub">  Session Cutoff + ≥650°F Trip</text>
+  <text x="354" y="308" class="sd-sub">• 8-LED WS2812B PEEK Status Ring</text>
+  <rect x="354" y="352" width="228" height="22" rx="11" class="sd-pill-ok"/>
+  <text x="468" y="366.8" text-anchor="middle" class="sd-pill-ok-text">Works Even If Linux Is Off</text>
+
+  <!-- Right Top: Orange Pi Zero 2W -->
+  <rect x="646" y="68" width="290" height="166" rx="10" class="sd-card-accent"/>
+  <rect x="658" y="80" width="32" height="22" rx="6" class="sd-badge"/>
+  <text x="674" y="94.8" text-anchor="middle" class="sd-badge-text">SBC</text>
+  <text x="698" y="95.5" class="sd-title">Orange Pi Zero 2W + 24p</text>
+  <text x="658" y="116" class="sd-sub-sm">Allwinner H618 (1GB) · RetroArch</text>
+  <line x1="658" y1="126" x2="924" y2="126" class="sd-divider"/>
+  <text x="658" y="144" class="sd-sub">• 3.5&quot; 4:3 CVBS Composite TFT</text>
+  <text x="658" y="162" class="sd-sub">• Split Pre-Amp + /SHDN Jack Mute</text>
+  <text x="658" y="180" class="sd-sub">• dab_hud.py → UDP :55355 OSD</text>
+  <rect x="658" y="198" width="266" height="22" rx="11" class="sd-pill"/>
+  <text x="791" y="212.8" text-anchor="middle" class="sd-pill-text">Live Temp Overlay Over Gameplay</text>
+
+  <!-- Right Bottom: PEEK Hot-Zone Well -->
+  <rect x="646" y="250" width="290" height="166" rx="10" class="sd-card-warn"/>
+  <rect x="658" y="262" width="36" height="22" rx="6" class="sd-badge-warn"/>
+  <text x="676" y="276.8" text-anchor="middle" class="sd-badge-text">HOT</text>
+  <text x="702" y="277.5" class="sd-title">Machined PEEK Hot Well</text>
+  <text x="658" y="298" class="sd-sub-sm">Ø32mm OD PEEK · 2mm Radial Air Gap</text>
+  <line x1="658" y1="308" x2="924" y2="308" class="sd-divider"/>
+  <text x="658" y="326" class="sd-sub">• V5 / Core 2.1 3D Alumina Bucket</text>
+  <text x="658" y="344" class="sd-sub">• Spring K-Type Probe + 10kΩ Gate Lock</text>
+  <text x="658" y="362" class="sd-sub">• 10mm Borosilicate Straight Whip</text>
+  <rect x="658" y="380" width="266" height="22" rx="11" class="sd-pill-warn"/>
+  <text x="791" y="394.8" text-anchor="middle" class="sd-pill-warn-text">7× M3 Ears → Wood / Resin Shells</text>
+
+  <!-- Arrows -->
+  <path d="M 292 148 L 340 148" class="sd-arrow-muted" marker-end="url(#arr-m-orangepi-retro-edab-rig)"/>
+  <path d="M 292 330 L 340 300" class="sd-arrow" marker-end="url(#arr-orangepi-retro-edab-rig)"/>
+  <path d="M 594 175 L 644 150" class="sd-arrow" marker-end="url(#arr-orangepi-retro-edab-rig)"/>
+  <path d="M 594 310 L 644 330" class="sd-arrow" marker-start="url(#arr-orangepi-retro-edab-rig)" marker-end="url(#arr-orangepi-retro-edab-rig)"/>
+</svg>

@@ -1,0 +1,16 @@
+# Private Vault (Layer 2: Local-only, never committed to Git)
+docs/vault/
+assets/vault/
+portfolio-vault.js
+
+# Local extraction dumps, discovery shards & reconciliation ledger (kept locally on disk)
+data/
+
+# Python / OS / IDE artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+.DS_Store
+Thumbs.db
+*.tmp
+*.bak

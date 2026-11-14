@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
+  <script>
+    try {
+      var savedScheme = localStorage.getItem("studio-color-scheme");
+      var metaScheme = document.querySelector('meta[name="color-scheme"]');
+      metaScheme.content = (savedScheme === "dark" || savedScheme === "light") ? savedScheme : "light";
+    } catch (e) {
+      document.querySelector('meta[name="color-scheme"]').content = "light";
+    }
+  </script>
+  <title>Studio Portfolio — Partner &amp; Collaborator Guide</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand-block">
+        <div class="eyebrow-row">
+          <span class="studio-pill">Living Studio Guide</span>
+          <span class="inception-label tabular-nums" id="headerDateSpan">Aug 2026 – Nov 2026</span>
+        </div>
+        <h1 class="site-title">Studio Portfolio &amp; System Atlas</h1>
+        <p class="site-subtitle">
+          Plain-English guide to every software platform, game engine, AI workflow, business plan, creative pipeline, and hardware build we have created together.
+        </p>
+      </div>
+
+      <div class="header-stats" id="headerStats" aria-label="Portfolio summary metrics">
+        <div class="stat-card">
+          <span class="stat-value tabular-nums" id="statTotalEntries">0</span>
+          <span class="stat-label">Documented Entries</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value tabular-nums" id="statShipped">0</span>
+          <span class="stat-label">Shipped &amp; Verified</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value tabular-nums" id="statWorkflows">0</span>
+          <span class="stat-label">Reusable Workflows</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value tabular-nums" id="statMemories">0</span>
+          <span class="stat-label">Memories Indexed</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value tabular-nums" id="statSessions">0</span>
+          <span class="stat-label">Sessions Audited</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="controls-bar">
+      <div class="container controls-inner">
+        <nav class="view-tabs" role="tablist" aria-label="Portfolio organization views">
+          <button type="button" role="tab" class="view-tab is-active" data-view="pillars" aria-selected="true">
+            Domain Pillars
+          </button>
+          <button type="button" role="tab" class="view-tab" data-view="readiness" aria-selected="false">
+            By Readiness Stage
+          </button>
+          <button type="button" role="tab" class="view-tab" data-view="type" aria-selected="false">
+            By Type
+          </button>
+          <button type="button" role="tab" class="view-tab" data-view="timeline" aria-selected="false">
+            Timeline
+          </button>
+        </nav>
+
+        <div class="search-and-theme">
+          <div class="search-box">
+            <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input
+              type="search"
+              id="searchInput"
+              class="search-input"
+              placeholder="Search projects, workflows, plans… ( / )"
+              aria-label="Search portfolio entries"
+              autocomplete="off"
+            >
+            <button type="button" id="clearSearchBtn" class="clear-search-btn" hidden aria-label="Clear search query">
+              Clear
+            </button>
+          </div>
+
+          <button type="button" id="themeToggleBtn" class="theme-toggle-btn" aria-label="Switch color theme">
+            <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+            <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <span class="theme-btn-text" id="themeBtnLabel">Dark Studio</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content container" id="mainContent">
+    <section id="primerMount" class="primer-section" aria-label="How Our AI Studio Works"></section>
+    <div id="filterPillsMount" class="filter-pills-bar" aria-label="Quick section jump"></div>
+    <div id="portfolioMount" class="portfolio-mount"></div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-meta">
+        <p class="footer-title">Living Studio Portfolio · Partner &amp; Collaborator System Atlas</p>
+        <p class="footer-note tabular-nums" id="footerSyncNote">
+          Deterministic studio catalog covering AI infrastructure, game engines, SaaS ventures, 3D pipelines, and hardware builds.
+        </p>
+      </div>
+      <div class="footer-actions">
+        <a href="atlas.html" class="ghost-btn" style="text-decoration:none;display:inline-flex;align-items:center;">
+          15-World Concept Atlas →
+        </a>
+        <button
+          type="button"
+          id="vaultToggleBtn"
+          class="vault-toggle-btn"
+          aria-pressed="false"
+          hidden
+        >
+          <span class="vault-dot" aria-hidden="true"></span>
+          <span id="vaultToggleLabel" class="tabular-nums">Show Private Vault (0)</span>
+        </button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Distraction-Free Slide-Over Reader Drawer -->
+  <dialog id="readerDialog" class="reader-dialog" closedby="any" aria-labelledby="readerTitle">
+    <div class="reader-panel" id="readerPanel">
+      <header class="reader-topbar">
+        <div class="reader-crumbs" id="readerCrumbs"></div>
+        <div class="reader-topbar-actions">
+          <button type="button" id="copyLinkBtn" class="ghost-btn" aria-label="Copy bookmark link to this entry">
+            Copy Link
+          </button>
+          <button type="button" id="closeReaderBtn" class="icon-close-btn" aria-label="Close entry reader">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+      </header>
+      <div class="reader-scroll-body" id="readerBody"></div>
+    </div>
+  </dialog>
+
+  <!-- Full-Screen Media & Diagram Lightbox -->
+  <dialog id="lightboxDialog" class="lightbox-dialog" closedby="any" aria-label="Full-screen visual preview">
+    <div class="lightbox-inner" id="lightboxInner">
+      <header class="lightbox-topbar">
+        <div class="lightbox-badges" id="lightboxBadges"></div>
+        <div class="lightbox-controls">
+          <button type="button" id="lightboxPrevBtn" class="ghost-btn lightbox-nav-btn" aria-label="Previous image">
+            ← Prev
+          </button>
+          <span id="lightboxCounter" class="lightbox-counter tabular-nums"></span>
+          <button type="button" id="lightboxNextBtn" class="ghost-btn lightbox-nav-btn" aria-label="Next image">
+            Next →
+          </button>
+          <button type="button" id="closeLightboxBtn" class="icon-close-btn" aria-label="Close full-screen preview">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+      </header>
+      <figure class="lightbox-stage-wrap">
+        <div class="lightbox-stage" id="lightboxStage"></div>
+        <figcaption class="lightbox-caption" id="lightboxCaption"></figcaption>
+      </figure>
+    </div>
+  </dialog>
+
+  <script src="portfolio-data.js"></script>
+  <script>
+    if (window.location.protocol === "file:") {
+      document.write('<script src="portfolio-vault.js"><\/script>');
+    }
+  </script>
+  <script src="app.js"></script>
+</body>
+</html>

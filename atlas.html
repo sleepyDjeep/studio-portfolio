@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <script>
+    try {
+      document.querySelector('meta[name="color-scheme"]').content =
+        localStorage.getItem("atlas-color-scheme") ?? "light dark";
+    } catch (e) {}
+  </script>
+  <title>Public-Domain Synergistic Mashup Worlds — 45-Render Concept Atlas</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      &:has(> head > meta[name="color-scheme"][content="dark"]) { color-scheme: dark; }
+      &:has(> head > meta[name="color-scheme"][content="light"]) { color-scheme: light; }
+      --bg: light-dark(#f8fafc, #0b0f17);
+      --surface: light-dark(#ffffff, #131a26);
+      --surface-muted: light-dark(#f1f5f9, #182234);
+      --text: light-dark(#0f172a, #f8fafc);
+      --muted: light-dark(#475569, #94a3b8);
+      --border: light-dark(#e2e8f0, #1e293b);
+      --accent: light-dark(#2563eb, #3b82f6);
+      --accent-soft: light-dark(#eff6ff, #172554);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100dvh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+    h1, h2, h3 { text-wrap: balance; margin: 0; }
+    p, figcaption span { text-wrap: pretty; }
+    .num { font-variant-numeric: tabular-nums; }
+    .shell { max-width: 1380px; margin: 0 auto; padding: 32px 24px 72px; }
+    .topbar {
+      display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; justify-content: space-between;
+      padding-bottom: 24px; border-bottom: 1px solid var(--border);
+    }
+    .eyebrow {
+      display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 600;
+      background: var(--accent-soft); color: var(--accent); margin-bottom: 10px;
+    }
+    h1 { font-size: clamp(1.65rem, 2.6vw, 2.25rem); letter-spacing: -0.02em; }
+    .subtitle { color: var(--muted); max-width: 76ch; margin-top: 8px; }
+    .controls {
+      display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between;
+      margin: 20px 0 28px;
+    }
+    .pills { display: flex; flex-wrap: wrap; gap: 8px; }
+    .pill-btn, .theme-btn, .search-input {
+      min-height: 44px; border-radius: 10px; border: 1px solid var(--border);
+      background: var(--surface); color: var(--text); font-size: 14px; font-weight: 600;
+      padding: 0 14px; cursor: pointer;
+      transition: opacity 160ms ease-out, transform 160ms ease-out;
+    }
+    .pill-btn.is-active { background: var(--accent); border-color: var(--accent); color: #ffffff; }
+    .search-wrap { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    .search-input { min-width: 260px; font-weight: 400; cursor: text; }
+    .world-section {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+      padding: 24px; margin-bottom: 24px;
+    }
+    .world-eyebrow { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 8px; font-size: 12px; }
+    .world-num {
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-weight: 700;
+      padding: 3px 8px; border-radius: 6px; background: var(--accent-soft); color: var(--accent);
+      font-variant-numeric: tabular-nums;
+    }
+    .world-cat, .world-genre {
+      padding: 3px 9px; border-radius: 6px; background: var(--surface-muted); color: var(--muted); font-weight: 600;
+    }
+    .world-header h2 { font-size: 1.35rem; margin-bottom: 8px; }
+    .world-sources, .world-style { margin: 4px 0; font-size: 0.92rem; color: var(--muted); }
+    .triad-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 16px; margin-top: 18px;
+    }
+    .shot-card {
+      margin: 0; background: var(--surface-muted); border: 1px solid var(--border); border-radius: 10px; overflow: hidden;
+      display: flex; flex-direction: column;
+    }
+    .shot-trigger {
+      position: relative; display: block; width: 100%; padding: 0; border: 0; background: #0b0f17; cursor: zoom-in;
+      aspect-ratio: 16 / 9; overflow: hidden;
+    }
+    .shot-trigger img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      transition: transform 180ms ease-out;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .shot-trigger:hover img { transform: scale(1.025); }
+    }
+    .shot-badge {
+      position: absolute; top: 10px; left: 10px; padding: 4px 8px; border-radius: 6px;
+      background: rgba(15, 23, 42, 0.82); color: #f8fafc; font-size: 11px; font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+    figcaption { padding: 12px 14px; display: flex; flex-direction: column; gap: 4px; font-size: 0.88rem; }
+    figcaption strong { color: var(--text); font-size: 0.92rem; }
+    figcaption span { color: var(--muted); }
+    dialog:modal {
+      max-width: min(1240px, 94vw); max-height: 92dvh; border: 1px solid var(--border); border-radius: 14px;
+      padding: 0; background: var(--surface); color: var(--text); overscroll-behavior: contain;
+    }
+    dialog::backdrop {
+      background: rgba(9, 13, 22, 0.78); overflow: hidden; overscroll-behavior: contain;
+    }
+    .lb-inner { display: flex; flex-direction: column; max-height: 92dvh; }
+    .lb-bar {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding: 12px 16px; border-bottom: 1px solid var(--border);
+    }
+    .lb-close {
+      min-width: 44px; min-height: 44px; border-radius: 8px; border: 1px solid var(--border);
+      background: var(--surface-muted); color: var(--text); font-weight: 700; cursor: pointer;
+    }
+    .lb-img-wrap { background: #05080f; display: flex; justify-content: center; overflow: auto; }
+    .lb-img-wrap img { max-width: 100%; max-height: 74dvh; object-fit: contain; display: block; }
+    .lb-cap { padding: 12px 16px; color: var(--muted); font-size: 0.92rem; margin: 0; }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <div>
+        <span class="eyebrow num">15 Worlds · 45 Concept Renders · U.S. 2026 Public Domain</span>
+        <h1>Public-Domain Mashup Worlds — Concept Art Atlas</h1>
+        <p class="subtitle">Three-shot visual pitch triads (1: Establishing World, 2: Cast &amp; Factions, 3: In-Game Mechanic Moment) rendered via our parallel Nano Banana studio workflow with era-matched literary art direction.</p>
+      </div>
+      <div class="search-wrap">
+        <a href="file:///D:/Projects/Studio_Portfolio/index.html#entry=public-domain-mashup-worlds" class="theme-btn" style="text-decoration:none;display:inline-flex;align-items:center;">← Studio Portfolio</a>
+        <button type="button" id="themeBtn" class="theme-btn" aria-label="Toggle light or dark color scheme">Toggle Light / Dark</button>
+      </div>
+    </header>
+
+    <div class="controls">
+      <div class="pills" id="catPills"><button type="button" class="pill-btn is-active" data-cat="All Worlds">All Worlds <span class="num">(15)</span></button><button type="button" class="pill-btn" data-cat="CRPG &amp; Intrigue">CRPG &amp; Intrigue <span class="num">(3)</span></button><button type="button" class="pill-btn" data-cat="Immersive Sim &amp; Horror">Immersive Sim &amp; Horror <span class="num">(4)</span></button><button type="button" class="pill-btn" data-cat="Mythic &amp; Deep-Time 4X">Mythic &amp; Deep-Time 4X <span class="num">(4)</span></button><button type="button" class="pill-btn" data-cat="Tactical &amp; Action">Tactical &amp; Action <span class="num">(4)</span></button></div>
+      <input type="search" id="searchInput" class="search-input" placeholder="Search worlds, canons, genres..." aria-label="Search mashup worlds">
+    </div>
+
+    <main id="worldsContainer">
+      
+            <article class="world-section" data-cat="Immersive Sim &amp; Horror" data-search="the redoubt protocol immersive sim / survival rpg the night land (1912) × carnacki the ghost-finder (1910) × the tin woodman (1900) zdzislaw beksinski &amp; piranesi dark romanticism oil painting with vacuum-tube brass">
+              <div class="world-header">
+                <div>
+                  <div class="world-eyebrow">
+                    <span class="world-num">WORLD 01</span>
+                    <span class="world-cat">Immersive Sim &amp; Horror</span>
+                    <span class="world-genre">Immersive Sim / Survival RPG</span>
+                  </div>
+                  <h2>The Redoubt Protocol</h2>
+                  <p class="world-sources"><strong>Public-Domain Ingredients:</strong> The Night Land (1912) × Carnacki the Ghost-Finder (1910) × The Tin Woodman (1900)</p>
+                  <p class="world-style"><strong>Era Art Direction:</strong> Zdzislaw Beksinski &amp; Piranesi dark romanticism oil painting with vacuum-tube brass</p>
+                </div>
+              </div>
+              <div class="triad-grid">
+                
+                <figure class="shot-card">
+                  <button type="button" class="shot-trigger"
+                    data-src="assets/concepts/story-worlds/01-the-redoubt-protocol-01_establishing.png"
+                    data-title="The Redoubt Protocol — Establishing — Eight-Mile Last Redoubt Pyramid"
+                    data-caption="The Last Redoubt rising eight miles into the sunless freeze, ringed by the amber Earth-Current barrier while colossal Watchers wait beyond pale-green mist."
+                    aria-label="Zoom The Redoubt Protocol shot 1">
+                    <img src="assets/concepts/story-worlds/01-the-redoubt-protocol-01_establishing.png" alt="Establishing — Eight-Mile Last Redoubt Pyramid" loading="lazy">
+                    <span class="shot-badge">Shot 01 · Concept Preview</span>
+                  </button>
+                  <figcaption>
+                    <strong>Establishing — Eight-Mile Last Redoubt Pyramid</strong>
+                    <span>The Last Redoubt rising eight miles into the sunless freeze, ringed by the amber Earth-Current barrier while colossal Watchers wait beyond pale-green mist.</span>
+                  </figcaption>
+                </figure>
+                
+                <figure class="shot-card">
+                  <button type="button" class="shot-trigger"
+                    data-src="assets/concepts/story-worlds/01-the-redoubt-protocol-02_character.png"
+                    data-title="The Redoubt Protocol — Cast — Current Guild Engineer &amp; Tin-Bound Soldier"
+                    data-caption="A Carnacki-lineage Current Guild technician with vacuum-tube pentacle gear alongside a Tin-Bound veteran sporting riveted tin-and-brass prosthetic limbs."
+                    aria-label="Zoom The Redoubt Protocol shot 2">
+                    <img src="assets/concepts/story-worlds/01-the-redoubt-protocol-02_character.png" alt="Cast — Current Guild Engineer &amp; Tin-Bound Soldier" loading="lazy">
+                    <span class="shot-badge">Shot 02 · Concept Preview</span>
+                  </button>
+                  <figcaption>
+                    <strong>Cast — Current Guild Engineer &amp; Tin-Bound Soldier</strong>
+                    <span>A Carnacki-lineage Current Guild technician with vacuum-tube pentacle gear alongside a Tin-Bound veteran sporting riveted tin-and-brass prosthetic limbs.</span>
+                  </figcaption>
+                </figure>
+                
+                <figure class="shot-card">
+                  <button type="button" class="shot-trigger"
+                    data-src="assets/concepts/story-worlds/01-the-redoubt-protocol-03_gameplay.png"
+                    data-title="The Redoubt Protocol — Gameplay — Light-as-Aggro &amp; Electric Pentacle"
+                    data-caption="First-person breach defense holding an incandescent vacuum-tube Electric Pentacle and spinning Diskos war-disc against creeping Ab-human stalkers."
+                    aria-label="Zoom The Redoubt Protocol shot 3">
+                    <img src="assets/concepts/story-worlds/01-the-redoubt-protocol-03_gameplay.png" alt="Gameplay — Light-as-Aggro &amp; Electric Pentacle" loading="lazy">
+                    <span class="shot-badge">Shot 03 · Concept Preview</span>
+                  </button>
+                  <figcaption>
+                    <strong>Gameplay — Light-as-Aggro &amp; Electric Pentacle</strong>
+                    <span>First-person breach defense holding an incandescent vacuum-tube Electric Pentacle and spinning Diskos war-disc against creeping Ab-human stalkers.</span>
+                  </figcaption>
+                </figure>
+                
+              </div>
+            </article>
+            
+            <article class="world-section" data-cat="CRPG &amp; Intrigue" data-search="war of the glass wall systemic social-stealth noir crpg we (1924) × metropolis (1926) × r.u.r. (1920) × sam spade (1930 novel) 1927 fritz lang metropolis &amp; russian constructivist glass-and-brass art deco cinema">
+              <div class="world-header">
+                <div>
+                  <div class="world-eyebrow">
+                    <span class="world-num">WORLD 02</span>
+                    <span class="world-cat">CRPG &amp; Intrigue</span>
+                    <span class="world-genre">Systemic Social-Stealth Noir CRPG</span>
+                  </div>
+                  <h2>War of the Glass Wall</h2>
+                  <p class="world-sources"><strong>Public-Domain Ingredients:</strong> We (1924) × Metropolis (1926) × R.U.R. (1920) × Sam Spade (1930 novel)</p>
+                  <p class="world-style"><strong>Era Art Direction:</strong> 1927 Fritz Lang Metropolis &amp; Russian Constructivist glass-and-brass Art Deco cinema</p>
+                </div>
+              </div>
+              <div class="triad-grid">
+                
+                <figure class="shot-card">
+                  <button type="button" class="shot-trigger"
+                    data-src="assets/concepts/story-worlds/02-war-of-the-glass-wall-01_establishing.png"
+                    data-title="War of the Glass Wall — Establishing — OneState &amp; The Green Wall"
+                    data-caption="Transparent glass skyscrapers and skybridges of OneState separated from the untamed Mephi jungle by the curved Green Wall."
+                    aria-label="Zoom War of the Glass Wall shot 1">
+                    <img src="assets/concepts/story-worlds/02-war-of-the-glass-wall-01_establishing.png" alt="Establishing — OneState &amp; The Green Wall" loading="lazy">
+                    <span class="shot-badge">Shot 01 · Concept Preview</span>
+                  </button>
+                  <figcaption>
+                    <strong>Establishing — OneState &amp; The Green Wall</strong>
+                    <span>Transparent glass skyscrapers and skybridges of OneState separated from the untamed Mephi jungle by the curved Green Wall.</span>
+                  </figcaption>
+                </figure>
+                
+                <figure class="shot-card">
+                  <button type="button" class="shot-trigger"
+                    data-src="assets/concepts/story-worlds/02-war-of-the-glass-wall-02_character.png"
+                    data-title="War of the Glass Wall — Cast — Cipher-Investigator D-Spade &amp; Rossum Synthetic"
+                    data-caption="Hardboiled 1930 investigator D-Spade inspecting a porcelain-and-brass Maschinenmensch synthetic inside a monitored glass apartment."
+                    aria-label="Zoom War of the Glass Wall shot 2">
+                    <img src="assets/concepts/story-worlds/02-war-of-the-glass-wall-02_character.png" alt="Cast — Cipher-Investigator D-Spade &amp; Rossum Synthetic" loading="lazy">
+                    <span class="shot-badge">Shot 02 · Concept Preview</span>
+                  </button>
+                  <figcaption>
+                    <strong>Cast — Cipher-Investigator D-Spade &amp; Rossum Synthetic</strong>
+                    <span>Hardboiled 1930 investigator D-Spade inspecting a porcelain-and-brass Maschinenmensch synthetic inside a monitored glass apartment.</span>
+                  </figcaption>
+                </figure>
+                
+                <figure class="shot-card">
+                  <button type="button" class="shot-trigger"
+                    data-src="assets/concepts/story-worlds/02-war-of-the-glass-wall-03_gameplay.png"
+                    data-title="War of the Glass Wall — Gameplay — Table of Hours Stealth in Moloch Vats"
+                    data-caption="Slipping through refracted glass shadows past Guardian searchlights in the subterranean Moloch turbines and Rossum bio-vats."
+                    aria-label="Zoom War of the Glass Wall shot 3">
+                    <img src="assets/concepts/story-worlds/02-war-of-the-glass-wall-03_gameplay.png" alt="Gameplay — Table of Hours Stealth in Moloch Vats" loading="lazy">
+                    <span class="shot-badge">Shot 03 · Concept Preview</span>
+                  </button>
+                  <figcaption>
+                    <strong>Gameplay — Table of Hours Stealth in Moloch Vats</strong>
+                    <span>Slipping through refracted glass shadows past Guardian searchlights in the subterranean Moloch turbines and Rossum bio-vats.</span>
+                  </figcaption>
+                </figure>
+                
+              </div>
+            </article>
+            
+            <article class="world-section" data-cat="Tactical &amp; Action" data-search="eternal mercury high-lethality tactical rpg the worm ouroboros (1922) × the metal monster (1920) × kullervo (kalevala) gustave dore &amp; frank frazetta baroque alpine oil collided with mirror-chrome polyhedra">
+              <div class="world-header">
+                <div>
+                  <div class="world-eyebrow">
+                    <span class="world-num">WORLD 03</span>
+                    <span class="world-cat">Tactical &amp; Action</span>
+                    <span class="world-genre">High-Lethality Tactical RPG</span>
+                  </div>
+                  <h2>Eternal Mercury</h2>
+                  <p class="world-sources"><strong>Public-Domain Ingredients:</strong> The Worm Ouroboros (1922) × The Metal Monster (1920) × Kullervo (Kalevala)</p>
+                  <p class="world-style"><strong>Era Art Direction:</strong> Gustave Dore &amp; Frank Frazetta baroque alpine oil collided with mirror-chrome polyhedra</p>
+                </div>
+              </div>
+              <div class="triad-grid">
+                
+                <figure class="shot-card">
+                  <button type="button" class="shot-trigger"
+                    data-src="assets/concepts/story-worlds/03-eternal-mercury-01_establishing.png"
+                    data-title="Eternal Mercury — Establishing — Carce Spire &amp; Geometric Titan"
+                    data-caption="Obsidian fortress of Carce above Himalayan passes as levitating metallic cubes, spheres, and pyramids fuse into a siege titan."
+                    aria-label="Zoom Eternal Mercury shot 1">
+                    <img src="assets/concepts/story-worlds/03-eternal-mercury-01_establishing.png" alt="Establishing — Carce Spire &amp; Geometric Titan" loading="lazy">
+                    <span class="shot-badge">Shot 01 · Concept Preview</span>
+                  </button>
+                  <figcaption>
+                    <strong>Establishing — Carce Spire &amp; Geometric Titan</strong>
+                    <span>Obsidian fortress of Carce above Himalayan passes as levitating metallic cubes, spheres, and pyramids fuse into a siege titan.</span>
+                  </figcaption>
+                </figure>
+                
+                <figure class="shot-card">
+                  <button type="button" class="shot-trigger"
+                    data-src="assets/concepts/story-worlds/03-eternal-mercury-02_character.png"
+                    data-title="Eternal Mercury — Cast — Kullervo &amp; Demonland Champions"
+                    data-caption="Cursed mercenary Kullervo wielding his sentient rune-etched broadsword opposite plumed Demonland duelists amid drifting silver polyhedra."
+                    aria-label="Zoom Eternal Mercury shot 2">
+                    <img src="assets/concepts/story-worlds/03-eternal-mercury-02_character.png" alt="Cast — Kullervo &amp; Demonland Champions" loading="lazy">
+                    <span class="shot-badge">Shot 02 · Concept Preview</span>
+                  </button>
+                  <figcaption>
+                    <strong>Cast — Kullervo &amp; Demonland Champions</strong>
+                    <span>Cursed mercenary Kullervo wielding his sentient rune-etched broadsword opposite plumed Demonland duelists amid drifting silver polyhedra.</span>
+                  </figcaption>
+                </figure>
+                
+                <figure class="shot-card">
+                  <button type="button" class="shot-trigger"
+                    data-src="assets/concepts/story-worlds/03-eternal-mercury-03_gameplay.png"
+                    data-title="Eternal Mercury — Gameplay — Dynamic Polyhedral Battlefield"
+                    data-caption="Isometric mountain-bridge clash where felled metal polyhedra reassemble mid-battle into a laser-firing geometric bastion."
+                    aria-label="Zoom Eternal Mercury shot 3">
+                    <img src="assets/concepts/story-worlds/03-eternal-mercury-03_gameplay.png" alt="Gameplay — Dynamic Polyhedral Battlefield" loading="lazy">
+                    <span class="shot-badge">Shot 03 · Concept Preview</span>
+                  </button>
+                  <figcaption>
+                    <strong>Gameplay — Dynamic Polyhedral Battlefield</strong>
+                    <span>Isometric mountain-bridge clash where felled metal polyhedra reassemble mid-battle into a laser-firing geometric bastion.</span>
+                  </figcaption>
+                </figure>
+                
+              </div>
+            </article>
+            
+            <article class="world-section" data-cat="Tactical &amp; Action" data-search="junkyard vikings mercenary fleet &amp; mech-salvage sim space viking / junkyard planet (piper) × time traders (norton) × captain nemo (1870) chris foss &amp; john berkey 1970s retro-scifi gouache meets victorian submarine ironwork">
+              <div class="world-header">
+                <div>
+                  <div class="world-eyebrow">
+                    <span class="world-num">WORLD 04</span>
+                    <span class="world-cat">Tactical &amp; Action</span>
+                    <span class="world-genre">Mercenary Fleet &amp; Mech-Salvage Sim</span>
+                  </div>
+                  <h2>Junkyard Vikings</h2>
+                  <p class="world-sources"><strong>Public-Domain Ingredients:</strong> Space Viking / Junkyard Planet (Piper) × Time Traders (Norton) × Captain Nemo (1870)</p>
+                  <p class="world-style"><strong>Era Art Direction:</strong> Chris Foss &amp; John Berkey 1970s retro-scifi gouache meets Victorian submarine ironwork</p>
+                </div>
+              </div>
+              <div class="triad-grid">
+                
+                <figure class="shot-card">
+                  <button type="button" class="shot-trigger"
+                    data-src="assets/concepts/story-worlds/04-junkyard-vikings-01_establishing.png"
+                    data-title="Junkyard Vikings — Establishing — Poictesme Wreckage &amp; Void Nautilus"
+                    data-caption="Rust-red plains buried in gutted Federation star-cruisers and war-mechs as Captain Nemo&#x27;s stealth frigate deploys salvage cranes."
+                    aria-label="Zoom Junkyard Vikings shot 1">
+                    <img src="assets/concepts/story-worlds/04-junkyard-vikings-01_establishing.png" alt="Establishing — Poictesme Wreckage &amp; Void Nautilus" loading="lazy">
+                    <span class="shot-badge">Shot 01 · Concept Preview</span>
+                  </button>
+                  <figcaption>
+                    <strong>Establishing — Poictesme Wreckage &amp; Void Nautilus</strong>
+                    <span>Rust-red plains buried in gutted Federation star-cruisers and war-mechs as Captain Nemo&#x27;s stealth frigate deploys salvage cranes.</span>
+                  </figcaption>
+                </figure>
+                
+                <figure class="shot-card">
+                  <button type="button" class="shot-trigger"
+                    data-src="assets/concepts/story-worlds/04-junkyard-vikings-02_character.png"
+                    data-title="Junkyard Vikings — Cast — Captain Nemo, Space Viking &amp; Sapient Fuzzy"
+                    data-caption="Stateless engineer-prince Nemo plotting raid logistics on a brass star-bridge alongside a Sword-World raider and golden-furred Fuzzy."
+                    aria-label="Zoom Junkyard Vikings shot 2">
+                    <img src="assets/concepts/story-worlds/04-junkyard-vikings-02_character.png" alt="Cast — Captain Nemo, Space Viking &amp; Sapient Fuzzy" loading="lazy">
+                    <span class="shot-badge">Shot 02 · Concept Preview</span>
+                  </button>
+                  <figcaption>
+                    <strong>Cast — Captain Nemo, Space Viking &amp; Sapient Fuzzy</strong>
+                    <span>Stateless engineer-prince Nemo plotting raid logistics on a brass star-bridge alongside a Sword-World raider and golden-furred Fuzzy.</span>
+                  </figcaption>
+                </figure>
+                
+                <figure class="shot-card">
+                  <button type="button" class="shot-trigger"
+                    data-src="assets/concepts/story-worlds/04-junkyard-vikings-03_gameplay.png"
+                    data-title="Junkyard Vikings — Gameplay — Crater Mech &amp; Core Excavation"
+                    data-caption="Kitbashed salvage mechs winching an ancient Forerunner computer core from a Federation hull as Sword-World dropships descend."
+                    aria-label="Zoom Junkyard Vikings shot 3">
+                    <img src="assets/concepts/story-worlds/04-junkyard-vikings-03_gameplay.png" alt="Gameplay — Crater Mech &amp; Core Excavation" loading="lazy">
+                    <span class="shot-badge">Shot 03 · Concept Preview</span>
+                  </button>
+                  <figcaption>
+                    <strong>Gameplay — Crater Mech &amp; Core Excavation</strong>
+                    <span>Kitbashed salvage mechs winching an ancient Forerunner computer core from a Federation hull as Sword-World dropships descend.</span>
+                  </figcaption>
+                </figure>
+                
+              </div>
+            </article>
+            
+            <article class="world-section" data-cat="Tactical &amp; Action" data-search="arcturus: sensoria surrealist metaphysical action-rpg a voyage to arcturus (1920) × flatland (1884) × the clockwork man (1923) × spring-heeled jack moebius &amp; roger dean fine-line ink and twin-sun prismatic watercolor">
+              <div class="world-header">
+                <div>
+                  <div class="world-eyebrow">
+                    <span class="world-num">WORLD 05</span>
+                    <span class="world-cat">Tactical &amp; Action</span>
+                    <span class="world-genre">Surrealist Metaphysical Action-RPG</span>
+                  </div>
+                  <h2>Arcturus: Sensoria</h2>
+                  <p class="world-sources"><strong>Public-Domain Ingredients:</strong> A Voyage to Arcturus (1920) × Flatland (1884) × The Clockwork Man (1923) × Spring-Heeled Jack</p>
+                  <p class="world-style"><strong>Era Art Direction:</strong> Moebius &amp; Roger Dean fine-line ink and twin-sun prismatic watercolor</p>
+                </div>
+              </div>
+              <div class="triad-grid">
+                
+                <figure class="shot-card">
+                  <button type="button" class="shot-trigger"
+                    data-src="assets/concepts/story-worlds/05-arcturus-sensoria-01_establishing.png"
+                    data-title="Arcturus: Sensoria — Establishing — Twin-Sun Tormance &amp; Flatland Slits"
+                    data-caption="Ulfire-and-jale twin suns illuminating crystalline Tormance cliffs and mid-air 4D Flatland dimensional rifts."
+                    aria-label="Zoom Arcturus: Sensoria shot 1">
+                    <img src="assets/concepts/story-worlds/05-arcturus-sensoria-01_establishing.png" alt="Establishing — Twin-Sun Tormance &amp; Flatland Slits" loading="lazy">
+                    <span class="shot-badge">Shot 01 · Concept Preview</span>
+                  </button>
+                  <figcaption>
+                    <strong>Establishing — Twin-Sun Tormance &amp; Flatland Slits</strong>
+                    <span>Ulfire-and-jale twin suns illuminating crystalline Tormance cliffs and mid-air 4D Flatland dimensional rifts.</span>
+                  </figcaption>
+                </figure>
+                
+                <figure class="shot-card">
+                  <button type="button" class="shot-trigger"
+                    data-src="assets/concepts/story-worlds/05-arcturus-sensoria-02_character.png"
+                    data-title="Arcturus: Sensoria — Cast — The Clockwork Man &amp; Spring-Heeled Jack"
+                    data-caption="An 80th-century fugitive with exposed cranial brass clockwork beside blue-flame-breathing vigilante Spring-Heeled Jack."
+                    aria-label="Zoom Arcturus: Sensoria shot 2">
+                    <img src="assets/concepts/story-worlds/05-arcturus-sensoria-02_character.png" alt="Cast — The Clockwork Man &amp; Spring-Heeled Jack" loading="lazy">
+                    <span class="shot-badge">Shot 02 · Concept Preview</span>
+                  </button>
+                  <figcaption>
+                    <strong>Cast — The Clockwork Man &amp; Spring-Heeled Jack</strong>
+                    <span>An 80th-century fugitive with exposed cranial brass clockwork beside blue-flame-breathing vigilante Spring-Heeled Jack.</span>
+                  </figcaption>
+                </figure>
+                
+                <figure class="shot-card">
+                  <button type="button" class="shot-trigger"
+                    data-src="assets/concepts/story-worlds/05-arcturus-sensoria-03_gameplay.png"
+                    data-title="Arcturus: Sensoria — Gameplay — Sensory-Shader Phase Leaping"
+                    data-caption="Vaulting across 4D geometric platforms revealed in real time by a prismatic sensory-organ shader ripple and cobalt-flame burst."
+                    aria-label="Zoom Arcturus: Sensoria shot 3">
+                    <img src="assets/concepts/story-worlds/05-arcturus-sensoria-03_gameplay.png" alt="Gameplay — Sensory-Shader Phase Leaping" loading="lazy">
+                    <span class="shot-badge">Shot 03 · Concept Preview</span>
+                  </button>
+                  <figcaption>
+                    <strong>Gameplay — Sensory-Shader Phase Leaping</strong>
+                    <span>Vaulting across 4D geometric platforms revealed in real time by a prismatic sensory-organ shader ripple and cobalt-flame burst.</span>
+                  </figcaption>
+                </figure>
+                
+              </div>
+            </article>
+            
+            <article class="world-section" data-cat="Immersive Sim &amp; Horror" data-search="the sargasso hulks maritime survival-horror extraction rpg the boats of the glen carrig (1907) × 20,000 leagues (1870) × prof. challenger × the invisible man j.m.w. turner &amp; n.c. wyeth atmospheric maritime oil with bioluminescent kelp">
+              <div class="world-header">
+                <div>
+                  <div class="world-eyebrow">
+                    <span class="world-num">WORLD 06</span>
+                    <span class="world-cat">Immersive Sim &amp; Horror</span>
+                    <span class="world-genre">Maritime Survival-Horror Extraction RPG</span>
+                  </div>
+                  <h2>The Sargasso Hulks</h2>
+                  <p class="world-sources"><strong>Public-Domain Ingredients:</strong> The Boats of the Glen Carrig (1907) × 20,000 Leagues (1870) × Prof. Challenger × The Invisible Man</p>
+                  <p class="world-style"><strong>Era Art Direction:</strong> J.M.W. Turner &amp; N.C. Wyeth atmospheric maritime oil with bioluminescent kelp</p>
+                </div>
+              </div>
+              <div class="triad-grid">
+                
+                <figure class="shot-card">
+                  <button type="button" class="shot-trigger"
+                    data-src="assets/concepts/story-worlds/06-the-sargasso-hulks-01_establishing.png"
+                    data-title="The Sargasso Hulks — Establishing — Shipwreck Gyre Continent"
+                    data-caption="Spanish galleons, Victorian ironclads, and a riveted submarine locked inside a miles-wide floating continent of glowing kelp."
+                    aria-label="Zoom The Sargasso Hulks shot 1">
+                    <img src="assets/concepts/story-worlds/06-the-sargasso-hulks-01_establishing.png" alt="Establishing — Shipwreck Gyre Continent" loading="lazy">
+                    <span class="shot-badge">Shot 01 · Concept Preview</span>
+                  </button>
+                  <figcaption>
+                    <strong>Establishing — Shipwreck Gyre Continent</strong>
+                    <span>Spanish galleons, Victorian ironclads, and a riveted submarine locked inside a miles-wide floating continent of glowing kelp.</span>
+                  </figcaption>
+                </figure>
+                
+                <figure class="shot-card">
+                  <button type="button" class="shot-trigger"
+                    data-src="assets/concepts/story-worlds/06-the-sargasso-hulks-02_character.png"
+                    data-title="The Sargasso Hulks — Cast — Professor Challenger &amp; Rain-Outlined Griffin"
+                    data-caption="Barrel-chested Professor Challenger with a boat-axe beside bandaged, rain-betrayed Griffin as amphibious Weed-Men scale the hull."
+                    aria-label="Zoom The Sargasso Hulks shot 2">
+                    <img src="assets/concepts/story-worlds/06-the-sargasso-hulks-02_character.png" alt="Cast — Professor Challenger &amp; Rain-Outlined Griffin" loading="lazy">
+                    <span class="shot-badge">Shot 02 · Concept Preview</span>
+                  </button>
+                  <figcaption>
+                    <strong>Cast — Professor Challenger &amp; Rain-Outlined Griffin</strong>
+                    <span>Barrel-chested Professor Challenger with a boat-axe beside bandaged, rain-betrayed Griffin as amphibious Weed-Men scale the hull.</span>
+                  </figcaption>
+                </figure>
+                
+                <figure class="shot-card">
+                  <button type="button" class="shot-trigger"
+                    data-src="assets/concepts/story-worlds/06-the-sargasso-hulks-03_gameplay.png"
+                    data-title="The Sargasso Hulks — Gameplay — Buoyancy Planks &amp; Rain Stealth"
+                    data-caption="Crossing precarious timber planks over sinking weed-mats while giant crab claws surface and rain reveals invisible footprints."
+                    aria-label="Zoom The Sargasso Hulks shot 3">
+                    <img src="assets/concepts/story-worlds/06-the-sargasso-hulks-03_gameplay.png" alt="Gameplay — Buoyancy Planks &amp; Rain Stealth" loading="lazy">
+                    <span class="shot-badge">Shot 03 · Concept Preview</span>
+                  </button>
+                  <figcaption>
+                    <strong>Gameplay — Buoyancy Planks &amp; Rain Stealth</strong>
+                    <span>Crossing precarious timber planks over sinking weed-mats while giant crab claws surface and rain reveals invisible footprints.</span>
+                  </figcaption>
+                </figure>
+                
+              </div>
+            </article>
+            
+            <article class="world-section" data-cat="Immersive Sim &amp; Horror" data-search="chitin &amp; spore monster-hunting survival-crafting rpg the forgotten planet (1920) × caspak (1918) × fantomah (1940 comic) nausicaa &amp; ernst haeckel botanical-entomological gouache and golden age pulp ink">
+              <div class="world-header">
+                <div>
+                  <div class="world-eyebrow">
+                    <span class="world-num">WORLD 07</span>
+                    <span class="world-cat">Immersive Sim &amp; Horror</span>
+                    <span class="world-genre">Monster-Hunting Survival-Crafting RPG</span>
+                  </div>
+                  <h2>Chitin &amp; Spore</h2>
+                  <p class="world-sources"><strong>Public-Domain Ingredients:</strong> The Forgotten Planet (1920) × Caspak (1918) × Fantomah (1940 comic)</p>
+                  <p class="world-style"><strong>Era Art Direction:</strong> Nausicaa &amp; Ernst Haeckel botanical-entomological gouache and Golden Age pulp ink</p>
+                </div>
+              </div>
+              <div class="triad-grid">
+                
+                <figure class="shot-card">
+                  <button type="button" class="shot-trigger"
+                    data-src="assets/concepts/story-worlds/07-chitin-and-spore-01_establishing.png"
+                    data-title="Chitin &amp; Spore — Establishing — 100-Foot Fungal Canopy"
+                    data-caption="Beetle-shell cliff villages tucked beneath towering shelf mushrooms above forest trails patrolled by tank-sized ants."
+                    aria-label="Zoom Chitin &amp; Spore shot 1">
+                    <img src="assets/concepts/story-worlds/07-chitin-and-spore-01_establishing.png" alt="Establishing — 100-Foot Fungal Canopy" loading="lazy">
+                    <span class="shot-badge">Shot 01 · Concept Preview</span>
+                  </button>
+                  <figcaption>
+                    <strong>Establishing — 100-Foot Fungal Canopy</strong>
+                    <span>Beetle-shell cliff villages tucked beneath towering shelf mushrooms above forest trails patrolled by tank-sized ants.</span>
+                  </figcaption>
+                </figure>
+                
+                <figure class="shot-card">
+                  <button type="button" class="shot-trigger"
+                    data-src="assets/concepts/story-worlds/07-chitin-and-spore-02_character.png"
+                    data-title="Chitin &amp; Spore — Cast — Chitin Hunters &amp; Guardian Fantomah"
+                    data-caption="Dragonfly-shielded hunters kneeling as jungle guardian Fantomah manifests her blue-skull aura to halt a charging giant stag-beetle."
+                    aria-label="Zoom Chitin &amp; Spore shot 2">
+                    <img src="assets/concepts/story-worlds/07-chitin-and-spore-02_character.png" alt="Cast — Chitin Hunters &amp; Guardian Fantomah" loading="lazy">
+                    <span class="shot-badge">Shot 02 · Concept Preview</span>
+                  </button>
+                  <figcaption>
+                    <strong>Cast — Chitin Hunters &amp; Guardian Fantomah</strong>
+                    <span>Dragonfly-shielded hunters kneeling as jungle guardian Fantomah manifests her blue-skull aura to halt a charging giant stag-beetle.</span>
+                  </figcaption>
+                </figure>
+                
+                <figure class="shot-card">
+                  <button type="button" class="shot-trigger"
+                    data-src="assets/concepts/story-worlds/07-chitin-and-spore-03_gameplay.png"
+                    data-title="Chitin &amp; Spore — Gameplay — Mushroom-Cap Grapple &amp; Mandible Parry"
+                    data-caption="Parrying a diving giant hornet with a hollowed ant-mandible shield amid glowing northward evolutionary spore currents."
+                    aria-label="Zoom Chitin &amp; Spore shot 3">
+                    <img src="assets/concepts/story-worlds/07-chitin-and-spore-03_gameplay.png" alt="Gameplay — Mushroom-Cap Grapple &amp; Mandible Parry" loading="lazy">
+                    <span class="shot-badge">Shot 03 · Concept Preview</span>
+                  </button>
+                  <figcaption>
+                    <strong>Gameplay — Mushroom-Cap Grapple &amp; Mandible Parry</strong>
+                    <span>Parrying a diving giant hornet with a hollowed ant-mandible shield amid glowing northward evolutionary spore currents.</span>
+                  </figcaption>
+                </figure>
+                
+              </div>
+            </article>
+            
+            <article class="world-section" data-cat="Tactical &amp; Action" data-search="carcosa in 2419 vertical movement boomer shooter armageddon 2419 a.d. (1928) × the king in yellow (1895) × dr. nikola (1895) 1928 amazing stories raygun gothic pulp cover collided with yellow-ochre cosmic symbolism">
+              <div class="world-header">
+                <div>
+                  <div class="world-eyebrow">
+                    <span class="world-num">WORLD 08</span>
+                    <span class="world-cat">Tactical &amp; Action</span>
+                    <span class="world-genre">Vertical Movement Boomer Shooter</span>
+                  </div>
+                  <h2>Carcosa in 2419</h2>
+                  <p class="world-sources"><strong>Public-Domain Ingredients:</strong> Armageddon 2419 A.D. (1928) × The King in Yellow (1895) × Dr. Nikola (1895)</p>
+                  <p class="world-style"><strong>Era Art Direction:</strong> 1928 Amazing Stories Raygun Gothic pulp cover collided with yellow-ochre cosmic symbolism</p>
+                </div>
+              </div>
+              <div class="triad-grid">
+                
+                <figure class="shot-card">
+                  <button type="button" class="shot-trigger"
+                    data-src="assets/concepts/story-worlds/08-carcosa-in-2419-01_establishing.png"
+                    data-title="Carcosa in 2419 — Establishing — Han Airships Under Twin Pale Suns"
+                    data-caption="Anti-gravity Han dreadnoughts hovering over shattered 25th-century ruins as Carcosa&#x27;s black stars tear open the yellow sky."
+                    aria-label="Zoom Carcosa in 2419 shot 1">
+                    <img src="assets/concepts/story-worlds/08-carcosa-in-2419-01_establishing.png" alt="Establishing — Han Airships Under Twin Pale Suns" loading="lazy">
+                    <span class="shot-badge">Shot 01 · Concept Preview</span>
+                  </button>
+                  <figcaption>
+                    <strong>Establishing — Han Airships Under Twin Pale Suns</strong>
+                    <span>Anti-gravity Han dreadnoughts hovering over shattered 25th-century ruins as Carcosa&#x27;s black stars tear open the yellow sky.</span>
+                  </figcaption>
+                </figure>
+                
+                <figure class="shot-card">
+                  <button type="button" class="shot-trigger"
+                    data-src="assets/concepts/story-worlds/08-carcosa-in-2419-02_character.png"
+                    data-title="Carcosa in 2419 — Cast — Anthony Rogers vs. Dr. Nikola"
+                    data-caption="Inerton-belted guerrilla Anthony Rogers confronting immortal occultist Dr. Nikola and his black cat before a Yellow Sign transmitter."
+                    aria-label="Zoom Carcosa in 2419 shot 2">
+                    <img src="assets/concepts/story-worlds/08-carcosa-in-2419-02_character.png" alt="Cast — Anthony Rogers vs. Dr. Nikola" loading="lazy">
+                    <span class="shot-badge">Shot 02 · Concept Preview</span>
+                  </button>
+                  <figcaption>
+                    <strong>Cast — Anthony Rogers vs. Dr. Nikola</strong>
+                    <span>Inerton-belted guerrilla Anthony Rogers confronting immortal occultist Dr. Nikola and his black cat before a Yellow Sign transmitter.</span>
+                  </figcaption>
+                </figure>
+                
+                <figure class="shot-card">
+                  <button type="button" class="shot-trigger"
+                    data-src="assets/concepts/story-worlds/08-carcosa-in-2419-03_gameplay.png"
+                    data-title="Carcosa in 2419 — Gameplay — Inerton Sky-Vault &amp; Memetic Fire"
+                    data-caption="First-person counter-gravity leap between burning Han airships with a brass rocket-carbine and crackling Yellow Sign filaments."
+                    aria-label="Zoom Carcosa in 2419 shot 3">
+                    <img src="assets/concepts/story-worlds/08-carcosa-in-2419-03_gameplay.png" alt="Gameplay — Inerton Sky-Vault &amp; Memetic Fire" loading="lazy">
+                    <span class="shot-badge">Shot 03 · Concept Preview</span>
+                  </button>
+                  <figcaption>
+                    <strong>Gameplay — Inerton Sky-Vault &amp; Memetic Fire</strong>
+                    <span>First-person counter-gravity leap between burning Han airships with a brass rocket-carbine and crackling Yellow Sign filaments.</span>
+                  </figcaption>
+                </figure>
+                
+              </div>
+            </article>
+            
+            <article class="world-section" data-cat="Mythic &amp; Deep-Time 4X" data-search="the singing sampo mythic spell-singing open-world rpg the kalevala (1835) × king of elfland&#x27;s daughter (1924) × gods of pegana (1905) × baba yaga akseli gallen-kallela &amp; ivan bilibin nordic-slavic tempera and woodblock art">
+              <div class="world-header">
+                <div>
+                  <div class="world-eyebrow">
+                    <span class="world-num">WORLD 09</span>
+                    <span class="world-cat">Mythic &amp; Deep-Time 4X</span>
+                    <span class="world-genre">Mythic Spell-Singing Open-World RPG</span>
+                  </div>
+                  <h2>The Singing Sampo</h2>
+                  <p class="world-sources"><strong>Public-Domain Ingredients:</strong> The Kalevala (1835) × King of Elfland&#x27;s Daughter (1924) × Gods of Pegana (1905) × Baba Yaga</p>
+                  <p class="world-style"><strong>Era Art Direction:</strong> Akseli Gallen-Kallela &amp; Ivan Bilibin Nordic-Slavic tempera and woodblock art</p>
+                </div>
+              </div>
+              <div class="triad-grid">
+                
+                <figure class="shot-card">
+                  <button type="button" class="shot-trigger"
+                    data-src="assets/concepts/story-worlds/09-the-singing-sampo-01_establishing.png"
+                    data-title="The Singing Sampo — Establishing — Elfland Crystal Border &amp; Sampo Forge"
+                    data-caption="Subarctic boreal twilight where the creeping crystal border of Elfland meets the golden sparks of the world-forging Sampo mill."
+                    aria-label="Zoom The Singing Sampo shot 1">
+                    <img src="assets/concepts/story-worlds/09-the-singing-sampo-01_establishing.png" alt="Establishing — Elfland Crystal Border &amp; Sampo Forge" loading="lazy">
+                    <span class="shot-badge">Shot 01 · Concept Preview</span>
+                  </button>
+                  <figcaption>
+                    <strong>Establishing — Elfland Crystal Border &amp; Sampo Forge</strong>
+                    <span>Subarctic boreal twilight where the creeping crystal border of Elfland meets the golden sparks of the world-forging Sampo mill.</span>
+                  </figcaption>
+                </figure>
+                
+                <figure class="shot-card">
+                  <button type="button" class="shot-trigger"
+                    data-src="assets/concepts/story-worlds/09-the-singing-sampo-02_character.png"
+                    data-title="The Singing Sampo — Cast — Vainamoinen, Ilmarinen &amp; Baba Yaga&#x27;s Hut"
+                    data-caption="Bard Vainamoinen playing his pike-jaw kantele beside smith Ilmarinen&#x27;s star-anvil while Baba Yaga&#x27;s chicken-legged hut stalks the birches."
+                    aria-label="Zoom The Singing Sampo shot 2">
+                    <img src="assets/concepts/story-worlds/09-the-singing-sampo-02_character.png" alt="Cast — Vainamoinen, Ilmarinen &amp; Baba Yaga&#x27;s Hut" loading="lazy">
+                    <span class="shot-badge">Shot 02 · Concept Preview</span>
+                  </button>
+                  <figcaption>
+                    <strong>Cast — Vainamoinen, Ilmarinen &amp; Baba Yaga&#x27;s Hut</strong>
+                    <span>Bard Vainamoinen playing his pike-jaw kantele beside smith Ilmarinen&#x27;s star-anvil while Baba Yaga&#x27;s chicken-legged hut stalks the birches.</span>
+                  </figcaption>
+                </figure>
+                
+                <figure class="shot-card">
+                  <button type="button" class="shot-trigger"
+                    data-src="assets/concepts/story-worlds/09-the-singing-sampo-03_gameplay.png"
+                    data-title="The Singing Sampo — Gameplay — Combinatorial Kantele Verse-Dueling"
+                    data-caption="Plucking resonant golden sound-geometry that physically sinks armored Pohjola raiders waist-deep into swirling bog stone."
+                    aria-label="Zoom The Singing Sampo shot 3">
+                    <img src="assets/concepts/story-worlds/09-the-singing-sampo-03_gameplay.png" alt="Gameplay — Combinatorial Kantele Verse-Dueling" loading="lazy">
+                    <span class="shot-badge">Shot 03 · Concept Preview</span>
+                  </button>
+                  <figcaption>
+                    <strong>Gameplay — Combinatorial Kantele Verse-Dueling</strong>
+                    <span>Plucking resonant golden sound-geometry that physically sinks armored Pohjola raiders waist-deep into swirling bog stone.</span>
+                  </figcaption>
+                </figure>
+                
+              </div>
+            </article>
+            
+            <article class="world-section" data-cat="Immersive Sim &amp; Horror" data-search="cell-block zero: the stopped machine claustrophobic systemic puzzle-horror the machine stops (1909) × the phantom of the opera (1910) × the clockwork man (1923) edwardian ceramic-and-brass cutaway industrialism meets gaston leroux chiaroscuro">
+              <div class="world-header">
+                <div>
+                  <div class="world-eyebrow">
+                    <span class="world-num">WORLD 10</span>
+                    <span class="world-cat">Immersive Sim &amp; Horror</span>
+                    <span class="world-genre">Claustrophobic Systemic Puzzle-Horror</span>
+                  </div>
+                  <h2>Cell-Block Zero: The Stopped Machine</h2>
+                  <p class="world-sources"><strong>Public-Domain Ingredients:</strong> The Machine Stops (1909) × The Phantom of the Opera (1910) × The Clockwork Man (1923)</p>
+                  <p class="world-style"><strong>Era Art Direction:</strong> Edwardian ceramic-and-brass cutaway industrialism meets Gaston Leroux chiaroscuro</p>
+                </div>
+              </div>
+              <div class="triad-grid">
+                
+                <figure class="shot-card">
+                  <button type="button" class="shot-trigger"
+                    data-src="assets/concepts/story-worlds/10-cell-block-zero-01_establishing.png"
+                    data-title="Cell-Block Zero: The Stopped Machine — Establishing — Failing Subterranean Hex-Hive"
+                    data-caption="Miles-deep honeycomb of isolated hexagonal ceramic cells, hissing pneumatic tubes, and dying communication plates."
+                    aria-label="Zoom Cell-Block Zero: The Stopped Machine shot 1">
+                    <img src="assets/concepts/story-worlds/10-cell-block-zero-01_establishing.png" alt="Establishing — Failing Subterranean Hex-Hive" loading="lazy">
+                    <span class="shot-badge">Shot 01 · Concept Preview</span>
+                  </button>
+                  <figcaption>
+                    <strong>Establishing — Failing Subterranean Hex-Hive</strong>
+                    <span>Miles-deep honeycomb of isolated hexagonal ceramic cells, hissing pneumatic tubes, and dying communication plates.</span>
+                  </figcaption>
+                </figure>
+                
+                <figure class="shot-card">
+                  <button type="button" class="shot-trigger"
+                    data-src="assets/concepts/story-worlds/10-cell-block-zero-02_character.png"
+                    data-title="Cell-Block Zero: The Stopped Machine — Cast — Erik the Trap-Architect &amp; Hive Escapee"
+                    data-caption="Skull-masked architectural assassin Erik with a Punjab lasso beside brass acoustic listening-horns stalking catacomb survivors."
+                    aria-label="Zoom Cell-Block Zero: The Stopped Machine shot 2">
+                    <img src="assets/concepts/story-worlds/10-cell-block-zero-02_character.png" alt="Cast — Erik the Trap-Architect &amp; Hive Escapee" loading="lazy">
+                    <span class="shot-badge">Shot 02 · Concept Preview</span>
+                  </button>
+                  <figcaption>
+                    <strong>Cast — Erik the Trap-Architect &amp; Hive Escapee</strong>
+                    <span>Skull-masked architectural assassin Erik with a Punjab lasso beside brass acoustic listening-horns stalking catacomb survivors.</span>
+                  </figcaption>
+                </figure>
+                
+                <figure class="shot-card">
+                  <button type="button" class="shot-trigger"
+                    data-src="assets/concepts/story-worlds/10-cell-block-zero-03_gameplay.png"
+                    data-title="Cell-Block Zero: The Stopped Machine — Gameplay — Life-Support Reroute &amp; Mirror Traps"
+                    data-caption="First-person valve rerouting in a flickering maintenance shaft as an acoustic mirror corridor betrays Erik&#x27;s approaching shadow."
+                    aria-label="Zoom Cell-Block Zero: The Stopped Machine shot 3">
+                    <img src="assets/concepts/story-worlds/10-cell-block-zero-03_gameplay.png" alt="Gameplay — Life-Support Reroute &amp; Mirror Traps" loading="lazy">
+                    <span class="shot-badge">Shot 03 · Concept Preview</span>
+                  </button>
+                  <figcaption>
+                    <strong>Gameplay — Life-Support Reroute &amp; Mirror Traps</strong>
+                    <span>First-person valve rerouting in a flickering maintenance shaft as an acoustic mirror corridor betrays Erik&#x27;s approaching shadow.</span>
+                  </figcaption>
+                </figure>
+                
+              </div>
+            </article>
+            
+            <article class="world-section" data-cat="CRPG &amp; Intrigue" data-search="city of brass &amp; neon steampunk-occult heist &amp; djinn-pact crpg the city of brass (1001 nights) × arsene lupin (1905) × fantomas (1911) × jules de grandin (1925) edmund dulac orientalist clockwork brass and belle epoque gaslight noir">
+              <div class="world-header">
+                <div>
+                  <div class="world-eyebrow">
+                    <span class="world-num">WORLD 11</span>
+                    <span class="world-cat">CRPG &amp; Intrigue</span>
+                    <span class="world-genre">Steampunk-Occult Heist &amp; Djinn-Pact CRPG</span>
+                  </div>
+                  <h2>City of Brass &amp; Neon</h2>
+                  <p class="world-sources"><strong>Public-Domain Ingredients:</strong> The City of Brass (1001 Nights) × Arsene Lupin (1905) × Fantomas (1911) × Jules de Grandin (1925)</p>
+                  <p class="world-style"><strong>Era Art Direction:</strong> Edmund Dulac Orientalist clockwork brass and Belle Epoque gaslight noir</p>
+                </div>
+              </div>
+              <div class="triad-grid">
+                
+                <figure class="shot-card">
+                  <button type="button" class="shot-trigger"
+                    data-src="assets/concepts/story-worlds/11-city-of-brass-and-neon-01_establishing.png"
+                    data-title="City of Brass &amp; Neon — Establishing — Moonlit Brass Minarets &amp; Automata"
+                    data-caption="Hammered copper domes, patrolling clockwork brass horsemen, and glowing Solomon-sealed Djinn vaults in a desert basin."
+                    aria-label="Zoom City of Brass &amp; Neon shot 1">
+                    <img src="assets/concepts/story-worlds/11-city-of-brass-and-neon-01_establishing.png" alt="Establishing — Moonlit Brass Minarets &amp; Automata" loading="lazy">
+                    <span class="shot-badge">Shot 01 · Concept Preview</span>
+                  </button>
+                  <figcaption>
+                    <strong>Establishing — Moonlit Brass Minarets &amp; Automata</strong>
+                    <span>Hammered copper domes, patrolling clockwork brass horsemen, and glowing Solomon-sealed Djinn vaults in a desert basin.</span>
+                  </figcaption>
+                </figure>
+                
+                <figure class="shot-card">
+                  <button type="button" class="shot-trigger"
+                    data-src="assets/concepts/story-worlds/11-city-of-brass-and-neon-02_character.png"
+                    data-title="City of Brass &amp; Neon — Cast — Arsene Lupin, Fantomas &amp; Jules de Grandin"
+                    data-caption="Gentleman thief Lupin escaping across copper rooftops with a sealed Djinn vessel between hooded Fantomas and rapier-drawn Grandin."
+                    aria-label="Zoom City of Brass &amp; Neon shot 2">
+                    <img src="assets/concepts/story-worlds/11-city-of-brass-and-neon-02_character.png" alt="Cast — Arsene Lupin, Fantomas &amp; Jules de Grandin" loading="lazy">
+                    <span class="shot-badge">Shot 02 · Concept Preview</span>
+                  </button>
+                  <figcaption>
+                    <strong>Cast — Arsene Lupin, Fantomas &amp; Jules de Grandin</strong>
+                    <span>Gentleman thief Lupin escaping across copper rooftops with a sealed Djinn vessel between hooded Fantomas and rapier-drawn Grandin.</span>
+                  </figcaption>
+                </figure>
+                
+                <figure class="shot-card">
+                  <button type="button" class="shot-trigger"
+                    data-src="assets/concepts/story-worlds/11-city-of-brass-and-neon-03_gameplay.png"
+                    data-title="City of Brass &amp; Neon — Gameplay — Automaton Cones &amp; Unsealed Djinn Pact"
+                    data-caption="Isometric vault heist slipping past clockwork sentries while an unsealed brass amphora bends reality with smokeless fire."
+                    aria-label="Zoom City of Brass &amp; Neon shot 3">
+                    <img src="assets/concepts/story-worlds/11-city-of-brass-and-neon-03_gameplay.png" alt="Gameplay — Automaton Cones &amp; Unsealed Djinn Pact" loading="lazy">
+                    <span class="shot-badge">Shot 03 · Concept Preview</span>
+                  </button>
+                  <figcaption>
+                    <strong>Gameplay — Automaton Cones &amp; Unsealed Djinn Pact</strong>
+                    <span>Isometric vault heist slipping past clockwork sentries while an unsealed brass amphora bends reality with smokeless fire.</span>
+                  </figcaption>
+                </figure>
+                
+              </div>
+            </article>
+            
+            <article class="world-section" data-cat="CRPG &amp; Intrigue" data-search="the serpent court of valusia paranoid court-intrigue sword-and-sorcery crpg thurian age valusia (1929) × carmilla (1872) × reynard the fox × dr. john silence (1908) 1929 weird tales &amp; frank frazetta pre-cataclysmic sword-and-sorcery oil painting">
+              <div class="world-header">
+                <div>
+                  <div class="world-eyebrow">
+                    <span class="world-num">WORLD 12</span>
+                    <span class="world-cat">CRPG &amp; Intrigue</span>
+                    <span class="world-genre">Paranoid Court-Intrigue Sword-and-Sorcery CRPG</span>
+                  </div>
+                  <h2>The Serpent Court of Valusia</h2>
+                  <p class="world-sources"><strong>Public-Domain Ingredients:</strong> Thurian Age Valusia (1929) × Carmilla (1872) × Reynard the Fox × Dr. John Silence (1908)</p>
+                  <p class="world-style"><strong>Era Art Direction:</strong> 1929 Weird Tales &amp; Frank Frazetta pre-cataclysmic sword-and-sorcery oil painting</p>
+                </div>
+              </div>
+              <div class="triad-grid">
+                
+                <figure class="shot-card">
+                  <button type="button" class="shot-trigger"
+                    data-src="assets/concepts/story-worlds/12-serpent-court-of-valusia-01_establishing.png"
+                    data-title="The Serpent Court of Valusia — Establishing — Green-Marble Throne of Valusia"
+                    data-caption="Brazier-lit cyclopean palace pillars casting double reptilian shadows behind silk-draped noble conspirators."
+                    aria-label="Zoom The Serpent Court of Valusia shot 1">
+                    <img src="assets/concepts/story-worlds/12-serpent-court-of-valusia-01_establishing.png" alt="Establishing — Green-Marble Throne of Valusia" loading="lazy">
+                    <span class="shot-badge">Shot 01 · Concept Preview</span>
+                  </button>
+                  <figcaption>
+                    <strong>Establishing — Green-Marble Throne of Valusia</strong>
+                    <span>Brazier-lit cyclopean palace pillars casting double reptilian shadows behind silk-draped noble conspirators.</span>
+                  </figcaption>
+                </figure>
+                
+                <figure class="shot-card">
+                  <button type="button" class="shot-trigger"
+                    data-src="assets/concepts/story-worlds/12-serpent-court-of-valusia-02_character.png"
+                    data-title="The Serpent Court of Valusia — Cast — Usurper King, Carmilla, Reynard &amp; John Silence"
+                    data-caption="Jade-throned barbarian monarch flanked by vampire Carmilla, fox-masked vizier Reynard, and John Silence&#x27;s illusion-piercing lens."
+                    aria-label="Zoom The Serpent Court of Valusia shot 2">
+                    <img src="assets/concepts/story-worlds/12-serpent-court-of-valusia-02_character.png" alt="Cast — Usurper King, Carmilla, Reynard &amp; John Silence" loading="lazy">
+                    <span class="shot-badge">Shot 02 · Concept Preview</span>
+                  </button>
+                  <figcaption>
+                    <strong>Cast — Usurper King, Carmilla, Reynard &amp; John Silence</strong>
+                    <span>Jade-throned barbarian monarch flanked by vampire Carmilla, fox-masked vizier Reynard, and John Silence&#x27;s illusion-piercing lens.</span>
+                  </figcaption>
+                </figure>
+                
+                <figure class="shot-card">
+                  <button type="button" class="shot-trigger"
+                    data-src="assets/concepts/story-worlds/12-serpent-court-of-valusia-03_gameplay.png"
+                    data-title="The Serpent Court of Valusia — Gameplay — Occult Serpent-Man Exposure &amp; Melee"
+                    data-caption="Holding up an astral brass prism to unmask scaly Serpent-Man infiltrators mid-court as broadswords clash."
+                    aria-label="Zoom The Serpent Court of Valusia shot 3">
+                    <img src="assets/concepts/story-worlds/12-serpent-court-of-valusia-03_gameplay.png" alt="Gameplay — Occult Serpent-Man Exposure &amp; Melee" loading="lazy">
+                    <span class="shot-badge">Shot 03 · Concept Preview</span>
+                  </button>
+                  <figcaption>
+                    <strong>Gameplay — Occult Serpent-Man Exposure &amp; Melee</strong>
+                    <span>Holding up an astral brass prism to unmask scaly Serpent-Man infiltrators mid-court as broadswords clash.</span>
+                  </figcaption>
+                </figure>
+                
+              </div>
+            </article>
+            
+            <article class="world-section" data-cat="Mythic &amp; Deep-Time 4X" data-search="lunar sutra celestial sci-myth stealth &amp; yokai survival tale of the bamboo cutter × kwaidan (1904) × sun wukong × stardust the super wizard (1939) kawase hasui nocturnal ukiyo-e woodblock collided with 1940 cosmic surrealism">
+              <div class="world-header">
+                <div>
+                  <div class="world-eyebrow">
+                    <span class="world-num">WORLD 13</span>
+                    <span class="world-cat">Mythic &amp; Deep-Time 4X</span>
+                    <span class="world-genre">Celestial Sci-Myth Stealth &amp; Yokai Survival</span>
+                  </div>
+                  <h2>Lunar Sutra</h2>
+                  <p class="world-sources"><strong>Public-Domain Ingredients:</strong> Tale of the Bamboo Cutter × Kwaidan (1904) × Sun Wukong × Stardust the Super Wizard (1939)</p>
+                  <p class="world-style"><strong>Era Art Direction:</strong> Kawase Hasui nocturnal ukiyo-e woodblock collided with 1940 cosmic surrealism</p>
+                </div>
+              </div>
+              <div class="triad-grid">
+                
+                <figure class="shot-card">
+                  <button type="button" class="shot-trigger"
+                    data-src="assets/concepts/story-worlds/13-lunar-sutra-01_establishing.png"
+                    data-title="Lunar Sutra — Establishing — Moon-Carriage Over Bamboo Shrine"
+                    data-caption="Geometric porcelain-and-gold celestial carriage descending on cold silver beams above a yokai-haunted bamboo shrine."
+                    aria-label="Zoom Lunar Sutra shot 1">
+                    <img src="assets/concepts/story-worlds/13-lunar-sutra-01_establishing.png" alt="Establishing — Moon-Carriage Over Bamboo Shrine" loading="lazy">
+                    <span class="shot-badge">Shot 01 · Concept Preview</span>
+                  </button>
+                  <figcaption>
+                    <strong>Establishing — Moon-Carriage Over Bamboo Shrine</strong>
+                    <span>Geometric porcelain-and-gold celestial carriage descending on cold silver beams above a yokai-haunted bamboo shrine.</span>
+                  </figcaption>
+                </figure>
+                
+                <figure class="shot-card">
+                  <button type="button" class="shot-trigger"
+                    data-src="assets/concepts/story-worlds/13-lunar-sutra-02_character.png"
+                    data-title="Lunar Sutra — Cast — Hoichi, Sun Wukong, Kaguya &amp; Cosmic Sentinel"
+                    data-caption="Sutra-warded biwa player Hoichi and armored Monkey King beneath luminous Princess Kaguya and an orbital blue-suited sentinel."
+                    aria-label="Zoom Lunar Sutra shot 2">
+                    <img src="assets/concepts/story-worlds/13-lunar-sutra-02_character.png" alt="Cast — Hoichi, Sun Wukong, Kaguya &amp; Cosmic Sentinel" loading="lazy">
+                    <span class="shot-badge">Shot 02 · Concept Preview</span>
+                  </button>
+                  <figcaption>
+                    <strong>Cast — Hoichi, Sun Wukong, Kaguya &amp; Cosmic Sentinel</strong>
+                    <span>Sutra-warded biwa player Hoichi and armored Monkey King beneath luminous Princess Kaguya and an orbital blue-suited sentinel.</span>
+                  </figcaption>
+                </figure>
+                
+                <figure class="shot-card">
+                  <button type="button" class="shot-trigger"
+                    data-src="assets/concepts/story-worlds/13-lunar-sutra-03_gameplay.png"
+                    data-title="Lunar Sutra — Gameplay — Body-Ward Runes vs. Amnesia Beam"
+                    data-caption="Crouching in midnight bamboo as golden sutra body-wards flare against shadow-yokai and a sweeping Feather-Robe amnesia wave."
+                    aria-label="Zoom Lunar Sutra shot 3">
+                    <img src="assets/concepts/story-worlds/13-lunar-sutra-03_gameplay.png" alt="Gameplay — Body-Ward Runes vs. Amnesia Beam" loading="lazy">
+                    <span class="shot-badge">Shot 03 · Concept Preview</span>
+                  </button>
+                  <figcaption>
+                    <strong>Gameplay — Body-Ward Runes vs. Amnesia Beam</strong>
+                    <span>Crouching in midnight bamboo as golden sutra body-wards flare against shadow-yokai and a sweeping Feather-Robe amnesia wave.</span>
+                  </figcaption>
+                </figure>
+                
+              </div>
+            </article>
+            
+            <article class="world-section" data-cat="Mythic &amp; Deep-Time 4X" data-search="the blazing pole 17th-century weird-science fleet &amp; strategy rpg the blazing world (1666) × etidorhpa (1895) × baron munchausen (1785) × gulliver (1726) 17th-century dutch hand-tinted copperplate map engraving &amp; karel zeman cinema art">
+              <div class="world-header">
+                <div>
+                  <div class="world-eyebrow">
+                    <span class="world-num">WORLD 14</span>
+                    <span class="world-cat">Mythic &amp; Deep-Time 4X</span>
+                    <span class="world-genre">17th-Century Weird-Science Fleet &amp; Strategy RPG</span>
+                  </div>
+                  <h2>The Blazing Pole</h2>
+                  <p class="world-sources"><strong>Public-Domain Ingredients:</strong> The Blazing World (1666) × Etidorhpa (1895) × Baron Munchausen (1785) × Gulliver (1726)</p>
+                  <p class="world-style"><strong>Era Art Direction:</strong> 17th-century Dutch hand-tinted copperplate map engraving &amp; Karel Zeman cinema art</p>
+                </div>
+              </div>
+              <div class="triad-grid">
+                
+                <figure class="shot-card">
+                  <button type="button" class="shot-trigger"
+                    data-src="assets/concepts/story-worlds/14-the-blazing-pole-01_establishing.png"
+                    data-title="The Blazing Pole — Establishing — North Pole Sea-Portal &amp; Twin Suns"
+                    data-caption="A 17th-century galleon sailing through polar ice jaws into a double-sunned sea above Etidorhpa&#x27;s glowing fungal caverns."
+                    aria-label="Zoom The Blazing Pole shot 1">
+                    <img src="assets/concepts/story-worlds/14-the-blazing-pole-01_establishing.png" alt="Establishing — North Pole Sea-Portal &amp; Twin Suns" loading="lazy">
+                    <span class="shot-badge">Shot 01 · Concept Preview</span>
+                  </button>
+                  <figcaption>
+                    <strong>Establishing — North Pole Sea-Portal &amp; Twin Suns</strong>
+                    <span>A 17th-century galleon sailing through polar ice jaws into a double-sunned sea above Etidorhpa&#x27;s glowing fungal caverns.</span>
+                  </figcaption>
+                </figure>
+                
+                <figure class="shot-card">
+                  <button type="button" class="shot-trigger"
+                    data-src="assets/concepts/story-worlds/14-the-blazing-pole-02_character.png"
+                    data-title="The Blazing Pole — Cast — Bear-Men, Fox-Men, Munchausen &amp; Gulliver"
+                    data-caption="Bear-Men physicists with brass microscopes and Fox-Men diplomats debating Baron Munchausen and Lemuel Gulliver."
+                    aria-label="Zoom The Blazing Pole shot 2">
+                    <img src="assets/concepts/story-worlds/14-the-blazing-pole-02_character.png" alt="Cast — Bear-Men, Fox-Men, Munchausen &amp; Gulliver" loading="lazy">
+                    <span class="shot-badge">Shot 02 · Concept Preview</span>
+                  </button>
+                  <figcaption>
+                    <strong>Cast — Bear-Men, Fox-Men, Munchausen &amp; Gulliver</strong>
+                    <span>Bear-Men physicists with brass microscopes and Fox-Men diplomats debating Baron Munchausen and Lemuel Gulliver.</span>
+                  </figcaption>
+                </figure>
+                
+                <figure class="shot-card">
+                  <button type="button" class="shot-trigger"
+                    data-src="assets/concepts/story-worlds/14-the-blazing-pole-03_gameplay.png"
+                    data-title="The Blazing Pole — Gameplay — Fire-Stone Ships &amp; Cannonball Ride"
+                    data-caption="Gilded fire-stone warships and clockwork submarines clashing as Munchausen arcs overhead astride a smoking brass cannonball."
+                    aria-label="Zoom The Blazing Pole shot 3">
+                    <img src="assets/concepts/story-worlds/14-the-blazing-pole-03_gameplay.png" alt="Gameplay — Fire-Stone Ships &amp; Cannonball Ride" loading="lazy">
+                    <span class="shot-badge">Shot 03 · Concept Preview</span>
+                  </button>
+                  <figcaption>
+                    <strong>Gameplay — Fire-Stone Ships &amp; Cannonball Ride</strong>
+                    <span>Gilded fire-stone warships and clockwork submarines clashing as Munchausen arcs overhead astride a smoking brass cannonball.</span>
+                  </figcaption>
+                </figure>
+                
+              </div>
+            </article>
+            
+            <article class="world-section" data-cat="Mythic &amp; Deep-Time 4X" data-search="eighteen men 2-billion-year evolutionary 4x grand strategy last and first men (1930, 2026 u.s. pd) × skylark of space (1928) × pellucidar × black terror chesley bonestell &amp; wayne barlowe mid-century astronomical &amp; speculative-evolution art">
+              <div class="world-header">
+                <div>
+                  <div class="world-eyebrow">
+                    <span class="world-num">WORLD 15</span>
+                    <span class="world-cat">Mythic &amp; Deep-Time 4X</span>
+                    <span class="world-genre">2-Billion-Year Evolutionary 4X Grand Strategy</span>
+                  </div>
+                  <h2>Eighteen Men</h2>
+                  <p class="world-sources"><strong>Public-Domain Ingredients:</strong> Last and First Men (1930, 2026 U.S. PD) × Skylark of Space (1928) × Pellucidar × Black Terror</p>
+                  <p class="world-style"><strong>Era Art Direction:</strong> Chesley Bonestell &amp; Wayne Barlowe mid-century astronomical &amp; speculative-evolution art</p>
+                </div>
+              </div>
+              <div class="triad-grid">
+                
+                <figure class="shot-card">
+                  <button type="button" class="shot-trigger"
+                    data-src="assets/concepts/story-worlds/15-eighteen-men-01_establishing.png"
+                    data-title="Eighteen Men — Establishing — Last Men Spires on Neptune"
+                    data-caption="Crystalline spires of the Eighteenth Men under a dying red Sun beside winged Venusian relics and Skylark star-rings."
+                    aria-label="Zoom Eighteen Men shot 1">
+                    <img src="assets/concepts/story-worlds/15-eighteen-men-01_establishing.png" alt="Establishing — Last Men Spires on Neptune" loading="lazy">
+                    <span class="shot-badge">Shot 01 · Concept Preview</span>
+                  </button>
+                  <figcaption>
+                    <strong>Establishing — Last Men Spires on Neptune</strong>
+                    <span>Crystalline spires of the Eighteenth Men under a dying red Sun beside winged Venusian relics and Skylark star-rings.</span>
+                  </figcaption>
+                </figure>
+                
+                <figure class="shot-card">
+                  <button type="button" class="shot-trigger"
+                    data-src="assets/concepts/story-worlds/15-eighteen-men-02_character.png"
+                    data-title="Eighteen Men — Cast — Winged Seventh Man, Eighteenth Sage &amp; Alchemist"
+                    data-caption="Three human speciation branches—winged Venusian flyer, multi-eyed Neptunian philosopher, and formic-ether guardian—before Martian cloud-minds."
+                    aria-label="Zoom Eighteen Men shot 2">
+                    <img src="assets/concepts/story-worlds/15-eighteen-men-02_character.png" alt="Cast — Winged Seventh Man, Eighteenth Sage &amp; Alchemist" loading="lazy">
+                    <span class="shot-badge">Shot 02 · Concept Preview</span>
+                  </button>
+                  <figcaption>
+                    <strong>Cast — Winged Seventh Man, Eighteenth Sage &amp; Alchemist</strong>
+                    <span>Three human speciation branches—winged Venusian flyer, multi-eyed Neptunian philosopher, and formic-ether guardian—before Martian cloud-minds.</span>
+                  </figcaption>
+                </figure>
+                
+                <figure class="shot-card">
+                  <button type="button" class="shot-trigger"
+                    data-src="assets/concepts/story-worlds/15-eighteen-men-03_gameplay.png"
+                    data-title="Eighteen Men — Gameplay — Billion-Year Speciation Globe"
+                    data-caption="Planetary grand-strategy view linking glaciated Earth, ocean-Venus, and ringed Neptune across branching biological tech trees."
+                    aria-label="Zoom Eighteen Men shot 3">
+                    <img src="assets/concepts/story-worlds/15-eighteen-men-03_gameplay.png" alt="Gameplay — Billion-Year Speciation Globe" loading="lazy">
+                    <span class="shot-badge">Shot 03 · Concept Preview</span>
+                  </button>
+                  <figcaption>
+                    <strong>Gameplay — Billion-Year Speciation Globe</strong>
+                    <span>Planetary grand-strategy view linking glaciated Earth, ocean-Venus, and ringed Neptune across branching biological tech trees.</span>
+                  </figcaption>
+                </figure>
+                
+              </div>
+            </article>
+            
+    </main>
+  </div>
+
+  <dialog id="lightbox" closedby="any" aria-labelledby="lbTitle">
+    <div class="lb-inner">
+      <div class="lb-bar">
+        <strong id="lbTitle"></strong>
+        <button type="button" class="lb-close" id="lbClose" aria-label="Close zoomed concept render">✕</button>
+      </div>
+      <div class="lb-img-wrap"><img id="lbImg" alt=""></div>
+      <p class="lb-cap" id="lbCap"></p>
+    </div>
+  </dialog>
+
+  <script>
+    const meta = document.querySelector('meta[name="color-scheme"]');
+    document.getElementById('themeBtn').addEventListener('click', () => {
+      const sysDark = matchMedia('(prefers-color-scheme: dark)').matches;
+      const cur = meta.content === 'light dark' ? (sysDark ? 'dark' : 'light') : meta.content;
+      const next = cur === 'dark' ? 'light' : 'dark';
+      const sysVal = sysDark ? 'dark' : 'light';
+      if (next === sysVal) {
+        try { localStorage.removeItem('atlas-color-scheme'); } catch (e) {}
+        meta.content = 'light dark';
+      } else {
+        try { localStorage.setItem('atlas-color-scheme', next); } catch (e) {}
+        meta.content = next;
+      }
+    });
+
+    let activeCat = 'All Worlds';
+    const searchInput = document.getElementById('searchInput');
+    const sections = Array.from(document.querySelectorAll('.world-section'));
+    function applyFilter() {
+      const q = searchInput.value.trim().toLowerCase();
+      for (const sec of sections) {
+        const catOk = activeCat === 'All Worlds' || sec.dataset.cat === activeCat;
+        const qOk = !q || sec.dataset.search.includes(q);
+        sec.hidden = !(catOk && qOk);
+      }
+    }
+    document.getElementById('catPills').addEventListener('click', (e) => {
+      const btn = e.target.closest('.pill-btn');
+      if (!btn) return;
+      document.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+      activeCat = btn.dataset.cat;
+      applyFilter();
+    });
+    searchInput.addEventListener('input', applyFilter);
+
+    const dlg = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lbImg');
+    const lbTitle = document.getElementById('lbTitle');
+    const lbCap = document.getElementById('lbCap');
+    document.getElementById('worldsContainer').addEventListener('click', (e) => {
+      const trig = e.target.closest('.shot-trigger');
+      if (!trig) return;
+      lbImg.src = trig.dataset.src;
+      lbImg.alt = trig.dataset.title;
+      lbTitle.textContent = trig.dataset.title;
+      lbCap.textContent = trig.dataset.caption;
+      dlg.showModal();
+    });
+    document.getElementById('lbClose').addEventListener('click', () => dlg.close());
+    if (!('closedBy' in HTMLDialogElement.prototype)) {
+      dlg.addEventListener('click', (ev) => {
+        if (ev.target !== dlg) return;
+        const r = dlg.getBoundingClientRect();
+        const inside = r.top <= ev.clientY && ev.clientY <= r.top + r.height && r.left <= ev.clientX && ev.clientX <= r.left + r.width;
+        if (!inside) dlg.close();
+      });
+    }
+  </script>
+</body>
+</html>

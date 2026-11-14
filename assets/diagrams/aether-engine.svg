@@ -1,0 +1,134 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 440" role="img" aria-label="Aether Engine architecture diagram showing Browser and Touch Studio on port 8080, Tri-Agent Ensemble with 14.3ms Runtime Doctor, Wasmoon Lua 5.4 WASM at 60 Hz, WebGL2 10,000-sprite batcher, ComfyUI slicer, and 2-second pure-Node APK/EXE/HTML5 exporter.">
+  <defs>
+    <style>
+    :where(:root) { color-scheme: light dark; }
+    .sd-bg { fill: #f8fafc; fill: light-dark(#f8fafc, #0b0f17); }
+    .sd-zone { fill: #f1f5f9; fill: light-dark(#f1f5f9, #0f1623); stroke: #cbd5e1; stroke: light-dark(#cbd5e1, #334155); stroke-width: 1.25; stroke-dasharray: 5 4; }
+    .sd-card { fill: #ffffff; fill: light-dark(#ffffff, #131a26); stroke: #cbd5e1; stroke: light-dark(#cbd5e1, #334155); stroke-width: 1.5; }
+    .sd-card-accent { fill: #ffffff; fill: light-dark(#ffffff, #131a26); stroke: #2563eb; stroke: light-dark(#2563eb, #3b82f6); stroke-width: 1.75; }
+    .sd-card-subtle { fill: #f1f5f9; fill: light-dark(#f1f5f9, #182234); stroke: #cbd5e1; stroke: light-dark(#cbd5e1, #334155); stroke-width: 1.25; }
+    .sd-card-warn { fill: #fffbeb; fill: light-dark(#fffbeb, #261405); stroke: #d97706; stroke: light-dark(#d97706, #f59e0b); stroke-width: 1.5; stroke-dasharray: 5 3; }
+    .sd-divider { stroke: #e2e8f0; stroke: light-dark(#e2e8f0, #1e293b); stroke-width: 1; }
+    .sd-accent-bar { fill: #2563eb; fill: light-dark(#2563eb, #3b82f6); }
+    .sd-badge { fill: #2563eb; fill: light-dark(#2563eb, #3b82f6); }
+    .sd-badge-warn { fill: #d97706; fill: light-dark(#d97706, #f59e0b); }
+    .sd-badge-ok { fill: #15803d; fill: light-dark(#15803d, #16a34a); }
+    .sd-badge-text { fill: #ffffff; font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .sd-pill { fill: #eff6ff; fill: light-dark(#eff6ff, #172554); stroke: #bfdbfe; stroke: light-dark(#bfdbfe, #1e40af); stroke-width: 1; }
+    .sd-pill-text { fill: #1d4ed8; fill: light-dark(#1d4ed8, #93c5fd); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 600; font-variant-numeric: tabular-nums; }
+    .sd-pill-neutral { fill: #f1f5f9; fill: light-dark(#f1f5f9, #1e293b); stroke: #cbd5e1; stroke: light-dark(#cbd5e1, #334155); stroke-width: 1; }
+    .sd-pill-neutral-text { fill: #334155; fill: light-dark(#334155, #cbd5e1); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 600; font-variant-numeric: tabular-nums; }
+    .sd-pill-ok { fill: #f0fdf4; fill: light-dark(#f0fdf4, #052e16); stroke: #86efac; stroke: light-dark(#86efac, #166534); stroke-width: 1; }
+    .sd-pill-ok-text { fill: #166534; fill: light-dark(#166534, #86efac); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .sd-pill-warn { fill: #fffbeb; fill: light-dark(#fffbeb, #451a03); stroke: #fcd34d; stroke: light-dark(#fcd34d, #92400e); stroke-width: 1; }
+    .sd-pill-warn-text { fill: #92400e; fill: light-dark(#92400e, #fcd34d); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .sd-hdr-title { fill: #0f172a; fill: light-dark(#0f172a, #f8fafc); font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 15px; font-weight: 700; }
+    .sd-title { fill: #0f172a; fill: light-dark(#0f172a, #f8fafc); font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 13px; font-weight: 700; }
+    .sd-title-sm { fill: #0f172a; fill: light-dark(#0f172a, #f8fafc); font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 12px; font-weight: 700; }
+    .sd-sub { fill: #475569; fill: light-dark(#475569, #94a3b8); font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 11.5px; font-weight: 500; }
+    .sd-sub-sm { fill: #475569; fill: light-dark(#475569, #94a3b8); font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 11px; font-weight: 500; }
+    .sd-mono { fill: #334155; fill: light-dark(#334155, #cbd5e1); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 500; font-variant-numeric: tabular-nums; }
+    .sd-mono-bold { fill: #0f172a; fill: light-dark(#0f172a, #f8fafc); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .sd-zone-lbl { fill: #475569; fill: light-dark(#475569, #94a3b8); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 700; }
+    .sd-arrow { fill: none; stroke: #2563eb; stroke: light-dark(#2563eb, #3b82f6); stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+    .sd-arrow-dashed { fill: none; stroke: #2563eb; stroke: light-dark(#2563eb, #3b82f6); stroke-width: 1.5; stroke-dasharray: 5 4; stroke-linecap: round; stroke-linejoin: round; }
+    .sd-arrow-muted { fill: none; stroke: #64748b; fill: light-dark(#64748b, #94a3b8); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+    .sd-arrow-head { fill: #2563eb; fill: light-dark(#2563eb, #3b82f6); }
+    .sd-arrow-head-muted { fill: #64748b; fill: light-dark(#64748b, #94a3b8); }
+    .sd-edge-box { fill: #f8fafc; fill: light-dark(#f8fafc, #0b0f17); stroke: #cbd5e1; stroke: light-dark(#cbd5e1, #334155); stroke-width: 1; }
+    .sd-edge-lbl { fill: #475569; fill: light-dark(#475569, #94a3b8); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10px; font-weight: 600; font-variant-numeric: tabular-nums; }
+    .sd-bar-track { fill: #e2e8f0; fill: light-dark(#e2e8f0, #1e293b); }
+    .sd-bar-fill { fill: #2563eb; fill: light-dark(#2563eb, #3b82f6); }
+    .sd-bar-warn { fill: #d97706; fill: light-dark(#d97706, #f59e0b); }
+    </style>
+    <marker id="arr-aether-engine" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 1 1.5 L 9 5 L 1 8.5 z" class="sd-arrow-head"/>
+    </marker>
+    <marker id="arr-m-aether-engine" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 1 1.5 L 9 5 L 1 8.5 z" class="sd-arrow-head-muted"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="960" height="440" rx="12" class="sd-bg"/>
+  <rect x="20" y="20" width="4" height="20" rx="2" class="sd-accent-bar"/>
+  <text x="32" y="35" class="sd-hdr-title">Aether Engine — Browser Studio, Tri-Agent AI &amp; 2s Exporter</text>
+  <rect x="641" y="17" width="299" height="25" rx="12.5" class="sd-pill"/>
+  <text x="790.5" y="33.5" text-anchor="middle" class="sd-pill-text">:8080 Studio · 60 Hz Lua WASM · 10k Sprites</text>
+  <line x1="20" y1="52" x2="940" y2="52" class="sd-divider"/>
+  <rect x="20" y="68" width="264" height="348" rx="10" class="sd-card-accent"/>
+  <rect x="32" y="80" width="25" height="22" rx="6" class="sd-badge"/>
+  <text x="44.5" y="94.8" text-anchor="middle" class="sd-badge-text">01</text>
+  <text x="65" y="95.5" class="sd-title">Browser / Touch Studio</text>
+  <text x="32" y="115" class="sd-sub-sm">Unified Runtime &amp; Editor (:8080)</text>
+  <rect x="32" y="384" width="240" height="22" rx="11.0" class="sd-pill"/>
+  <text x="152.0" y="398.8" text-anchor="middle" class="sd-pill-text">localhost:8080 · Touch Ready</text>
+  <rect x="34" y="136" width="236" height="68" rx="7" class="sd-card-subtle"/>
+  <rect x="216" y="143" width="46" height="19" rx="9.5" class="sd-pill"/>
+  <text x="239.0" y="156.3" text-anchor="middle" class="sd-pill-text">60 Hz</text>
+  <text x="44" y="155" class="sd-title-sm">Wasmoon Lua 5.4 WASM</text>
+  <text x="44" y="172" class="sd-sub-sm">60 Hz Deterministic Sandbox</text>
+  <rect x="34" y="214" width="236" height="68" rx="7" class="sd-card-subtle"/>
+  <rect x="203" y="221" width="59" height="19" rx="9.5" class="sd-pill"/>
+  <text x="232.5" y="234.3" text-anchor="middle" class="sd-pill-text">10k Spr</text>
+  <text x="44" y="233" class="sd-title-sm">WebGL2 Sprite Batcher</text>
+  <text x="44" y="250" class="sd-sub-sm">10,000 Sprites in Single Pass</text>
+  <rect x="34" y="292" width="236" height="68" rx="7" class="sd-card-subtle"/>
+  <rect x="235" y="299" width="27" height="19" rx="9.5" class="sd-pill"/>
+  <text x="248.5" y="312.3" text-anchor="middle" class="sd-pill-text">UI</text>
+  <text x="44" y="311" class="sd-title-sm">Live Scene &amp; Tile Canvas</text>
+  <text x="44" y="328" class="sd-sub-sm">Multi-Touch Gizmos + Inspector</text>
+  <rect x="348" y="68" width="276" height="348" rx="10" class="sd-card-accent"/>
+  <rect x="360" y="80" width="25" height="22" rx="6" class="sd-badge"/>
+  <text x="372.5" y="94.8" text-anchor="middle" class="sd-badge-text">02</text>
+  <text x="393" y="95.5" class="sd-title">Tri-Agent AI + Asset Pipe</text>
+  <text x="360" y="115" class="sd-sub-sm">Live Co-Creation &amp; Self-Healing Loop</text>
+  <rect x="360" y="384" width="252" height="22" rx="11.0" class="sd-pill"/>
+  <text x="486.0" y="398.8" text-anchor="middle" class="sd-pill-text">14.3 ms Auto-Patch Loop</text>
+  <rect x="362" y="136" width="248" height="52" rx="7" class="sd-card-subtle"/>
+  <rect x="562" y="143" width="40" height="19" rx="9.5" class="sd-pill"/>
+  <text x="582.0" y="156.3" text-anchor="middle" class="sd-pill-text">Plan</text>
+  <text x="372" y="155" class="sd-title-sm">Architect Agent</text>
+  <text x="372" y="172" class="sd-sub-sm">ECS Scene Graph &amp; Physics</text>
+  <rect x="362" y="196" width="248" height="52" rx="7" class="sd-card-subtle"/>
+  <rect x="569" y="203" width="33" height="19" rx="9.5" class="sd-pill"/>
+  <text x="585.5" y="216.3" text-anchor="middle" class="sd-pill-text">Lua</text>
+  <text x="372" y="215" class="sd-title-sm">Coder Agent</text>
+  <text x="372" y="232" class="sd-sub-sm">Hot-Swaps Lua 5.4 Scripts</text>
+  <rect x="362" y="256" width="248" height="52" rx="7" class="sd-card-subtle"/>
+  <rect x="550" y="263" width="52" height="19" rx="9.5" class="sd-pill"/>
+  <text x="576.0" y="276.3" text-anchor="middle" class="sd-pill-text">14.3ms</text>
+  <text x="372" y="275" class="sd-title-sm">Runtime Doctor</text>
+  <text x="372" y="292" class="sd-sub-sm">Traps &amp; Patches in 14.3ms</text>
+  <rect x="362" y="316" width="248" height="52" rx="7" class="sd-card-subtle"/>
+  <rect x="569" y="323" width="33" height="19" rx="9.5" class="sd-pill"/>
+  <text x="585.5" y="336.3" text-anchor="middle" class="sd-pill-text">Art</text>
+  <text x="372" y="335" class="sd-title-sm">ComfyUI BFS Slicer</text>
+  <text x="372" y="352" class="sd-sub-sm">Generates Sprite Atlases Live</text>
+  <rect x="688" y="68" width="252" height="348" rx="10" class="sd-card-accent"/>
+  <rect x="700" y="80" width="25" height="22" rx="6" class="sd-badge-ok"/>
+  <text x="712.5" y="94.8" text-anchor="middle" class="sd-badge-text">03</text>
+  <text x="733" y="95.5" class="sd-title">Pure-Node Packager</text>
+  <text x="700" y="115" class="sd-sub-sm">Zero Heavy SDK Build Pipeline</text>
+  <rect x="700" y="384" width="228" height="22" rx="11.0" class="sd-pill-ok"/>
+  <text x="814.0" y="398.8" text-anchor="middle" class="sd-pill-ok-text">2.0s Multi-Target Export</text>
+  <rect x="702" y="136" width="224" height="68" rx="7" class="sd-card-subtle"/>
+  <rect x="878" y="143" width="40" height="19" rx="9.5" class="sd-pill"/>
+  <text x="898.0" y="156.3" text-anchor="middle" class="sd-pill-text">.apk</text>
+  <text x="712" y="155" class="sd-title-sm">Android .apk Bundle</text>
+  <text x="712" y="172" class="sd-sub-sm">Signed Mobile Package Ready</text>
+  <rect x="702" y="214" width="224" height="68" rx="7" class="sd-card-subtle"/>
+  <rect x="878" y="221" width="40" height="19" rx="9.5" class="sd-pill"/>
+  <text x="898.0" y="234.3" text-anchor="middle" class="sd-pill-text">.exe</text>
+  <text x="712" y="233" class="sd-title-sm">Windows Desktop .exe</text>
+  <text x="712" y="250" class="sd-sub-sm">Self-Contained Native Wrapper</text>
+  <rect x="702" y="292" width="224" height="68" rx="7" class="sd-card-subtle"/>
+  <rect x="872" y="299" width="46" height="19" rx="9.5" class="sd-pill"/>
+  <text x="895.0" y="312.3" text-anchor="middle" class="sd-pill-text">HTML5</text>
+  <text x="712" y="311" class="sd-title-sm">Offline HTML5 Archive</text>
+  <text x="712" y="328" class="sd-sub-sm">Single-Folder Web Deployment</text>
+  <path d="M 286.0 242.0 L 346.0 242.0" class="sd-arrow" marker-start="url(#arr-aether-engine)" marker-end="url(#arr-aether-engine)"/>
+  <rect x="288.5" y="207.0" width="55" height="18" rx="9" class="sd-edge-box"/>
+  <text x="316.0" y="219.5" text-anchor="middle" class="sd-edge-lbl">WS Sync</text>
+  <path d="M 624.0 242.0 L 686.0 242.0" class="sd-arrow" marker-end="url(#arr-aether-engine)"/>
+  <rect x="627.5" y="207.0" width="55" height="18" rx="9" class="sd-edge-box"/>
+  <text x="655.0" y="219.5" text-anchor="middle" class="sd-edge-lbl">2s Pack</text>
+</svg>

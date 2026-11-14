@@ -1,0 +1,136 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 440" role="img" aria-label="Architecture diagram of the AI Studio Operating Loop from 100-question grill-me spec through LanceDB memory, specialist agent swarm, Challenger and 10-lens CV QA gate, to shipped software and blueprints.">
+  <defs>
+    <style>
+    :where(:root) { color-scheme: light dark; }
+    .sd-bg { fill: #f8fafc; fill: light-dark(#f8fafc, #0b0f17); }
+    .sd-zone { fill: #f1f5f9; fill: light-dark(#f1f5f9, #0f1623); stroke: #cbd5e1; stroke: light-dark(#cbd5e1, #334155); stroke-width: 1.25; stroke-dasharray: 5 4; }
+    .sd-card { fill: #ffffff; fill: light-dark(#ffffff, #131a26); stroke: #cbd5e1; stroke: light-dark(#cbd5e1, #334155); stroke-width: 1.5; }
+    .sd-card-accent { fill: #ffffff; fill: light-dark(#ffffff, #131a26); stroke: #2563eb; stroke: light-dark(#2563eb, #3b82f6); stroke-width: 1.75; }
+    .sd-card-subtle { fill: #f1f5f9; fill: light-dark(#f1f5f9, #182234); stroke: #cbd5e1; stroke: light-dark(#cbd5e1, #334155); stroke-width: 1.25; }
+    .sd-card-warn { fill: #fffbeb; fill: light-dark(#fffbeb, #261405); stroke: #d97706; stroke: light-dark(#d97706, #f59e0b); stroke-width: 1.5; stroke-dasharray: 5 3; }
+    .sd-divider { stroke: #e2e8f0; stroke: light-dark(#e2e8f0, #1e293b); stroke-width: 1; }
+    .sd-accent-bar { fill: #2563eb; fill: light-dark(#2563eb, #3b82f6); }
+    .sd-badge { fill: #2563eb; fill: light-dark(#2563eb, #3b82f6); }
+    .sd-badge-warn { fill: #d97706; fill: light-dark(#d97706, #f59e0b); }
+    .sd-badge-ok { fill: #15803d; fill: light-dark(#15803d, #16a34a); }
+    .sd-badge-text { fill: #ffffff; font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .sd-pill { fill: #eff6ff; fill: light-dark(#eff6ff, #172554); stroke: #bfdbfe; stroke: light-dark(#bfdbfe, #1e40af); stroke-width: 1; }
+    .sd-pill-text { fill: #1d4ed8; fill: light-dark(#1d4ed8, #93c5fd); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 600; font-variant-numeric: tabular-nums; }
+    .sd-pill-neutral { fill: #f1f5f9; fill: light-dark(#f1f5f9, #1e293b); stroke: #cbd5e1; stroke: light-dark(#cbd5e1, #334155); stroke-width: 1; }
+    .sd-pill-neutral-text { fill: #334155; fill: light-dark(#334155, #cbd5e1); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 600; font-variant-numeric: tabular-nums; }
+    .sd-pill-ok { fill: #f0fdf4; fill: light-dark(#f0fdf4, #052e16); stroke: #86efac; stroke: light-dark(#86efac, #166534); stroke-width: 1; }
+    .sd-pill-ok-text { fill: #166534; fill: light-dark(#166534, #86efac); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .sd-pill-warn { fill: #fffbeb; fill: light-dark(#fffbeb, #451a03); stroke: #fcd34d; stroke: light-dark(#fcd34d, #92400e); stroke-width: 1; }
+    .sd-pill-warn-text { fill: #92400e; fill: light-dark(#92400e, #fcd34d); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .sd-hdr-title { fill: #0f172a; fill: light-dark(#0f172a, #f8fafc); font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 15px; font-weight: 700; }
+    .sd-title { fill: #0f172a; fill: light-dark(#0f172a, #f8fafc); font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 13px; font-weight: 700; }
+    .sd-title-sm { fill: #0f172a; fill: light-dark(#0f172a, #f8fafc); font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 12px; font-weight: 700; }
+    .sd-sub { fill: #475569; fill: light-dark(#475569, #94a3b8); font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 11.5px; font-weight: 500; }
+    .sd-sub-sm { fill: #475569; fill: light-dark(#475569, #94a3b8); font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 11px; font-weight: 500; }
+    .sd-mono { fill: #334155; fill: light-dark(#334155, #cbd5e1); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 500; font-variant-numeric: tabular-nums; }
+    .sd-mono-bold { fill: #0f172a; fill: light-dark(#0f172a, #f8fafc); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .sd-zone-lbl { fill: #475569; fill: light-dark(#475569, #94a3b8); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 700; }
+    .sd-arrow { fill: none; stroke: #2563eb; stroke: light-dark(#2563eb, #3b82f6); stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+    .sd-arrow-dashed { fill: none; stroke: #2563eb; stroke: light-dark(#2563eb, #3b82f6); stroke-width: 1.5; stroke-dasharray: 5 4; stroke-linecap: round; stroke-linejoin: round; }
+    .sd-arrow-muted { fill: none; stroke: #64748b; fill: light-dark(#64748b, #94a3b8); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+    .sd-arrow-head { fill: #2563eb; fill: light-dark(#2563eb, #3b82f6); }
+    .sd-arrow-head-muted { fill: #64748b; fill: light-dark(#64748b, #94a3b8); }
+    .sd-edge-box { fill: #f8fafc; fill: light-dark(#f8fafc, #0b0f17); stroke: #cbd5e1; stroke: light-dark(#cbd5e1, #334155); stroke-width: 1; }
+    .sd-edge-lbl { fill: #475569; fill: light-dark(#475569, #94a3b8); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10px; font-weight: 600; font-variant-numeric: tabular-nums; }
+    .sd-bar-track { fill: #e2e8f0; fill: light-dark(#e2e8f0, #1e293b); }
+    .sd-bar-fill { fill: #2563eb; fill: light-dark(#2563eb, #3b82f6); }
+    .sd-bar-warn { fill: #d97706; fill: light-dark(#d97706, #f59e0b); }
+    </style>
+    <marker id="arr-how-our-ai-studio-works" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 1 1.5 L 9 5 L 1 8.5 z" class="sd-arrow-head"/>
+    </marker>
+    <marker id="arr-m-how-our-ai-studio-works" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 1 1.5 L 9 5 L 1 8.5 z" class="sd-arrow-head-muted"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="960" height="440" rx="12" class="sd-bg"/>
+  <rect x="20" y="20" width="4" height="20" rx="2" class="sd-accent-bar"/>
+  <text x="32" y="35" class="sd-hdr-title">Studio Operating Loop — Spec to Verified Software</text>
+  <rect x="641" y="17" width="299" height="25" rx="12.5" class="sd-pill"/>
+  <text x="790.5" y="33.5" text-anchor="middle" class="sd-pill-text">5-Wave Loop · 1,020 Memories · RTX 4060 8GB</text>
+  <line x1="20" y1="52" x2="940" y2="52" class="sd-divider"/>
+  <rect x="20" y="70" width="162" height="214" rx="10" class="sd-card"/>
+  <rect x="32" y="82" width="25" height="20" rx="5" class="sd-badge"/>
+  <text x="44.5" y="95.8" text-anchor="middle" class="sd-badge-text">01</text>
+  <text x="63" y="96" class="sd-mono">/grill-me Lock</text>
+  <text x="32" y="119" class="sd-title">100-Q Spec</text>
+  <line x1="32" y1="132" x2="170" y2="132" class="sd-divider"/>
+  <text x="32" y="149" class="sd-sub-sm">• Socratic Q&amp;A Loop</text>
+  <text x="32" y="167.5" class="sd-sub-sm">• Scope &amp; UX Rules</text>
+  <text x="32" y="186.0" class="sd-sub-sm">• Edge Cases Fixed</text>
+  <text x="32" y="204.5" class="sd-sub-sm">• Zero Guesswork</text>
+  <rect x="32" y="252" width="138" height="22" rx="11.0" class="sd-pill"/>
+  <text x="101.0" y="266.8" text-anchor="middle" class="sd-pill-text">100 Decisions</text>
+  <rect x="206" y="70" width="162" height="214" rx="10" class="sd-card"/>
+  <rect x="218" y="82" width="25" height="20" rx="5" class="sd-badge"/>
+  <text x="230.5" y="95.8" text-anchor="middle" class="sd-badge-text">02</text>
+  <text x="249" y="96" class="sd-mono">LanceDB + ONNX</text>
+  <text x="218" y="119" class="sd-title">4-Surface Memory</text>
+  <line x1="218" y1="132" x2="356" y2="132" class="sd-divider"/>
+  <text x="218" y="149" class="sd-sub-sm">• IDE + CLI Tools</text>
+  <text x="218" y="167.5" class="sd-sub-sm">• LM Studio :11234</text>
+  <text x="218" y="186.0" class="sd-sub-sm">• ComfyUI 3 Nodes</text>
+  <text x="218" y="204.5" class="sd-sub-sm">• CPU 0 MB VRAM</text>
+  <rect x="218" y="252" width="138" height="22" rx="11.0" class="sd-pill"/>
+  <text x="287.0" y="266.8" text-anchor="middle" class="sd-pill-text">1,020 Memories</text>
+  <rect x="392" y="70" width="170" height="214" rx="10" class="sd-card-accent"/>
+  <rect x="404" y="82" width="25" height="20" rx="5" class="sd-badge"/>
+  <text x="416.5" y="95.8" text-anchor="middle" class="sd-badge-text">03</text>
+  <text x="435" y="96" class="sd-mono">Wave Execution</text>
+  <text x="404" y="119" class="sd-title">Specialist Swarm</text>
+  <line x1="404" y1="132" x2="550" y2="132" class="sd-divider"/>
+  <text x="404" y="149" class="sd-sub-sm">• Parallel Agents</text>
+  <text x="404" y="167.5" class="sd-sub-sm">• Exclusive Locks</text>
+  <text x="404" y="186.0" class="sd-sub-sm">• RTX 4060 Slicing</text>
+  <text x="404" y="204.5" class="sd-sub-sm">• Shared Core Lib</text>
+  <rect x="404" y="252" width="146" height="22" rx="11.0" class="sd-pill"/>
+  <text x="477.0" y="266.8" text-anchor="middle" class="sd-pill-text">8 GB Time-Sliced</text>
+  <rect x="586" y="70" width="162" height="214" rx="10" class="sd-card"/>
+  <rect x="598" y="82" width="25" height="20" rx="5" class="sd-badge"/>
+  <text x="610.5" y="95.8" text-anchor="middle" class="sd-badge-text">04</text>
+  <text x="629" y="96" class="sd-mono">Red-Team + CV</text>
+  <text x="598" y="119" class="sd-title">Challenger &amp; QA</text>
+  <line x1="598" y1="132" x2="736" y2="132" class="sd-divider"/>
+  <text x="598" y="149" class="sd-sub-sm">• Challenger Audit</text>
+  <text x="598" y="167.5" class="sd-sub-sm">• 10-Lens CV Swarm</text>
+  <text x="598" y="186.0" class="sd-sub-sm">• /ui + prose Gate</text>
+  <text x="598" y="204.5" class="sd-sub-sm">• Full Test Suites</text>
+  <rect x="598" y="252" width="138" height="22" rx="11.0" class="sd-pill"/>
+  <text x="667.0" y="266.8" text-anchor="middle" class="sd-pill-text">0 Slop / 0 Leaks</text>
+  <rect x="772" y="70" width="168" height="214" rx="10" class="sd-card-accent"/>
+  <rect x="784" y="82" width="25" height="20" rx="5" class="sd-badge-ok"/>
+  <text x="796.5" y="95.8" text-anchor="middle" class="sd-badge-text">05</text>
+  <text x="815" y="96" class="sd-mono">Verified Builds</text>
+  <text x="784" y="119" class="sd-title">Shipped Output</text>
+  <line x1="784" y1="132" x2="928" y2="132" class="sd-divider"/>
+  <text x="784" y="149" class="sd-sub-sm">• Tested Software</text>
+  <text x="784" y="167.5" class="sd-sub-sm">• Live Engines</text>
+  <text x="784" y="186.0" class="sd-sub-sm">• Reusable Pipes</text>
+  <text x="784" y="204.5" class="sd-sub-sm">• Master Plans</text>
+  <rect x="784" y="252" width="144" height="22" rx="11.0" class="sd-pill-ok"/>
+  <text x="856.0" y="266.8" text-anchor="middle" class="sd-pill-ok-text">Verified on Disk</text>
+  <path d="M 182.0 177.0 L 204.0 177.0" class="sd-arrow" marker-end="url(#arr-how-our-ai-studio-works)"/>
+  <path d="M 368.0 177.0 L 390.0 177.0" class="sd-arrow" marker-end="url(#arr-how-our-ai-studio-works)"/>
+  <path d="M 562.0 177.0 L 584.0 177.0" class="sd-arrow" marker-end="url(#arr-how-our-ai-studio-works)"/>
+  <path d="M 748.0 177.0 L 770.0 177.0" class="sd-arrow" marker-end="url(#arr-how-our-ai-studio-works)"/>
+  <rect x="20" y="316" width="920" height="104" rx="12" class="sd-zone"/>
+  <text x="34" y="335" class="sd-zone-lbl">PERSISTENT HARDWARE ORCHESTRATION &amp; CONTINUOUS MEMORY FEEDBACK</text>
+  <rect x="36" y="344" width="434" height="62" rx="7" class="sd-card-subtle"/>
+  <rect x="403" y="351" width="59" height="19" rx="9.5" class="sd-pill"/>
+  <text x="432.5" y="364.3" text-anchor="middle" class="sd-pill-text">0 Spill</text>
+  <text x="46" y="363" class="sd-title-sm">RTX 4060 8GB Time-Slicing Protocol</text>
+  <text x="46" y="380" class="sd-sub-sm">LLM Unload -&gt; ComfyUI /free -&gt; Blender 5.1 -&gt; Godot 4.7 Vulkan</text>
+  <rect x="490" y="344" width="434" height="62" rx="7" class="sd-card-subtle"/>
+  <rect x="819" y="351" width="97" height="19" rx="9.5" class="sd-pill"/>
+  <text x="867.5" y="364.3" text-anchor="middle" class="sd-pill-text">&gt;=0.95 Dedupe</text>
+  <text x="500" y="363" class="sd-title-sm">Closed-Loop Lesson Capture</text>
+  <text x="500" y="380" class="sd-sub-sm">Challenger Findings &amp; Rulings Auto-Stored back into LanceDB</text>
+  <path d="M 477.0 286.0 L 477.0 314.0" class="sd-arrow" marker-start="url(#arr-how-our-ai-studio-works)" marker-end="url(#arr-how-our-ai-studio-works)"/>
+  <path d="M 667.0 284.0 L 667.0 342.0" class="sd-arrow-dashed" marker-end="url(#arr-how-our-ai-studio-works)"/>
+  <path d="M 560.0 344.0 L 560.0 306.0 Q 560.0 300.0 554.0 300.0 L 293.0 300.0 Q 287.0 300.0 287.0 294.0 L 287.0 286.0" class="sd-arrow-dashed" marker-end="url(#arr-how-our-ai-studio-works)"/>
+</svg>

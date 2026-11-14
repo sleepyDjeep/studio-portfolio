@@ -1,0 +1,129 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 440" role="img" aria-label="FaceScan Studio pipeline diagram from smartphone video/photo capture through AliceVision Meshroom SfM/MVS, Blender 5.1 MPFB2 clean topology with GPU SoftWrap, USC ICT-FaceKit 53 ARKit blendshapes, to 4K Cycles normal and albedo bake.">
+  <defs>
+    <style>
+    :where(:root) { color-scheme: light dark; }
+    .sd-bg { fill: #f8fafc; fill: light-dark(#f8fafc, #0b0f17); }
+    .sd-zone { fill: #f1f5f9; fill: light-dark(#f1f5f9, #0f1623); stroke: #cbd5e1; stroke: light-dark(#cbd5e1, #334155); stroke-width: 1.25; stroke-dasharray: 5 4; }
+    .sd-card { fill: #ffffff; fill: light-dark(#ffffff, #131a26); stroke: #cbd5e1; stroke: light-dark(#cbd5e1, #334155); stroke-width: 1.5; }
+    .sd-card-accent { fill: #ffffff; fill: light-dark(#ffffff, #131a26); stroke: #2563eb; stroke: light-dark(#2563eb, #3b82f6); stroke-width: 1.75; }
+    .sd-card-subtle { fill: #f1f5f9; fill: light-dark(#f1f5f9, #182234); stroke: #cbd5e1; stroke: light-dark(#cbd5e1, #334155); stroke-width: 1.25; }
+    .sd-card-warn { fill: #fffbeb; fill: light-dark(#fffbeb, #261405); stroke: #d97706; stroke: light-dark(#d97706, #f59e0b); stroke-width: 1.5; stroke-dasharray: 5 3; }
+    .sd-divider { stroke: #e2e8f0; stroke: light-dark(#e2e8f0, #1e293b); stroke-width: 1; }
+    .sd-accent-bar { fill: #2563eb; fill: light-dark(#2563eb, #3b82f6); }
+    .sd-badge { fill: #2563eb; fill: light-dark(#2563eb, #3b82f6); }
+    .sd-badge-warn { fill: #d97706; fill: light-dark(#d97706, #f59e0b); }
+    .sd-badge-ok { fill: #15803d; fill: light-dark(#15803d, #16a34a); }
+    .sd-badge-text { fill: #ffffff; font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .sd-pill { fill: #eff6ff; fill: light-dark(#eff6ff, #172554); stroke: #bfdbfe; stroke: light-dark(#bfdbfe, #1e40af); stroke-width: 1; }
+    .sd-pill-text { fill: #1d4ed8; fill: light-dark(#1d4ed8, #93c5fd); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 600; font-variant-numeric: tabular-nums; }
+    .sd-pill-neutral { fill: #f1f5f9; fill: light-dark(#f1f5f9, #1e293b); stroke: #cbd5e1; stroke: light-dark(#cbd5e1, #334155); stroke-width: 1; }
+    .sd-pill-neutral-text { fill: #334155; fill: light-dark(#334155, #cbd5e1); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 600; font-variant-numeric: tabular-nums; }
+    .sd-pill-ok { fill: #f0fdf4; fill: light-dark(#f0fdf4, #052e16); stroke: #86efac; stroke: light-dark(#86efac, #166534); stroke-width: 1; }
+    .sd-pill-ok-text { fill: #166534; fill: light-dark(#166534, #86efac); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .sd-pill-warn { fill: #fffbeb; fill: light-dark(#fffbeb, #451a03); stroke: #fcd34d; stroke: light-dark(#fcd34d, #92400e); stroke-width: 1; }
+    .sd-pill-warn-text { fill: #92400e; fill: light-dark(#92400e, #fcd34d); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .sd-hdr-title { fill: #0f172a; fill: light-dark(#0f172a, #f8fafc); font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 15px; font-weight: 700; }
+    .sd-title { fill: #0f172a; fill: light-dark(#0f172a, #f8fafc); font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 13px; font-weight: 700; }
+    .sd-title-sm { fill: #0f172a; fill: light-dark(#0f172a, #f8fafc); font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 12px; font-weight: 700; }
+    .sd-sub { fill: #475569; fill: light-dark(#475569, #94a3b8); font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 11.5px; font-weight: 500; }
+    .sd-sub-sm { fill: #475569; fill: light-dark(#475569, #94a3b8); font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 11px; font-weight: 500; }
+    .sd-mono { fill: #334155; fill: light-dark(#334155, #cbd5e1); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 500; font-variant-numeric: tabular-nums; }
+    .sd-mono-bold { fill: #0f172a; fill: light-dark(#0f172a, #f8fafc); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .sd-zone-lbl { fill: #475569; fill: light-dark(#475569, #94a3b8); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 700; }
+    .sd-arrow { fill: none; stroke: #2563eb; stroke: light-dark(#2563eb, #3b82f6); stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+    .sd-arrow-dashed { fill: none; stroke: #2563eb; stroke: light-dark(#2563eb, #3b82f6); stroke-width: 1.5; stroke-dasharray: 5 4; stroke-linecap: round; stroke-linejoin: round; }
+    .sd-arrow-muted { fill: none; stroke: #64748b; fill: light-dark(#64748b, #94a3b8); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+    .sd-arrow-head { fill: #2563eb; fill: light-dark(#2563eb, #3b82f6); }
+    .sd-arrow-head-muted { fill: #64748b; fill: light-dark(#64748b, #94a3b8); }
+    .sd-edge-box { fill: #f8fafc; fill: light-dark(#f8fafc, #0b0f17); stroke: #cbd5e1; stroke: light-dark(#cbd5e1, #334155); stroke-width: 1; }
+    .sd-edge-lbl { fill: #475569; fill: light-dark(#475569, #94a3b8); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10px; font-weight: 600; font-variant-numeric: tabular-nums; }
+    .sd-bar-track { fill: #e2e8f0; fill: light-dark(#e2e8f0, #1e293b); }
+    .sd-bar-fill { fill: #2563eb; fill: light-dark(#2563eb, #3b82f6); }
+    .sd-bar-warn { fill: #d97706; fill: light-dark(#d97706, #f59e0b); }
+    </style>
+    <marker id="arr-facescan-studio" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 1 1.5 L 9 5 L 1 8.5 z" class="sd-arrow-head"/>
+    </marker>
+    <marker id="arr-m-facescan-studio" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 1 1.5 L 9 5 L 1 8.5 z" class="sd-arrow-head-muted"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="960" height="440" rx="12" class="sd-bg"/>
+  <rect x="20" y="20" width="4" height="20" rx="2" class="sd-accent-bar"/>
+  <text x="32" y="35" class="sd-hdr-title">FaceScan Studio — Smartphone Video to 53-ARKit 4K Head Rig</text>
+  <rect x="628" y="17" width="312" height="25" rx="12.5" class="sd-pill"/>
+  <text x="784.0" y="33.5" text-anchor="middle" class="sd-pill-text">Meshroom SfM · GPU SoftWrap · 53 ARKit Shapes</text>
+  <line x1="20" y1="52" x2="940" y2="52" class="sd-divider"/>
+  <rect x="20" y="72" width="162" height="242" rx="10" class="sd-card"/>
+  <rect x="32" y="84" width="25" height="20" rx="5" class="sd-badge"/>
+  <text x="44.5" y="97.8" text-anchor="middle" class="sd-badge-text">01</text>
+  <text x="63" y="98" class="sd-mono">Video / Burst</text>
+  <text x="32" y="121" class="sd-title">Phone Capture</text>
+  <line x1="32" y1="134" x2="170" y2="134" class="sd-divider"/>
+  <text x="32" y="151" class="sd-sub-sm">• 1080p/4K Orbit</text>
+  <text x="32" y="169.5" class="sd-sub-sm">• Sharpness Gate</text>
+  <text x="32" y="188.0" class="sd-sub-sm">• Even Lighting</text>
+  <text x="32" y="206.5" class="sd-sub-sm">• Local Ingest</text>
+  <rect x="32" y="282" width="138" height="22" rx="11.0" class="sd-pill"/>
+  <text x="101.0" y="296.8" text-anchor="middle" class="sd-pill-text">Raw Frame Set</text>
+  <rect x="206" y="72" width="166" height="242" rx="10" class="sd-card"/>
+  <rect x="218" y="84" width="25" height="20" rx="5" class="sd-badge"/>
+  <text x="230.5" y="97.8" text-anchor="middle" class="sd-badge-text">02</text>
+  <text x="249" y="98" class="sd-mono">AliceVision MVS</text>
+  <text x="218" y="121" class="sd-title">Meshroom SfM</text>
+  <line x1="218" y1="134" x2="360" y2="134" class="sd-divider"/>
+  <text x="218" y="151" class="sd-sub-sm">• Camera Solve</text>
+  <text x="218" y="169.5" class="sd-sub-sm">• Dense Cloud</text>
+  <text x="218" y="188.0" class="sd-sub-sm">• Raw High-Poly</text>
+  <text x="218" y="206.5" class="sd-sub-sm">  Photogrammetry</text>
+  <rect x="218" y="282" width="142" height="22" rx="11.0" class="sd-pill"/>
+  <text x="289.0" y="296.8" text-anchor="middle" class="sd-pill-text">3D Scan Mesh</text>
+  <rect x="396" y="72" width="174" height="242" rx="10" class="sd-card-accent"/>
+  <rect x="408" y="84" width="25" height="20" rx="5" class="sd-badge"/>
+  <text x="420.5" y="97.8" text-anchor="middle" class="sd-badge-text">03</text>
+  <text x="439" y="98" class="sd-mono">Blender 5.1+MPFB2</text>
+  <text x="408" y="121" class="sd-title">GPU SoftWrap</text>
+  <line x1="408" y1="134" x2="558" y2="134" class="sd-divider"/>
+  <text x="408" y="151" class="sd-sub-sm">• MPFB2 Quad Mesh</text>
+  <text x="408" y="169.5" class="sd-sub-sm">• GPU-Ported Fit</text>
+  <text x="408" y="188.0" class="sd-sub-sm">• Clean Eye/Mouth</text>
+  <text x="408" y="206.5" class="sd-sub-sm">  Animation Loops</text>
+  <rect x="408" y="282" width="150" height="22" rx="11.0" class="sd-pill"/>
+  <text x="483.0" y="296.8" text-anchor="middle" class="sd-pill-text">Clean Quad Topo</text>
+  <rect x="594" y="72" width="164" height="242" rx="10" class="sd-card"/>
+  <rect x="606" y="84" width="25" height="20" rx="5" class="sd-badge"/>
+  <text x="618.5" y="97.8" text-anchor="middle" class="sd-badge-text">04</text>
+  <text x="637" y="98" class="sd-mono">Expression Rig</text>
+  <text x="606" y="121" class="sd-title">ICT-FaceKit</text>
+  <line x1="606" y1="134" x2="746" y2="134" class="sd-divider"/>
+  <text x="606" y="151" class="sd-sub-sm">• USC ICT-FaceKit</text>
+  <text x="606" y="169.5" class="sd-sub-sm">• Transfers All</text>
+  <text x="606" y="188.0" class="sd-sub-sm">  53 ARKit Shapes</text>
+  <text x="606" y="206.5" class="sd-sub-sm">• Live Mocap Ready</text>
+  <rect x="606" y="282" width="140" height="22" rx="11.0" class="sd-pill"/>
+  <text x="676.0" y="296.8" text-anchor="middle" class="sd-pill-text">53 Blendshapes</text>
+  <rect x="782" y="72" width="158" height="242" rx="10" class="sd-card-accent"/>
+  <rect x="794" y="84" width="25" height="20" rx="5" class="sd-badge-ok"/>
+  <text x="806.5" y="97.8" text-anchor="middle" class="sd-badge-text">05</text>
+  <text x="825" y="98" class="sd-mono">Raytraced PBR</text>
+  <text x="794" y="121" class="sd-title">4K Cycles Bake</text>
+  <line x1="794" y1="134" x2="928" y2="134" class="sd-divider"/>
+  <text x="794" y="151" class="sd-sub-sm">• Cage Raycast</text>
+  <text x="794" y="169.5" class="sd-sub-sm">• 4K Normal Map</text>
+  <text x="794" y="188.0" class="sd-sub-sm">• 4K Albedo Map</text>
+  <text x="794" y="206.5" class="sd-sub-sm">• .glb Export</text>
+  <rect x="794" y="282" width="134" height="22" rx="11.0" class="sd-pill-ok"/>
+  <text x="861.0" y="296.8" text-anchor="middle" class="sd-pill-ok-text">4K Rigged .glb</text>
+  <path d="M 182.0 193.0 L 204.0 193.0" class="sd-arrow" marker-end="url(#arr-facescan-studio)"/>
+  <path d="M 372.0 193.0 L 394.0 193.0" class="sd-arrow" marker-end="url(#arr-facescan-studio)"/>
+  <path d="M 570.0 193.0 L 592.0 193.0" class="sd-arrow" marker-end="url(#arr-facescan-studio)"/>
+  <path d="M 758.0 193.0 L 780.0 193.0" class="sd-arrow" marker-end="url(#arr-facescan-studio)"/>
+  <rect x="20" y="334" width="920" height="86" rx="12" class="sd-zone"/>
+  <text x="34" y="353" class="sd-zone-lbl">BIOMETRIC PRIVACY &amp; ENGINE INTEROPERABILITY</text>
+  <rect x="36" y="358" width="434" height="50" rx="7" class="sd-card-subtle"/>
+  <text x="46" y="377" class="sd-title-sm">100% Local GPU Execution (Zero Cloud Uploads)</text>
+  <text x="46" y="394" class="sd-sub-sm">Facial Scans &amp; Landmarks Never Leave Local Workstation Disk</text>
+  <rect x="490" y="358" width="434" height="50" rx="7" class="sd-card-subtle"/>
+  <text x="500" y="377" class="sd-title-sm">Production-Grade Deformation &amp; Texture Fidelity</text>
+  <text x="500" y="394" class="sd-sub-sm">Sub-Millimeter Scan Detail Baked onto Low-Poly 53-Shape Rig</text>
+</svg>
