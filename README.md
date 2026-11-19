@@ -9,7 +9,7 @@ Plain-English interactive atlas of every software platform, game engine, AI work
 - **Live Web Atlas**: `https://sleepydjeep.github.io/studio-portfolio/` (plus the standalone 45-render [15-World Concept Atlas](https://sleepydjeep.github.io/studio-portfolio/atlas.html)).
 - **Offline Local Bundle**: Open [index.html](file:///D:/Projects/Studio_Portfolio/index.html) directly in any desktop or mobile browser (`file:///D:/Projects/Studio_Portfolio/index.html`).
 
-- **No backend server required**: `portfolio-data.js` bundles all 43 public Markdown guides and inline SVG architecture diagrams into a single static payload.
+- **No backend server required**: `portfolio-data.js` bundles all 48 public Markdown guides and inline SVG architecture diagrams into a single static payload.
 - **Four ways to browse**:
   1. **Domain Pillars**: Organized across our 5 core studio pillars, starting with *How Our AI Studio Works*.
   2. **By Readiness Stage**: Separates *Shipped / Verified* software from *Reusable Workflows*, *Active Prototypes*, and *Master Blueprints*.

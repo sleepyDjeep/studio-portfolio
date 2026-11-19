@@ -1,0 +1,127 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 480" role="img" aria-label="MarcoPoloLive stream pack architecture: Twitch, Kick and bot inputs enter a Node relay, feed a six-seat audience model and a seven-game registry, and exit as 16:9 and 9:16 broadcast frames behind a readiness gate and reproducible release targets.">
+  <defs>
+    <style>
+    :where(:root) { color-scheme: light dark; }
+    .sd-bg { fill: #f8fafc; fill: light-dark(#f8fafc, #0b0f17); }
+    .sd-zone { fill: #f1f5f9; fill: light-dark(#f1f5f9, #0f1623); stroke: #cbd5e1; stroke: light-dark(#cbd5e1, #334155); stroke-width: 1.25; stroke-dasharray: 5 4; }
+    .sd-card { fill: #ffffff; fill: light-dark(#ffffff, #131a26); stroke: #cbd5e1; stroke: light-dark(#cbd5e1, #334155); stroke-width: 1.5; }
+    .sd-card-accent { fill: #ffffff; fill: light-dark(#ffffff, #131a26); stroke: #2563eb; stroke: light-dark(#2563eb, #3b82f6); stroke-width: 1.75; }
+    .sd-card-subtle { fill: #f1f5f9; fill: light-dark(#f1f5f9, #182234); stroke: #cbd5e1; stroke: light-dark(#cbd5e1, #334155); stroke-width: 1.25; }
+    .sd-divider { stroke: #e2e8f0; stroke: light-dark(#e2e8f0, #1e293b); stroke-width: 1; }
+    .sd-accent-bar { fill: #2563eb; fill: light-dark(#2563eb, #3b82f6); }
+    .sd-pill { fill: #eff6ff; fill: light-dark(#eff6ff, #172554); stroke: #bfdbfe; stroke: light-dark(#bfdbfe, #1e40af); stroke-width: 1; }
+    .sd-pill-text { fill: #1d4ed8; fill: light-dark(#1d4ed8, #93c5fd); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 600; font-variant-numeric: tabular-nums; }
+    .sd-pill-ok { fill: #f0fdf4; fill: light-dark(#f0fdf4, #052e16); stroke: #86efac; stroke: light-dark(#86efac, #166534); stroke-width: 1; }
+    .sd-pill-ok-text { fill: #166534; fill: light-dark(#166534, #86efac); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .sd-hdr-title { fill: #0f172a; fill: light-dark(#0f172a, #f8fafc); font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 15px; font-weight: 700; }
+    .sd-title { fill: #0f172a; fill: light-dark(#0f172a, #f8fafc); font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 13px; font-weight: 700; }
+    .sd-title-sm { fill: #0f172a; fill: light-dark(#0f172a, #f8fafc); font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 12px; font-weight: 700; }
+    .sd-sub { fill: #475569; fill: light-dark(#475569, #94a3b8); font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 11.5px; font-weight: 500; }
+    .sd-sub-sm { fill: #475569; fill: light-dark(#475569, #94a3b8); font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 11px; font-weight: 500; }
+    .sd-mono { fill: #334155; fill: light-dark(#334155, #cbd5e1); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 500; font-variant-numeric: tabular-nums; }
+    .sd-zone-lbl { fill: #475569; fill: light-dark(#475569, #94a3b8); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 700; }
+    .sd-arrow { fill: none; stroke: #2563eb; stroke: light-dark(#2563eb, #3b82f6); stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+    .sd-arrow-head { fill: #2563eb; fill: light-dark(#2563eb, #3b82f6); }
+    </style>
+    <marker id="arr-marco" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 1 1.5 L 9 5 L 1 8.5 z" class="sd-arrow-head"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="960" height="480" rx="12" class="sd-bg"/>
+  <rect x="20" y="20" width="4" height="20" rx="2" class="sd-accent-bar"/>
+  <text x="32" y="35" class="sd-hdr-title">MarcoPoloLive — One Audience, Seven Games</text>
+  <rect x="670" y="17" width="270" height="25" rx="12.5" class="sd-pill"/>
+  <text x="805" y="33.5" text-anchor="middle" class="sd-pill-text">6 Seats · 7 Games · 5 Release Targets</text>
+  <line x1="20" y1="52" x2="940" y2="52" class="sd-divider"/>
+
+  <rect x="24" y="70" width="186" height="212" rx="10" class="sd-zone"/>
+  <text x="36" y="90" class="sd-zone-lbl">PLATFORMS</text>
+  <rect x="34" y="98" width="166" height="52" rx="8" class="sd-card"/>
+  <text x="46" y="119" class="sd-title-sm">Twitch IRC</text>
+  <text x="46" y="136" class="sd-mono">read-only, no OAuth</text>
+  <rect x="34" y="158" width="166" height="52" rx="8" class="sd-card"/>
+  <text x="46" y="179" class="sd-title-sm">HTTP Events</text>
+  <text x="46" y="196" class="sd-mono">Kick · YouTube · bots</text>
+  <rect x="34" y="218" width="166" height="52" rx="8" class="sd-card-subtle"/>
+  <text x="46" y="239" class="sd-title-sm">Manual Chat Box</text>
+  <text x="46" y="256" class="sd-mono">127.0.0.1:8787</text>
+
+  <line x1="210" y1="176" x2="234" y2="176" class="sd-arrow" marker-end="url(#arr-marco)"/>
+
+  <rect x="238" y="70" width="194" height="212" rx="10" class="sd-zone"/>
+  <text x="250" y="90" class="sd-zone-lbl">RELAY BRIDGE (NODE)</text>
+  <rect x="248" y="98" width="174" height="52" rx="8" class="sd-card-accent"/>
+  <text x="260" y="119" class="sd-title-sm">Normalize</text>
+  <text x="260" y="136" class="sd-mono">user + text → event</text>
+  <rect x="248" y="158" width="174" height="52" rx="8" class="sd-card"/>
+  <text x="260" y="179" class="sd-title-sm">Rate Limit</text>
+  <text x="260" y="196" class="sd-mono">429 + retry-after</text>
+  <rect x="248" y="218" width="174" height="52" rx="8" class="sd-card-subtle"/>
+  <text x="260" y="239" class="sd-title-sm">Record / Replay</text>
+  <text x="260" y="256" class="sd-mono">JSONL · same cadence</text>
+
+  <line x1="432" y1="176" x2="456" y2="176" class="sd-arrow" marker-end="url(#arr-marco)"/>
+
+  <rect x="460" y="70" width="210" height="212" rx="10" class="sd-zone"/>
+  <text x="472" y="90" class="sd-zone-lbl">SIX-SEAT AUDIENCE</text>
+  <rect x="470" y="98" width="190" height="60" rx="8" class="sd-card"/>
+  <text x="482" y="119" class="sd-title-sm">Seats · Teams · Votes</text>
+  <text x="482" y="136" class="sd-sub-sm">normalized force per seat</text>
+  <text x="482" y="150" class="sd-sub-sm">cooldowns · command grammar</text>
+  <rect x="470" y="166" width="190" height="44" rx="8" class="sd-card"/>
+  <text x="482" y="187" class="sd-title-sm">Seat Rotation</text>
+  <text x="482" y="203" class="sd-mono">on by default · persisted</text>
+  <rect x="470" y="218" width="190" height="52" rx="8" class="sd-card-subtle"/>
+  <text x="482" y="239" class="sd-title-sm">Rehearsal Mode</text>
+  <text x="482" y="256" class="sd-mono">mock feed · no history writes</text>
+
+  <line x1="670" y1="176" x2="694" y2="176" class="sd-arrow" marker-end="url(#arr-marco)"/>
+
+  <rect x="698" y="70" width="238" height="212" rx="10" class="sd-zone"/>
+  <text x="710" y="90" class="sd-zone-lbl">PACK + SHELL</text>
+  <rect x="708" y="98" width="218" height="60" rx="8" class="sd-card-accent"/>
+  <text x="720" y="119" class="sd-title-sm">games.json Registry</text>
+  <text x="720" y="136" class="sd-sub-sm">7 games · per-game rules</text>
+  <text x="720" y="150" class="sd-sub-sm">layouts · keys · chat verbs</text>
+  <rect x="708" y="166" width="218" height="52" rx="8" class="sd-card"/>
+  <text x="720" y="187" class="sd-title-sm">Intermission · Series · Seasons</text>
+  <text x="720" y="204" class="sd-mono">!vote · standings · form</text>
+  <rect x="708" y="226" width="218" height="44" rx="8" class="sd-card-subtle"/>
+  <text x="720" y="247" class="sd-title-sm">Atomic History + Export</text>
+  <text x="720" y="263" class="sd-mono">5,000 rows · JSON / CSV</text>
+
+  <rect x="24" y="294" width="452" height="128" rx="10" class="sd-zone"/>
+  <text x="36" y="314" class="sd-zone-lbl">BROADCAST OUTPUTS</text>
+  <rect x="34" y="322" width="206" height="44" rx="8" class="sd-card"/>
+  <text x="46" y="343" class="sd-title-sm">16:9 Frame</text>
+  <text x="46" y="359" class="sd-mono">1920x1080 capture</text>
+  <rect x="250" y="322" width="216" height="44" rx="8" class="sd-card"/>
+  <text x="262" y="343" class="sd-title-sm">9:16 Frame</text>
+  <text x="262" y="359" class="sd-mono">1080x1920 capture</text>
+  <rect x="34" y="372" width="206" height="40" rx="8" class="sd-card-subtle"/>
+  <text x="46" y="390" class="sd-title-sm">Dual Output</text>
+  <text x="46" y="404" class="sd-sub-sm">two windows, one simulation</text>
+  <rect x="250" y="372" width="216" height="40" rx="8" class="sd-card-subtle"/>
+  <text x="262" y="390" class="sd-title-sm">OBS Window Smoke</text>
+  <text x="262" y="404" class="sd-sub-sm">sizes · flags · positions in CI</text>
+
+  <rect x="486" y="294" width="450" height="128" rx="10" class="sd-zone"/>
+  <text x="498" y="314" class="sd-zone-lbl">RELEASE + VERIFICATION</text>
+  <rect x="496" y="322" width="212" height="44" rx="8" class="sd-card"/>
+  <text x="508" y="343" class="sd-title-sm">5 Reproducible Targets</text>
+  <text x="508" y="359" class="sd-mono">win · linux · macos · single-file</text>
+  <rect x="718" y="322" width="208" height="44" rx="8" class="sd-card"/>
+  <text x="730" y="343" class="sd-title-sm">Boot + DMG Proof</text>
+  <text x="730" y="359" class="sd-mono">--exit-after · hdiutil mount</text>
+  <rect x="496" y="372" width="212" height="40" rx="8" class="sd-card-subtle"/>
+  <text x="508" y="390" class="sd-title-sm">Readiness Gate</text>
+  <text x="508" y="404" class="sd-sub-sm">xvfb · Mesa · zero-leak audio</text>
+  <rect x="718" y="372" width="208" height="40" rx="8" class="sd-card-subtle"/>
+  <text x="730" y="390" class="sd-title-sm">CI: gdscript + bridge</text>
+  <text x="730" y="404" class="sd-sub-sm">pinned 4.7.2 · macOS job</text>
+
+  <line x1="20" y1="436" x2="940" y2="436" class="sd-divider"/>
+  <text x="24" y="458" class="sd-mono">Godot 4.7 · 56 GDScript files / 20,567 LOC · 86 commits in 3 days</text>
+  <rect x="760" y="444" width="180" height="22" rx="11" class="sd-pill-ok"/>
+  <text x="850" y="459" text-anchor="middle" class="sd-pill-ok-text">Shipped 2026-11-18</text>
+</svg>

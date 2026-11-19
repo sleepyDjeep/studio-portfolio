@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 440" role="img" aria-label="Stream pack backend: Twitch, Kick, YouTube, TikTok and bot inputs enter a Node relay that validates, rate-limits and fans out one envelope over WebSocket to the game, with JSONL recording and replay.">
+  <defs>
+    <style>
+    :where(:root) { color-scheme: light dark; }
+    .sd-bg { fill: #f8fafc; fill: light-dark(#f8fafc, #0b0f17); }
+    .sd-zone { fill: #f1f5f9; fill: light-dark(#f1f5f9, #0f1623); stroke: #cbd5e1; stroke: light-dark(#cbd5e1, #334155); stroke-width: 1.25; stroke-dasharray: 5 4; }
+    .sd-card { fill: #ffffff; fill: light-dark(#ffffff, #131a26); stroke: #cbd5e1; stroke: light-dark(#cbd5e1, #334155); stroke-width: 1.5; }
+    .sd-card-accent { fill: #ffffff; fill: light-dark(#ffffff, #131a26); stroke: #2563eb; stroke: light-dark(#2563eb, #3b82f6); stroke-width: 1.75; }
+    .sd-card-subtle { fill: #f1f5f9; fill: light-dark(#f1f5f9, #182234); stroke: #cbd5e1; stroke: light-dark(#cbd5e1, #334155); stroke-width: 1.25; }
+    .sd-divider { stroke: #e2e8f0; stroke: light-dark(#e2e8f0, #1e293b); stroke-width: 1; }
+    .sd-accent-bar { fill: #2563eb; fill: light-dark(#2563eb, #3b82f6); }
+    .sd-pill { fill: #eff6ff; fill: light-dark(#eff6ff, #172554); stroke: #bfdbfe; stroke: light-dark(#bfdbfe, #1e40af); stroke-width: 1; }
+    .sd-pill-text { fill: #1d4ed8; fill: light-dark(#1d4ed8, #93c5fd); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 600; font-variant-numeric: tabular-nums; }
+    .sd-pill-ok { fill: #f0fdf4; fill: light-dark(#f0fdf4, #052e16); stroke: #86efac; stroke: light-dark(#86efac, #166534); stroke-width: 1; }
+    .sd-pill-ok-text { fill: #166534; fill: light-dark(#166534, #86efac); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .sd-hdr-title { fill: #0f172a; fill: light-dark(#0f172a, #f8fafc); font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 15px; font-weight: 700; }
+    .sd-title { fill: #0f172a; fill: light-dark(#0f172a, #f8fafc); font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 13px; font-weight: 700; }
+    .sd-title-sm { fill: #0f172a; fill: light-dark(#0f172a, #f8fafc); font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 12px; font-weight: 700; }
+    .sd-sub { fill: #475569; fill: light-dark(#475569, #94a3b8); font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 11.5px; font-weight: 500; }
+    .sd-sub-sm { fill: #475569; fill: light-dark(#475569, #94a3b8); font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 11px; font-weight: 500; }
+    .sd-mono { fill: #334155; fill: light-dark(#334155, #cbd5e1); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 500; font-variant-numeric: tabular-nums; }
+    .sd-zone-lbl { fill: #475569; fill: light-dark(#475569, #94a3b8); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 700; }
+    .sd-arrow { fill: none; stroke: #2563eb; stroke: light-dark(#2563eb, #3b82f6); stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+    .sd-arrow-head { fill: #2563eb; fill: light-dark(#2563eb, #3b82f6); }
+    </style>
+    <marker id="arr-bridge" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 1 1.5 L 9 5 L 1 8.5 z" class="sd-arrow-head"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="960" height="440" rx="12" class="sd-bg"/>
+  <rect x="20" y="20" width="4" height="20" rx="2" class="sd-accent-bar"/>
+  <text x="32" y="35" class="sd-hdr-title">Stream Pack Chat Relay — One Envelope, Every Platform</text>
+  <rect x="686" y="17" width="254" height="25" rx="12.5" class="sd-pill"/>
+  <text x="813" y="33.5" text-anchor="middle" class="sd-pill-text">Protocol v1 · 20 ev/s · burst 40</text>
+  <line x1="20" y1="52" x2="940" y2="52" class="sd-divider"/>
+
+  <rect x="24" y="70" width="196" height="238" rx="10" class="sd-zone"/>
+  <text x="36" y="90" class="sd-zone-lbl">SOURCES</text>
+  <rect x="34" y="98" width="176" height="52" rx="8" class="sd-card"/>
+  <text x="46" y="119" class="sd-title-sm">Twitch IRC</text>
+  <text x="46" y="136" class="sd-mono">anonymous · read-only</text>
+  <rect x="34" y="158" width="176" height="52" rx="8" class="sd-card"/>
+  <text x="46" y="179" class="sd-title-sm">Kick · YouTube · TikTok</text>
+  <text x="46" y="196" class="sd-mono">HTTP POST /event</text>
+  <rect x="34" y="218" width="176" height="52" rx="8" class="sd-card"/>
+  <text x="46" y="239" class="sd-title-sm">Existing Bots</text>
+  <text x="46" y="256" class="sd-sub-sm">Streamer.bot · SAMMI</text>
+  <text x="46" y="270" class="sd-sub-sm">Firebot · Mix It Up</text>
+  <rect x="34" y="278" width="176" height="22" rx="8" class="sd-card-subtle"/>
+  <text x="46" y="293" class="sd-mono">phone · curl · OBS</text>
+
+  <line x1="220" y1="188" x2="244" y2="188" class="sd-arrow" marker-end="url(#arr-bridge)"/>
+
+  <rect x="248" y="70" width="240" height="238" rx="10" class="sd-zone"/>
+  <text x="260" y="90" class="sd-zone-lbl">NODE RELAY · 127.0.0.1:8787</text>
+  <rect x="258" y="98" width="220" height="52" rx="8" class="sd-card-accent"/>
+  <text x="270" y="119" class="sd-title-sm">Validate + Normalize</text>
+  <text x="270" y="136" class="sd-mono">type · id · user · caps</text>
+  <rect x="258" y="158" width="220" height="52" rx="8" class="sd-card"/>
+  <text x="270" y="179" class="sd-title-sm">Token Bucket / Address</text>
+  <text x="270" y="196" class="sd-sub-sm">429 + retry-after · never forwarded</text>
+  <rect x="258" y="218" width="220" height="52" rx="8" class="sd-card"/>
+  <text x="270" y="239" class="sd-title-sm">Dedupe + Fan-out</text>
+  <text x="270" y="256" class="sd-sub-sm">drops duplicate ids on reconnect</text>
+  <rect x="258" y="278" width="220" height="22" rx="8" class="sd-card-subtle"/>
+  <text x="270" y="293" class="sd-mono">skips stalled sockets</text>
+
+  <line x1="488" y1="188" x2="512" y2="188" class="sd-arrow" marker-end="url(#arr-bridge)"/>
+
+  <rect x="516" y="70" width="200" height="238" rx="10" class="sd-zone"/>
+  <text x="528" y="90" class="sd-zone-lbl">GODOT CLIENT</text>
+  <rect x="526" y="98" width="180" height="62" rx="8" class="sd-card-accent"/>
+  <text x="538" y="119" class="sd-title-sm">StreamLink</text>
+  <text x="538" y="136" class="sd-sub-sm">one WS client · retry w/ backoff</text>
+  <text x="538" y="150" class="sd-sub-sm">dedupe · link state</text>
+  <rect x="526" y="168" width="180" height="62" rx="8" class="sd-card"/>
+  <text x="538" y="189" class="sd-title-sm">Audience</text>
+  <text x="538" y="206" class="sd-sub-sm">6 seats · votes · cooldowns</text>
+  <text x="538" y="220" class="sd-sub-sm">text commands on a tick</text>
+  <rect x="526" y="238" width="180" height="62" rx="8" class="sd-card-subtle"/>
+  <text x="538" y="259" class="sd-title-sm">7 Games</text>
+  <text x="538" y="276" class="sd-sub-sm">one shared audience model</text>
+  <text x="538" y="290" class="sd-sub-sm">one broadcast shell</text>
+
+  <rect x="736" y="70" width="200" height="110" rx="10" class="sd-zone"/>
+  <text x="748" y="90" class="sd-zone-lbl">OBSERVE</text>
+  <rect x="746" y="98" width="180" height="34" rx="8" class="sd-card"/>
+  <text x="758" y="119" class="sd-mono">GET /health</text>
+  <rect x="746" y="138" width="180" height="34" rx="8" class="sd-card-subtle"/>
+  <text x="758" y="159" class="sd-mono">GET / manual chat</text>
+
+  <rect x="736" y="190" width="200" height="118" rx="10" class="sd-zone"/>
+  <text x="748" y="210" class="sd-zone-lbl">RECORD / REPLAY</text>
+  <rect x="746" y="218" width="180" height="38" rx="8" class="sd-card"/>
+  <text x="758" y="238" class="sd-title-sm">RECORD=show.jsonl</text>
+  <text x="758" y="251" class="sd-mono">accepted events only</text>
+  <rect x="746" y="262" width="180" height="38" rx="8" class="sd-card-subtle"/>
+  <text x="758" y="282" class="sd-title-sm">replay.mjs</text>
+  <text x="758" y="295" class="sd-mono">recorded cadence · validate first</text>
+
+  <line x1="20" y1="322" x2="940" y2="322" class="sd-divider"/>
+  <text x="24" y="346" class="sd-zone-lbl">ENVELOPE v1</text>
+  <rect x="24" y="354" width="912" height="30" rx="8" class="sd-card"/>
+  <text x="36" y="373" class="sd-mono">{ "v": 1, "type": "chat | support | presence | control", "id": "dedupe", "user": "twitch:12345", "display": "...", "text": "!hold" }</text>
+  <text x="24" y="404" class="sd-mono">Node 20+ · 1,359 LOC across relay, replay, adapter and tests · 3 bridge test suites</text>
+  <rect x="772" y="390" width="168" height="22" rx="11" class="sd-pill-ok"/>
+  <text x="856" y="405" text-anchor="middle" class="sd-pill-ok-text">Shipped with the suite</text>
+  <text x="24" y="426" class="sd-sub-sm">Text is data: capped at 500 characters, never evaluated, never used as a path or URL.</text>
+</svg>

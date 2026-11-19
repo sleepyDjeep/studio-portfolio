@@ -8,7 +8,7 @@ entry_type: workflow
 readiness: shipped
 visibility: main
 date_started: '2026-08-16'
-date_updated: '2026-11-12'
+date_updated: '2026-11-19'
 tags:
 - studio-primer
 - multi-agent-orchestration
@@ -17,11 +17,11 @@ tags:
 - local-first-ai
 metrics:
 - label: Indexed Memories
-  value: 1,020
+  value: 1,024
 - label: Audited Sessions
-  value: '137'
+  value: '139'
 - label: Shipped & Active Entries
-  value: 40 Public
+  value: 48 Public
 - label: Marginal Cloud GPU Cost
   value: $0
 media:
@@ -70,6 +70,7 @@ memory_ids:
 - a490ffb9-653e-4da8-8c8d-2d1c675f4188
 - 32e3f2ac-5e83-4a7e-b43c-2e9fdb739ab0
 - cb3caf06-eb2d-4a89-8811-167ba275d685
+- 18c41ba8-b0b1-41a5-9381-00d17b1870cc
 conversation_ids:
 - 6b75cdd6-3bc3-48e8-bbb9-b9eb979bd951
 - e49d7a48-445a-4a68-ada7-8e54abcefb40
@@ -77,7 +78,7 @@ conversation_ids:
 
 ## What It Is & Why It Matters
 
-Since August 16, 2026, our studio has built 40 public software systems, playable games, custom engines, nationwide SaaS scrapers, and physical hardware blueprints from a single Windows 11 workstation. Most solo or two-person teams stall out when context evaporates between chat threads or when AI tools generate plausible-looking code that collapses on launch. We solved both bottlenecks by engineering a repeatable studio operating pipeline before scaling up production.
+Since August 16, 2026, our studio has built 48 public software systems, playable games, custom engines, nationwide SaaS scrapers, and physical hardware blueprints from a single Windows 11 workstation. Most solo or two-person teams stall out when context evaporates between chat threads or when AI tools generate plausible-looking code that collapses on launch. We solved both bottlenecks by engineering a repeatable studio operating pipeline before scaling up production.
 
 Every major project begins with a structured `/grill-me` architectural interview—up to 100 rapid-fire engineering and design questions that lock down scope, data schemas, failure modes, and aesthetic rules before a single line of code is written. Those answers go straight into a shared local LanceDB vector database (`1,020` indexed memories) that synchronizes in real time across our IDE, command line, local LLMs in LM Studio, and image/3D graphs in ComfyUI. When we switch from writing GDScript physics in the morning to generating PBR textures in the afternoon, every tool already knows the exact visual palette, polygon budget, and naming conventions.
 
@@ -95,7 +96,7 @@ Execution runs in disciplined, wave-based swarms of specialist agents followed b
 
 ## Where It Stands & Next Steps
 
-Our studio operating infrastructure is shipped and used daily across all six public portfolio pillars (`137` top-level engineering sessions and `1,020` persistent memories). Storage governance is strictly enforced after a September 18 workstation audit reclaimed `356.32 GB` across drives, isolating `C:\` strictly for Windows OS services while routing active codebases to `D:\Projects` (`732 GB` free NVMe space) and large emulation archives to `E:\` via zero-byte NTFS junctions. We also completed our engine standardization pivot on August 28 and September 18, retiring early Summer Engine experiments (`3.55 GB` reclaimed) in favor of pure Godot 4.7 paired with `godot-mcp` and 38 `godot-prompter` skills.
+Our studio operating infrastructure is shipped and used daily across all six public portfolio pillars (`139` top-level engineering sessions and `1,024` persistent memories). The last five days alone produced two shipped Godot 4.7 titles - *HydroHavoc* with a browser demo on day one, and the seven-game *MarcoPoloLive* suite plus its standalone chat relay - while *MechDestroyer* moved to a reproducible, CI-gated Windows export with `117 / 117` suites passing a zero-leak runner. Two hardware blueprints also entered the catalog: a solar automatic chicken feeder for the Guadalupe Loop flock and a universal auto-detecting battery charger station for the bench. Storage governance is strictly enforced after a September 18 workstation audit reclaimed `356.32 GB` across drives, isolating `C:\` strictly for Windows OS services while routing active codebases to `D:\Projects` (`732 GB` free NVMe space) and large emulation archives to `E:\` via zero-byte NTFS junctions. We also completed our engine standardization pivot on August 28 and September 18, retiring early Summer Engine experiments (`3.55 GB` reclaimed) in favor of pure Godot 4.7 paired with `godot-mcp` and 38 `godot-prompter` skills.
 
 Next steps for the studio operating layer:
 - Add automated post-commit hooks that re-run `master_manifest.json` catalog compilation whenever a project's test count or export binary updates on `D:\Projects`.

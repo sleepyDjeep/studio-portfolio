@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 440" role="img" aria-label="HydroHavoc architecture: chat Bits and TikTok gifts feed the piece queue, which drives a 32 by 32 shallow-water field with buoyant props, rendered as 16:9 and 9:16 broadcast layouts plus Windows and WebAssembly builds.">
+  <defs>
+    <style>
+    :where(:root) { color-scheme: light dark; }
+    .sd-bg { fill: #f8fafc; fill: light-dark(#f8fafc, #0b0f17); }
+    .sd-zone { fill: #f1f5f9; fill: light-dark(#f1f5f9, #0f1623); stroke: #cbd5e1; stroke: light-dark(#cbd5e1, #334155); stroke-width: 1.25; stroke-dasharray: 5 4; }
+    .sd-card { fill: #ffffff; fill: light-dark(#ffffff, #131a26); stroke: #cbd5e1; stroke: light-dark(#cbd5e1, #334155); stroke-width: 1.5; }
+    .sd-card-accent { fill: #ffffff; fill: light-dark(#ffffff, #131a26); stroke: #2563eb; stroke: light-dark(#2563eb, #3b82f6); stroke-width: 1.75; }
+    .sd-card-subtle { fill: #f1f5f9; fill: light-dark(#f1f5f9, #182234); stroke: #cbd5e1; stroke: light-dark(#cbd5e1, #334155); stroke-width: 1.25; }
+    .sd-divider { stroke: #e2e8f0; stroke: light-dark(#e2e8f0, #1e293b); stroke-width: 1; }
+    .sd-accent-bar { fill: #2563eb; fill: light-dark(#2563eb, #3b82f6); }
+    .sd-badge { fill: #2563eb; fill: light-dark(#2563eb, #3b82f6); }
+    .sd-badge-text { fill: #ffffff; font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .sd-pill { fill: #eff6ff; fill: light-dark(#eff6ff, #172554); stroke: #bfdbfe; stroke: light-dark(#bfdbfe, #1e40af); stroke-width: 1; }
+    .sd-pill-text { fill: #1d4ed8; fill: light-dark(#1d4ed8, #93c5fd); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 600; font-variant-numeric: tabular-nums; }
+    .sd-pill-neutral { fill: #f1f5f9; fill: light-dark(#f1f5f9, #1e293b); stroke: #cbd5e1; stroke: light-dark(#cbd5e1, #334155); stroke-width: 1; }
+    .sd-pill-neutral-text { fill: #334155; fill: light-dark(#334155, #cbd5e1); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10px; font-weight: 600; font-variant-numeric: tabular-nums; }
+    .sd-pill-ok { fill: #f0fdf4; fill: light-dark(#f0fdf4, #052e16); stroke: #86efac; stroke: light-dark(#86efac, #166534); stroke-width: 1; }
+    .sd-pill-ok-text { fill: #166534; fill: light-dark(#166534, #86efac); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .sd-hdr-title { fill: #0f172a; fill: light-dark(#0f172a, #f8fafc); font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 15px; font-weight: 700; }
+    .sd-title { fill: #0f172a; fill: light-dark(#0f172a, #f8fafc); font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 13px; font-weight: 700; }
+    .sd-title-sm { fill: #0f172a; fill: light-dark(#0f172a, #f8fafc); font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 12px; font-weight: 700; }
+    .sd-sub { fill: #475569; fill: light-dark(#475569, #94a3b8); font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 11.5px; font-weight: 500; }
+    .sd-sub-sm { fill: #475569; fill: light-dark(#475569, #94a3b8); font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 11px; font-weight: 500; }
+    .sd-mono { fill: #334155; fill: light-dark(#334155, #cbd5e1); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 500; font-variant-numeric: tabular-nums; }
+    .sd-zone-lbl { fill: #475569; fill: light-dark(#475569, #94a3b8); font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 10.5px; font-weight: 700; }
+    .sd-arrow { fill: none; stroke: #2563eb; stroke: light-dark(#2563eb, #3b82f6); stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+    .sd-arrow-head { fill: #2563eb; fill: light-dark(#2563eb, #3b82f6); }
+    </style>
+    <marker id="arr-hydro" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 1 1.5 L 9 5 L 1 8.5 z" class="sd-arrow-head"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="960" height="440" rx="12" class="sd-bg"/>
+  <rect x="20" y="20" width="4" height="20" rx="2" class="sd-accent-bar"/>
+  <text x="32" y="35" class="sd-hdr-title">HydroHavoc — Chat-Driven Water Physics</text>
+  <rect x="646" y="17" width="294" height="25" rx="12.5" class="sd-pill"/>
+  <text x="793" y="33.5" text-anchor="middle" class="sd-pill-text">32x32 SWE · Dual Layout · 2 Builds</text>
+  <line x1="20" y1="52" x2="940" y2="52" class="sd-divider"/>
+
+  <rect x="24" y="72" width="196" height="276" rx="10" class="sd-zone"/>
+  <text x="36" y="92" class="sd-zone-lbl">AUDIENCE INPUT</text>
+  <rect x="34" y="100" width="176" height="52" rx="8" class="sd-card"/>
+  <text x="46" y="121" class="sd-title-sm">Bits Tiers</text>
+  <text x="46" y="138" class="sd-mono">100 / 500 / 1,000</text>
+  <rect x="34" y="164" width="176" height="52" rx="8" class="sd-card"/>
+  <text x="46" y="185" class="sd-title-sm">TikTok Gifts</text>
+  <text x="46" y="202" class="sd-mono">Rose · Doughnut · Galaxy</text>
+  <rect x="34" y="228" width="176" height="52" rx="8" class="sd-card-subtle"/>
+  <text x="46" y="249" class="sd-title-sm">Stream Alerts</text>
+  <text x="46" y="266" class="sd-mono">VIP throne · banners</text>
+  <rect x="34" y="292" width="176" height="40" rx="8" class="sd-card-subtle"/>
+  <text x="46" y="309" class="sd-title-sm">Mock Test Dock</text>
+  <text x="46" y="323" class="sd-sub-sm">no relay needed</text>
+
+  <line x1="220" y1="210" x2="244" y2="210" class="sd-arrow" marker-end="url(#arr-hydro)"/>
+
+  <rect x="248" y="72" width="188" height="276" rx="10" class="sd-zone"/>
+  <text x="260" y="92" class="sd-zone-lbl">PIECE QUEUE</text>
+  <rect x="258" y="100" width="168" height="60" rx="8" class="sd-card"/>
+  <text x="270" y="121" class="sd-title-sm">6 Polyominoes</text>
+  <text x="270" y="138" class="sd-sub-sm">wall · trench · drop</text>
+  <text x="270" y="152" class="sd-sub-sm">fireball · bomb · sponge</text>
+  <rect x="258" y="172" width="168" height="52" rx="8" class="sd-card"/>
+  <text x="270" y="193" class="sd-title-sm">Rotate + Slam</text>
+  <text x="270" y="210" class="sd-mono">R / E · Space / Enter</text>
+  <rect x="258" y="236" width="168" height="52" rx="8" class="sd-card-subtle"/>
+  <text x="270" y="257" class="sd-title-sm">Event Resolver</text>
+  <text x="270" y="274" class="sd-mono">disaster → drop site</text>
+  <rect x="258" y="300" width="168" height="34" rx="8" class="sd-card-subtle"/>
+  <text x="270" y="321" class="sd-mono">queue state · rotation</text>
+
+  <line x1="436" y1="210" x2="460" y2="210" class="sd-arrow" marker-end="url(#arr-hydro)"/>
+
+  <rect x="464" y="72" width="232" height="276" rx="10" class="sd-zone"/>
+  <text x="476" y="92" class="sd-zone-lbl">32 x 32 FLUID FIELD</text>
+  <rect x="474" y="100" width="212" height="72" rx="8" class="sd-card-accent"/>
+  <text x="486" y="121" class="sd-title-sm">Shallow Water Equations</text>
+  <text x="486" y="138" class="sd-sub-sm">flux advection between cells</text>
+  <text x="486" y="153" class="sd-sub-sm">damping · no negative depth</text>
+  <text x="486" y="166" class="sd-mono">&lt; 3% CPU on target laptop</text>
+  <rect x="474" y="184" width="212" height="52" rx="8" class="sd-card"/>
+  <text x="486" y="205" class="sd-title-sm">Terrain + Water Meshes</text>
+  <text x="486" y="222" class="sd-mono">rebuilt each update</text>
+  <rect x="474" y="248" width="212" height="60" rx="8" class="sd-card"/>
+  <text x="486" y="269" class="sd-title-sm">Buoyant Props</text>
+  <text x="486" y="285" class="sd-sub-sm">ducks · named gift crates</text>
+  <text x="486" y="299" class="sd-sub-sm">anchors · mascot ragdoll</text>
+  <rect x="474" y="320" width="212" height="16" rx="6" class="sd-card-subtle"/>
+
+  <line x1="696" y1="210" x2="720" y2="210" class="sd-arrow" marker-end="url(#arr-hydro)"/>
+
+  <rect x="724" y="72" width="212" height="276" rx="10" class="sd-zone"/>
+  <text x="736" y="92" class="sd-zone-lbl">BROADCAST OUTPUT</text>
+  <rect x="734" y="100" width="192" height="60" rx="8" class="sd-card"/>
+  <text x="746" y="121" class="sd-title-sm">16:9 Widescreen</text>
+  <text x="746" y="138" class="sd-mono">Twitch · Kick · YouTube</text>
+  <text x="746" y="152" class="sd-sub-sm">T toggles layout at runtime</text>
+  <rect x="734" y="172" width="192" height="60" rx="8" class="sd-card"/>
+  <text x="746" y="193" class="sd-title-sm">9:16 Portrait</text>
+  <text x="746" y="210" class="sd-mono">TikTok Live · 720x1280</text>
+  <text x="746" y="224" class="sd-sub-sm">arena top · score rail below</text>
+  <rect x="734" y="244" width="192" height="44" rx="8" class="sd-card-subtle"/>
+  <text x="746" y="265" class="sd-title-sm">Windows Release</text>
+  <text x="746" y="281" class="sd-mono">110.6 MB .exe</text>
+  <rect x="734" y="298" width="192" height="44" rx="8" class="sd-card-subtle"/>
+  <text x="746" y="319" class="sd-title-sm">Browser Build</text>
+  <text x="746" y="335" class="sd-mono">39.5 MB wasm · GitHub Pages</text>
+
+  <line x1="20" y1="366" x2="940" y2="366" class="sd-divider"/>
+  <text x="24" y="392" class="sd-mono">Godot 4.7.2 Forward+ · Typed GDScript 1,640 LOC across 9 modules · 2 GLSL shaders</text>
+  <rect x="742" y="378" width="198" height="22" rx="11" class="sd-pill-ok"/>
+  <text x="841" y="393" text-anchor="middle" class="sd-pill-ok-text">Shipped 2026-11-14</text>
+  <text x="24" y="418" class="sd-sub-sm">One simulation feeds both layouts; the web build runs entirely client-side from a static folder.</text>
+</svg>

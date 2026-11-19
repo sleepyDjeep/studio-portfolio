@@ -7,7 +7,7 @@ entry_type: "project"
 readiness: "active-build"
 visibility: "main"
 date_started: "2026-08-16"
-date_updated: "2026-08-31"
+date_updated: "2026-11-19"
 tags:
   - "godot-4-7"
   - "mecha-simulator"
@@ -22,8 +22,14 @@ metrics:
     value: "76 Chassis"
   - label: "3D Mech & Prop GLBs"
     value: "87 Models"
-  - label: "Automated Test Suites"
-    value: "117 Test Files"
+  - label: "Certified Test Suites"
+    value: "117 / 117 Passing"
+  - label: "E2E Assertions"
+    value: "859 Passing"
+  - label: "Static Script Audit"
+    value: "160 / 160 Clean"
+  - label: "Windows Export"
+    value: "Reproducible"
   - label: "Executed Milestones"
     value: "33 Plans"
 media:
@@ -242,14 +248,16 @@ Early binary reverse-engineering experiments taught us how classic 1990s sims ac
 
 - **Input**: In the Hangar Loadout Builder (`LoadoutBuilderUI.gd`), you refit a 75-ton Heavy Sniper chassis with dual kinetic railguns, homing missiles, and `0.5`-ton jump jets, deploy via orbital DropShip into `UrbanAssassinationMission.tscn`, press `V` to switch your visor to Thermal IR through dense street smog, hold the Lance Command key to order wingmen to flank right, and core the lower stories of a sniper-occupied skyscraper.
 - **What Happens**: Holding the command key triggers `CommandWheelHUD.gd`, dropping `Engine.time_scale` to `0.20` while you select `FLANK_RIGHT`; releasing restores real-time physics and dispatches lateral formation vectors to `WingmanAI.gd`. Firing railguns applies directional pitch kick to `CockpitController.gd` and spikes reactor temperature in `HeatSystem.gd`, prompting `BitchinBetty.gd` to play `heat_critical.wav` over multi-layer hydraulic actuator audio. When lower-floor structural HP on `DestructibleBuilding.gd` hits zero, upper stories fracture via `RigidBody3D` cascades, shake nearby cockpits based on mass and distance, and settle into `StaticBody3D` rubble mounds (`<=45°` slope) that mechs can climb for hull-down cover.
-- **Output**: A playable 4-stage urban assassination vertical slice (`Infiltration -> Thermal ECM Jammers -> Plaza Ambush -> DropShip Boss`) backed by `87` `.glb` 3D models, `86` `.wav` tactical voice and weapon assets, and `113+` passing headless test suites.
+- **Output**: A playable 4-stage urban assassination vertical slice (`Infiltration -> Thermal ECM Jammers -> Plaza Ambush -> DropShip Boss`) backed by `87` `.glb` 3D models, `86` `.wav` tactical voice and weapon assets, `117` certified headless suites carrying `859` E2E assertions, and a byte-reproducible Windows export.
 
 ## Where It Stands & Next Steps
 
-*MechDestroyer* is an **active-build** vertical slice with Phase 1 Milestones `M1` through `M5` and expansion Plans `#01` through `#33` verified in headless testing. On disk at `D:\Projects\MechDestroyer`, the project totals `1,802` files (`1.36 GB`) and `86,348` lines of code across `421` source files (`404` GDScript files at `79,952` LOC, `9` Python mesh/audio generators at `6,017` LOC, and `8` `.gdshader` shaders), plus `32` `.tscn` scenes, `82` `.tres` resources, and `117` automated test scripts in `tests/`. No standalone Windows `.exe` binary has been exported yet; the build currently launches directly through Godot 4.7.
+*MechDestroyer* is an **active-build** vertical slice with Phase 1 Milestones `M1` through `M5` and expansion Plans `#01` through `#33` verified in headless testing. On disk at `D:\Projects\MechDestroyer`, the project totals `1,802` files (`1.36 GB`) and `86,348` lines of code across `421` source files (`404` GDScript files at `79,952` LOC, `9` Python mesh/audio generators at `6,017` LOC, and `8` `.gdshader` shaders), plus `32` `.tscn` scenes, `82` `.tres` resources, and `119` test scripts in `tests/`.
 
-Next steps toward a standalone public demo:
-- Export a signed Windows `.exe` vertical-slice build bundling the Hangar refit bay, the 4-stage Urban Assassination mission, and the Gladiator wave arena.
+The 2026-11-18 hardening pass closed the gap between "passes on the workstation" and "certified": `117 / 117` suites now pass a runner that fails on leaked objects or resources at exit, fails any suite that logs an assertion failure even when it exits `0`, and fails any suite that executes zero assertions. The static audit covers `160 / 160` scripts. `TEST_READY.md` records the run on Godot 4.7.2-stable and maps `859` E2E assertions across the four tiers. A reproducible Windows export now exists in `build/windows/` together with `SHA256SUMS.txt` and `BUILD_INFO.txt`, and `.github/workflows/tests.yml` runs the audit and the full suite on every push and pull request.
+
+Next steps toward a public demo:
+- Sign the exported Windows binary and add Linux and macOS presets so the same reproducible script covers all three desktop targets.
 - Swap remaining kitbashed proxy props for baked `2048x2048` PBR meshes from `Mech_Scrapyard.blend` using the headless Cycles baker proven on *Kaiju Kiosk*.
 - Run a 4-client WAN latency soak test on the `20 Hz` ENet snapshot interpolator and `200 ms` hitscan rewind buffer.
 
@@ -262,8 +270,21 @@ Key engineering decisions recorded in our Unified Memory Bank (`M0143`–`M0550`
 - **Authoritative ENet Co-Op (`M0517`–`M0522`)**: Supports 2–4 players with `20 Hz` server snapshot interpolation, `200 ms` lag-compensated hitscan rewind for long-range railgun/laser fire, and live drop-in takeover of AI Lance mates.
 - **4-Stem Dynamic Music & 46-WAV Cockpit Audio (`M0529`–`M0536`)**: Combines spatial weapon synthesis (`AudioManager.gd`) with layered footstep thuds, torso-servo whines, and 15 synthesized Betty cockpit callouts (`target_acquired.wav`, `heat_critical.wav`, `armor_critical.wav`).
 
+### Verification & Release Pipeline (2026-11-18)
+
+`tests/run_all_tests.gd` is now a gate, not a report. Every suite must exit clean and print the number of assertions it executed; a suite that logs `SCRIPT ERROR: Assertion failed` fails the run even if it called `quit(0)`, because Godot's `assert()` only aborts the calling function. The zero-leak gate fails any suite that leaves objects or resources alive at exit. Closing the last `12` suites required five distinct fixes:
+
+1. Static `instance` self-references in `15` manager autoloads now clear themselves on `NOTIFICATION_PREDELETE`.
+2. Tests that aborted before their `.free()` calls now track created nodes and free them on the exit path.
+3. `queue_free()` followed by `quit()` in the same frame became immediate `free()` in five suites.
+4. Projectiles, VFX and debris spawned with no scene root now parent to the spawner, so something owns and frees them.
+5. `EnemyAIController` parents its `NavigationAgent3D` immediately instead of deferring it into an orphan.
+
+On the release side, `tools/build.sh` exports from a clean output directory, fails the build if Godot logs any `ERROR:` while packing, writes `SHA256SUMS.txt` and `BUILD_INFO.txt`, and produces identical bytes across two clean builds of the same commit. A build is boot-checked with `./build/windows/MechDestroyer.exe --quit-after 300`. `tests/check_all_scripts.gd` and `tests/run_all_tests.gd` run in CI on a Windows runner with Godot 4.7.2-stable, a checksum-verified download, and the same leak and assertion rules.
+
 ### Key Local Files
 - Project Config & Architecture Specs: [project.godot](file:///D:/Projects/MechDestroyer/project.godot), [PROJECT.md](file:///D:/Projects/MechDestroyer/PROJECT.md), [TEST_INFRA.md](file:///D:/Projects/MechDestroyer/TEST_INFRA.md), [TEST_READY.md](file:///D:/Projects/MechDestroyer/TEST_READY.md)
 - Core Simulation & Cockpit Scripts: [src](file:///D:/Projects/MechDestroyer/src), [scripts](file:///D:/Projects/MechDestroyer/scripts), [scenes](file:///D:/Projects/MechDestroyer/scenes)
 - 3D Models, Shaders & Betty Audio: [assets](file:///D:/Projects/MechDestroyer/assets), [Mech_Scrapyard.blend](file:///D:/Projects/MechDestroyer/Mech_Scrapyard.blend), [default_bus_layout.tres](file:///D:/Projects/MechDestroyer/default_bus_layout.tres)
-- Headless Test Suite & Syntax Auditor: [run_all_tests.gd](file:///D:/Projects/MechDestroyer/tests/run_all_tests.gd), [check_all_scripts.gd](file:///D:/Projects/MechDestroyer/tests/check_all_scripts.gd)
+- Headless Test Suite & Syntax Auditor: [run_all_tests.gd](file:///D:/Projects/MechDestroyer/tests/run_all_tests.gd), [check_all_scripts.gd](file:///D:/Projects/MechDestroyer/tests/check_all_scripts.gd), [TEST_READY.md](file:///D:/Projects/MechDestroyer/TEST_READY.md)
+- Release & CI: [build.sh](file:///D:/Projects/MechDestroyer/tools/build.sh), [tests.yml](file:///D:/Projects/MechDestroyer/.github/workflows/tests.yml), [build/windows](file:///D:/Projects/MechDestroyer/build/windows)
