@@ -46,7 +46,8 @@ studio-portfolio/
     ├── extract_raw_ledger.py   # Exports full LanceDB, SQLite conversation, and disk inventories
     ├── build_portfolio.py      # Sub-second Markdown -> portfolio-data.js compiler
     ├── audit_new_work.py       # Spots new memories, sessions, or workspace folders
-    └── verify_portfolio.py     # Enforces 100% ID coverage, valid assets, gitignore & anti-slop prose
+    ├── verify_portfolio.py     # Enforces 100% ID coverage, valid assets, gitignore & anti-slop prose
+    └── check_bundle_freshness.py # Fails when committed portfolio-data.js no longer matches docs/ + assets/
 ```
 
 ---
@@ -65,9 +66,12 @@ It compares live LanceDB (`memories.lance`), Antigravity's `conversation_summari
 ### 2. Add or Edit an Entry
 1. Create or edit a Markdown file inside the matching `docs/<pillar>/` folder using the standard frontmatter and four `##` sections (`What It Is & Why It Matters`, `Real Example: How It Works in Practice`, `Where It Stands & Next Steps`, `Under the Hood & Local Files`).
 2. Drop screenshots or audio into `assets/media/<slug>/` (or `assets/concepts/<slug>.png` with `kind: "concept"` for unbuilt blueprints).
-3. Recompile the web bundle and run all 5 verification gates:
+3. Recompile the web bundle, run all 5 verification gates, then prove the committed payload matches your docs:
 
 ```powershell
 python "D:\Projects\Studio_Portfolio\tools\build_portfolio.py"
 python "D:\Projects\Studio_Portfolio\tools\verify_portfolio.py"
+python "D:\Projects\Studio_Portfolio\tools\check_bundle_freshness.py"
 ```
+
+Run `check_bundle_freshness.py` immediately before `git commit`. It recompiles into a temporary directory and compares the result against the committed `portfolio-data.js`, ignoring the `compiled_at` timestamp and the IDs that only come from the gitignored `data/master_manifest.json`. If you edited a doc or diagram without recompiling, it exits non-zero and names every drifted entry and field. The same check runs on each push and pull request to `main` through `.github/workflows/portfolio-bundle-freshness.yml`, so GitHub Pages cannot serve a payload older than the docs behind it.
