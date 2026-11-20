@@ -2,13 +2,13 @@
 id: s21u-cyberdeck-mk1
 title: 'S21U-DECK MK.I: Sub-$200 Snapdragon 888 Field Cyberdeck & KVM Crash-Cart'
 subtitle: Complete electrical, thermal, and mechanical blueprint repurposing a broken-screen Galaxy S21 Ultra inside
-  an Apache 2800 hardcase with Hall HOSAS sticks and 4 USB co-MCUs.
+  an Apache 2800 hardcase with Hall HOSAS sticks and 5 USB co-processors.
 pillar: 05-hardware-retro
 entry_type: idea
 readiness: blueprint
 visibility: main
 date_started: '2026-10-27'
-date_updated: '2026-11-13'
+date_updated: '2026-11-20'
 tags:
 - cyberdeck
 - hardware-engineering
@@ -18,13 +18,13 @@ tags:
 - hosas
 metrics:
 - label: All-New Retail BOM
-  value: $195.75 (<$200 Cap)
+  value: $197.75 (<$200 Cap)
 - label: Net Scavenged Cost
   value: ~$118 (After Salvage)
 - label: Battery Capacity
-  value: 70.3 Wh + PPS Bypass
+  value: 51.8 Wh pack (70.3 Wh w/ phone)
 - label: Hardware Co-MCUs
-  value: 4 (ESP32-S3 + 3x RP2040)
+  value: 5 (ESP32-S3 + 3x RP2040 + CANable)
 media:
 - src: assets/concepts/s21u-cyberdeck-mk1.png
   kind: concept
@@ -55,7 +55,9 @@ tech_stack:
 - Ginfull Hall-Effect HOSAS Gimbals
 local_paths:
 - label: S21U-DECK MK.I Master Blueprint & BOM
-  path: file:///C:/Users/ogreb/.gemini/antigravity/brain/8b7beecf-a694-42b2-8f48-ee4a02784f98/s21u_cyberdeck_master_blueprint.md
+  path: file:///C:/Users/ogreb/.config/freebuff-desktop/local-projects/40c5eaf3-fb9d-4d2c-9e87-3e6c65b6cecc/s21u-cyberdeck-mk1
+- label: Cost-Optimized BOM (CSV)
+  path: file:///C:/Users/ogreb/.config/freebuff-desktop/local-projects/40c5eaf3-fb9d-4d2c-9e87-3e6c65b6cecc/s21u-cyberdeck-mk1/BOM.csv
 - label: Enclosure Reference Photos (C121)
   path: file:///C:/Users/ogreb/.gemini/antigravity/brain/8b7beecf-a694-42b2-8f48-ee4a02784f98/scratch
 - label: 3 Layout & I/O Configuration Illustrations
@@ -74,7 +76,7 @@ conversation_ids:
 
 Replacing a cracked curved AMOLED assembly on an older flagship phone often costs more than the phone is worth, leaving a fast 8-core Snapdragon 888 / Adreno 660 computer (`12 GB` LPDDR5, UFS 3.1) sitting in a drawer. At the same time, US-variant Samsung phones (`SM-G998U`) enforce a hardware-locked Knox bootloader—blocking custom Linux kernels for Wi-Fi packet injection, USB HID gadget emulation (`/dev/hidg0`), or native SocketCAN automotive diagnostics.
 
-We designed **S21U-DECK MK.I** inside a weatherproof Harbor Freight Apache 2800 hardcase (`$195.75` 100% buy-new retail, `$148.19` with parts-bin scavenging, or **`~$118` net** after selling the pulled 108 MP OEM camera module on eBay). Instead of fighting the locked bootloader, our bus topology offloads physical-layer RF, BIOS KVM keyboard/mouse injection, 120 MHz logic analysis, and OBD-II CAN bus traffic onto four dedicated microcontrollers (`$16.70` combined) over an internally powered USB 2.0 hub—leaving the Snapdragon 888 dedicated to Samsung DeX on a `10.1"` IPS touchscreen, Mesa Turnip Vulkan emulation, Winlator x86_64 PC games, and `Termux:X11` Debian Linux.
+We designed **S21U-DECK MK.I** inside a weatherproof Harbor Freight Apache 2800 hardcase (`$197.75` 100% buy-new retail, `$148.19` with parts-bin scavenging, or **`~$118` net** after selling the pulled 108 MP OEM camera module on eBay). Instead of fighting the locked bootloader, our bus topology offloads physical-layer RF, BIOS KVM keyboard/mouse injection, 120 MHz logic analysis, and OBD-II CAN bus traffic onto five dedicated co-processors (`$20.80` combined) over an internally powered USB 2.0 hub—leaving the Snapdragon 888 dedicated to Samsung DeX on a `10.1"` IPS touchscreen, Mesa Turnip Vulkan emulation, Winlator x86_64 PC games, and `Termux:X11` Debian Linux.
 
 ## Real Example: How It Works in Practice
 
@@ -88,7 +90,7 @@ We designed **S21U-DECK MK.I** inside a weatherproof Harbor Freight Apache 2800 
 
 ## Where It Stands & Next Steps
 
-This entry is a complete, fabrication-ready engineering blueprint (`306 lines` of schematics, cut dimensions, pinouts, and pre-teardown software checklists in `s21u_cyberdeck_master_blueprint.md`). Every subsystem—including laser-cut `3mm` matte black cast acrylic plate coordinates (`298 x 224 mm`, `R10` corners for Apache 2800; `374 x 266 mm` for Apache 3800), Z-height clearances, and two mandatory `+5V` VBUS isolation cuts—has been verified against off-the-shelf component specs.
+This entry is a complete, fabrication-ready engineering blueprint (`300+ lines` of schematics, cut dimensions, pinouts, and pre-teardown software checklists in `s21u_cyberdeck_master_blueprint.md`). Every subsystem—including laser-cut `3mm` matte black cast acrylic plate coordinates (`298 x 224 mm`, `R10` corners for Apache 2800; `374 x 266 mm` for Apache 3800), Z-height clearances, and two mandatory `+5V` VBUS isolation cuts—has been verified against off-the-shelf component specs.
 
 Next steps when moving from blueprint to physical bench assembly:
 - Run the 5-step **Pre-Teardown Software Lock-In** on the S21 Ultra over external HDMI *before* heating the back glass (`Auto Blocker -> OFF`, `Disable adb authorization timeout -> ON`, `DeX Auto-Start -> ON`, `Pause USB PD` check, and blind USB keyboard BFU PIN unlock test).
@@ -108,5 +110,7 @@ Two electrical protection rules captured in our Memory Bank (`M0971`–`M0974`) 
 2. **Galvanic/VBUS KVM Isolation**: Connecting `RP2040 #1` (Deck Supervisor + `INA226`/`SSD1306` OLED power monitor) to `RP2040 #2` (Target USB HID emulator) strictly via `TX/RX` (`330 Ω` current-limiting series resistors) + `GND` with `VBUS` severed ensures a faulty external server power supply can never back-feed `5V` into the cyberdeck's internal rails.
 
 Local blueprint and reference files:
-- **Master Engineering Blueprint, Mermaids & 20-Line BOM**: [s21u_cyberdeck_master_blueprint.md](file:///C:/Users/ogreb/.gemini/antigravity/brain/8b7beecf-a694-42b2-8f48-ee4a02784f98/s21u_cyberdeck_master_blueprint.md)
+- **Master Engineering Blueprint, Mermaid Diagrams & 21-Line BOM**: [s21u_cyberdeck_master_blueprint.md](file:///C:/Users/ogreb/.config/freebuff-desktop/local-projects/40c5eaf3-fb9d-4d2c-9e87-3e6c65b6cecc/s21u-cyberdeck-mk1/s21u_cyberdeck_master_blueprint.md)
+- **Cost-Optimized BOM (CSV)**: [BOM.csv](file:///C:/Users/ogreb/.config/freebuff-desktop/local-projects/40c5eaf3-fb9d-4d2c-9e87-3e6c65b6cecc/s21u-cyberdeck-mk1/BOM.csv) — 21 priced lines, `$197.75` retail / `$148.19` scavenged
+- **Build Log**: [BUILD_LOG.md](file:///C:/Users/ogreb/.config/freebuff-desktop/local-projects/40c5eaf3-fb9d-4d2c-9e87-3e6c65b6cecc/s21u-cyberdeck-mk1/BUILD_LOG.md)
 - **Hardcase Reference Geometry**: [scratch](file:///C:/Users/ogreb/.gemini/antigravity/brain/8b7beecf-a694-42b2-8f48-ee4a02784f98/scratch)
