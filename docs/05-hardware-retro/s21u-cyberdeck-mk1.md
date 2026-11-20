@@ -18,9 +18,9 @@ tags:
 - hosas
 metrics:
 - label: All-New Retail BOM
-  value: $266.76 (retail over cap)
+  value: $608.11 (sourced, live links)
 - label: Net Scavenged Cost
-  value: ~$187 (After Salvage)
+  value: ~$470 (After Salvage)
 - label: Battery Capacity
   value: 51.8 Wh pack (70.3 Wh w/ phone)
 - label: Hardware Co-MCUs
@@ -89,7 +89,7 @@ conversation_ids:
 
 Replacing a cracked curved AMOLED assembly on an older flagship phone often costs more than the phone is worth, leaving a fast 8-core Snapdragon 888 / Adreno 660 computer (`12 GB` LPDDR5, UFS 3.1) sitting in a drawer. At the same time, US-variant Samsung phones (`SM-G998U`) enforce a hardware-locked Knox bootloader—blocking custom Linux kernels for Wi-Fi packet injection, USB HID gadget emulation (`/dev/hidg0`), or native SocketCAN automotive diagnostics.
 
-We designed **S21U-DECK MK.I** inside a used 20 in Sears Craftsman steel mechanics toolbox (`$266.76` 100% buy-new retail, `$217.20` with parts-bin scavenging, or **`~$187` net** after selling the pulled 108 MP OEM camera module on eBay). Instead of fighting the locked bootloader, our bus topology offloads physical-layer RF, BIOS KVM keyboard/mouse injection, 120 MHz logic analysis, and OBD-II CAN bus traffic onto five dedicated co-processors (`$20.80` combined) over an internally powered USB 2.0 hub—leaving the Snapdragon 888 dedicated to Samsung DeX on a `10.1"` IPS touchscreen, Mesa Turnip Vulkan emulation, Winlator x86_64 PC games, and `Termux:X11` Debian Linux.
+We designed **S21U-DECK MK.I** inside a used 20 in Sears Craftsman steel mechanics toolbox (`$608.11` 100% buy-new retail from live listings, `$499.53` with parts-bin scavenging, or **`~$470` net** after selling the pulled 108 MP OEM camera module on eBay). Instead of fighting the locked bootloader, our bus topology offloads physical-layer RF, BIOS KVM keyboard/mouse injection, 120 MHz logic analysis, and OBD-II CAN bus traffic onto five dedicated co-processors (`$20.80` combined) over an internally powered USB 2.0 hub—leaving the Snapdragon 888 dedicated to Samsung DeX on a `10.1"` IPS touchscreen, Mesa Turnip Vulkan emulation, Winlator x86_64 PC games, and `Termux:X11` Debian Linux.
 
 ## Real Example: How It Works in Practice
 
@@ -99,7 +99,7 @@ We designed **S21U-DECK MK.I** inside a used 20 in Sears Craftsman steel mechani
   2. **Headless Server KVM Mode**: Plugging a target machine into the flush `HDMI-IN` (`MS2109/MS2130` 1080p60 UVC capture) and `KVM-USB` ports streams the remote server's BIOS screen into a DeX window while typing on the deck streams keystrokes over a VBUS-isolated `921.6 kbps` UART bridge (`RP2040 #1` to `RP2040 #2`) acting as a hardware BIOS USB keyboard/mouse.
   3. **Hardware/RF Field Mode**: `ESP32-S3` (wired to a lid SMA whip antenna) handles 2.4 GHz Wi-Fi/BLE auditing, `RP2040 #3` (`sigrok-pico` + `TXS0108E` `1.8V–5V` level shifter) captures 24-channel digital logic off an 8-pin Phoenix terminal block, `CANable` reads vehicle CAN frames via a `GX12-4P` aviation plug, and a `7mm` UVC macro scope inspects SMD solder joints live.
   4. **Flight/Mech Sim Mode**: Unfolding the twin Hall-effect sticks out of `-36mm` side stowage wells engages a `1mm` PTFE friction clutch on the Left-Y axis for smooth non-centering throttle control alongside 6-DOF right-stick pitch/roll/aiming.
-- **Output**: Four field instruments—Linux/DeX workstation, isolated BIOS KVM crash-cart, electronics/CAN/RF diagnostic bench, and HOSAS simpit—packed inside a single steel toolbox for `~$187` net after camera salvage.
+- **Output**: Four field instruments—Linux/DeX workstation, isolated BIOS KVM crash-cart, electronics/CAN/RF diagnostic bench, and HOSAS simpit—packed inside a single steel toolbox for `~$470` net after camera salvage.
 
 ## Where It Stands & Next Steps
 
@@ -125,6 +125,6 @@ Two electrical protection rules captured in our Memory Bank (`M0971`–`M0974`) 
 
 Local blueprint and reference files:
 - **Master Engineering Blueprint, Mermaid Diagrams & 21-Line BOM**: [s21u_cyberdeck_master_blueprint.md](file:///C:/Users/ogreb/.config/freebuff-desktop/local-projects/40c5eaf3-fb9d-4d2c-9e87-3e6c65b6cecc/s21u-cyberdeck-mk1/s21u_cyberdeck_master_blueprint.md)
-- **Cost-Optimized BOM (CSV)**: [BOM.csv](file:///C:/Users/ogreb/.config/freebuff-desktop/local-projects/40c5eaf3-fb9d-4d2c-9e87-3e6c65b6cecc/s21u-cyberdeck-mk1/BOM.csv) — 21 priced lines, `$266.76` retail / `$217.20` scavenged
+- **Cost-Optimized BOM (CSV)**: [BOM.csv](file:///C:/Users/ogreb/.config/freebuff-desktop/local-projects/40c5eaf3-fb9d-4d2c-9e87-3e6c65b6cecc/s21u-cyberdeck-mk1/BOM.csv) — 27 priced lines, `$608.11` retail / `$499.53` scavenged, every line linked to a live vendor listing
 - **Build Log**: [BUILD_LOG.md](file:///C:/Users/ogreb/.config/freebuff-desktop/local-projects/40c5eaf3-fb9d-4d2c-9e87-3e6c65b6cecc/s21u-cyberdeck-mk1/BUILD_LOG.md)
 - **Assembly & Cut Sheet (published copy)**: [s21u-deck-assembly.svg](file:///D:/Projects/Studio_Portfolio/assets/diagrams/s21u-deck-assembly.svg) — true-scale 1.2 px/mm side section, 1.15 px/mm deck view, cut list and build sequence
