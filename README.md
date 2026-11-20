@@ -88,6 +88,6 @@ Enable the commit guard once per clone, so a commit cannot ship a payload older 
 git config core.hooksPath .githooks
 ```
 
-The hook runs the freshness check on `git commit` and refuses the commit when the bundle is stale or was left unstaged. Two workflows back it up: `.github/workflows/portfolio-bundle-freshness.yml` rebuilds on every push and pull request to `main`, and `.github/workflows/portfolio-live-freshness.yml` fetches the deployed `portfolio-data.js` once a day and compares it with a clean rebuild, so a Pages deploy that never landed becomes a failed run instead of a quietly stale atlas.
+The hook runs the freshness check on `git commit` and refuses the commit when the bundle is stale or was left unstaged. Two workflows back it up: `.github/workflows/portfolio-bundle-freshness.yml` rebuilds the payload and re-runs gates 2-5 (`python tools/verify_portfolio.py --skip-coverage`) on every push and pull request to `main`, and `.github/workflows/portfolio-live-freshness.yml` fetches the deployed `portfolio-data.js` once a day and compares it with a clean rebuild, so a Pages deploy that never landed becomes a failed run instead of a quietly stale atlas.
 
 CI has no `data/` directory (Gate 5 requires it to stay gitignored), so both workflows build from the committed `tools/public_manifest.json`, which carries the pillar list, the inception date, and the reconciliation counts. Regenerate it from `data/master_manifest.json` whenever those change.

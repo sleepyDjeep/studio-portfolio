@@ -4,6 +4,10 @@ name: Portfolio bundle freshness
 # so a doc or diagram edit that ships without recompiling never reaches the live
 # atlas. This job rebuilds the bundle from docs/ + assets/ and fails when the
 # committed portfolio-data.js no longer matches.
+#
+# It also runs gates 2-5 of tools/verify_portfolio.py (structure, assets, prose and
+# git hygiene). Only gate 1 needs the local memory databases, so CI skips that one
+# and everything else is enforced here rather than on one workstation.
 
 on:
   push:
@@ -27,6 +31,9 @@ jobs:
 
       - name: Install build dependency
         run: python -m pip install --upgrade pip pyyaml
+
+      - name: Run the structural, asset, prose and hygiene gates
+        run: python tools/verify_portfolio.py --skip-coverage
 
       - name: Rebuild bundle and compare with the committed payload
         run: python tools/check_bundle_freshness.py

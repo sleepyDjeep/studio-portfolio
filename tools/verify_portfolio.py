@@ -7,15 +7,18 @@ Exits non-zero if ANY gate fails:
   3. 100% Valid Asset Paths (every image, SVG, audio in portfolio-data.js exists and >0 bytes)
   4. Zero AI-Slop Lexicon (regex scan across docs/**/*.md, index.html, app.js, styles.css, README.md, DESIGN.md)
   5. Git & Vault Hygiene (docs/vault/ and assets/vault/ gitignored and zero tracked files inside them)
+
+Only gate 1 needs data/master_manifest.json and the local LanceDB/SQLite stores. Gates 2-5 read
+nothing but the committed tree, so `--skip-coverage` runs them anywhere, CI included.
 """
 
+import argparse
 import json
 import re
 import sqlite3
 import subprocess
 import sys
 from pathlib import Path
-import lancedb
 import yaml
 
 PORTFOLIO_ROOT = Path(__file__).resolve().parent.parent
@@ -57,13 +60,17 @@ BANNED_PATTERNS = [
 ]
 
 
-def main() -> int:
-    failures = []
+def gate_corpus_coverage(failures: list) -> None:
+    """Gate 1: every live memory and top-level conversation maps to an entry.
 
-    # --- GATE 1: 100% Corpus Coverage ---
+    Reads data/master_manifest.json and the local LanceDB/SQLite stores, so it only
+    runs where those exist; --skip-coverage omits it everywhere else.
+    """
     if not MANIFEST_PATH.exists():
-        print("[FAIL] data/master_manifest.json missing")
-        return 1
+        failures.append("Gate 1 (Coverage): data/master_manifest.json missing")
+        return
+
+    import lancedb  # imported here so gates 2-5 run on machines without it
 
     manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
     accounted_memories = set(manifest.get("excluded_memories", {}).keys())
@@ -100,6 +107,23 @@ def main() -> int:
         f"[Gate 1] Memories accounted: {len(live_mem_ids - set(missing_mems))}/{len(live_mem_ids)} | "
         f"Top-level Conversations accounted: {len(live_conv_ids - set(missing_convs))}/{len(live_conv_ids)}"
     )
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description="Run the portfolio verification gates.")
+    parser.add_argument(
+        "--skip-coverage",
+        action="store_true",
+        help="skip gate 1, which needs data/master_manifest.json and the local LanceDB and conversation databases",
+    )
+    args = parser.parse_args()
+
+    failures = []
+
+    # --- GATE 1: 100% Corpus Coverage (local databases only) ---
+    if args.skip_coverage:
+        print("[Gate 1] Skipped (--skip-coverage): corpus coverage needs the local memory databases.")
+    else:
+        gate_corpus_coverage(failures)
 
     # --- GATE 2: Every Entry Complete ---
     md_files = sorted(DOCS_DIR.rglob("*.md"))
@@ -192,7 +216,10 @@ def main() -> int:
     print(f"[Gate 4] Scanned {len([t for t in scan_targets if t.exists()])} files for banned AI-slop lexicon: {len(slop_hits)} hits.")
 
     # --- GATE 5: Git & Vault Hygiene ---
-    for vault_rel in ["docs/vault", "assets/vault", "portfolio-vault.js", "data"]:
+    # The trailing slashes matter: with the directory absent, `git check-ignore data`
+    # cannot tell it is a directory and misses the `data/` rule. CI sees exactly that
+    # state, since data/ is gitignored and never checked out.
+    for vault_rel in ["docs/vault/", "assets/vault/", "portfolio-vault.js", "data/"]:
         chk = subprocess.run(
             ["git", "check-ignore", "-v", vault_rel],
             cwd=str(PORTFOLIO_ROOT),
