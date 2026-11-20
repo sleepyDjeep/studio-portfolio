@@ -1,0 +1,55 @@
+{
+  "_doc": "Committed redacted manifest. tools/build_portfolio.py falls back to this file when the gitignored data/master_manifest.json is absent, so CI and the live-atlas check rebuild the same payload. Regenerate it when pillars or reconciliation counts change.",
+  "inception_date": "2026-08-16",
+  "pillars": [
+    {
+      "id": "00-studio-primer",
+      "title": "How Our AI Studio Works",
+      "short_title": "Studio Primer",
+      "description": "Our shared memory bank, wave-based agent architecture, local RTX 4060 GPU discipline, and verification gates."
+    },
+    {
+      "id": "01-ai-workflows",
+      "title": "Pillar 1: AI Infrastructure, Agents, Skills & Reusable Workflows",
+      "short_title": "AI & Workflows",
+      "description": "Persistent cross-app vector memory, private local assistants, anti-slop governance, VRAM orchestration, and asset factories."
+    },
+    {
+      "id": "02-games-engines",
+      "title": "Pillar 2: Games, Game Engines & Commercial Asset Kits",
+      "short_title": "Games & Engines",
+      "description": "Original 3D & 2D games, custom browser and mobile game engines, commercial marketplace kits, and immersive-sim blueprints."
+    },
+    {
+      "id": "03-ventures-saas",
+      "title": "Pillar 3: Business Ventures, SaaS Platforms & Executive Plans",
+      "short_title": "Ventures & SaaS",
+      "description": "Nationwide public-records SaaS fleet, autonomous growth command center, publishing pipelines, geospatial maps, and farm/manufacturing models."
+    },
+    {
+      "id": "04-creative-3d-media",
+      "title": "Pillar 4: 3D Scanning, Visual Art & Audio Production Pipelines",
+      "short_title": "Creative, 3D & Audio",
+      "description": "Open-source facial photogrammetry rigging, 2D-to-3D mech generation, SAM-2.1 video & SVG vector studios, tattoo planners, and 172 BPM DSP synthesis."
+    },
+    {
+      "id": "05-hardware-retro",
+      "title": "Pillar 5: Hardware Builds, Home Systems & Retro Gaming Engineering",
+      "short_title": "Hardware & Retro",
+      "description": "27-system living-room console appliance, Win11 binary preservation wrappers, flash storage forensics, S21 Ultra cyberdeck, and wood-fired pallet sauna."
+    }
+  ],
+  "reconciliation": {
+    "wave0_memory_count": 1024,
+    "mapped_memory_count": 1017,
+    "excluded_memory_count": 7,
+    "unaccounted_memory_ids": [],
+    "wave0_top_conversation_count": 139,
+    "mapped_conversation_count": 124,
+    "excluded_conversation_count": 15,
+    "unaccounted_conversation_ids": [],
+    "unaccounted_memory_count": 0,
+    "unaccounted_conversation_count": 0
+  },
+  "entries": []
+}

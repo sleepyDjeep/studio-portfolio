@@ -1,0 +1,31 @@
+#!/bin/sh
+# Refuses a commit that would publish a portfolio-data.js older than docs/.
+#
+# Installed with: git config core.hooksPath .githooks
+# Runs the same guard CI runs, so a doc or diagram edit can never reach GitHub
+# Pages without the regenerated payload beside it.
+
+set -u
+
+root=$(git rev-parse --show-toplevel) || exit 1
+cd "$root" || exit 1
+
+# The guard rebuilds and compares the working copy, so a staged-but-dirty bundle
+# would be validated on the wrong bytes.
+if ! git diff --quiet -- portfolio-data.js; then
+    echo "[pre-commit] portfolio-data.js has unstaged changes." >&2
+    echo "             The freshness check reads the working copy, so stage it first:" >&2
+    echo "             git add portfolio-data.js" >&2
+    exit 1
+fi
+
+if command -v python >/dev/null 2>&1; then
+    py=python
+elif command -v python3 >/dev/null 2>&1; then
+    py=python3
+else
+    echo "[pre-commit] python not found; skipping the bundle freshness check." >&2
+    exit 0
+fi
+
+exec "$py" tools/check_bundle_freshness.py

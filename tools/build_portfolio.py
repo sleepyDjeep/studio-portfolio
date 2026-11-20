@@ -1,11 +1,16 @@
 #!/usr/bin/env python3
 """
 Studio Portfolio Zero-Fragility Compiler (<1s runtime).
-Parses docs/**/*.md + data/master_manifest.json, validates referenced assets,
+Parses docs/**/*.md plus a manifest, validates and hashes referenced assets,
 renders clean semantic HTML per section, and writes portfolio-data.js so
 index.html runs directly via file:// with zero server and zero CORS errors.
+
+The full manifest (data/master_manifest.json) is gitignored. When it is absent,
+the committed redacted tools/public_manifest.json is used instead, so CI and the
+live-atlas check rebuild the same payload.
 """
 
+import hashlib
 import html
 import json
 import re
@@ -17,6 +22,7 @@ import yaml
 PORTFOLIO_ROOT = Path(__file__).resolve().parent.parent
 DOCS_DIR = PORTFOLIO_ROOT / "docs"
 MANIFEST_PATH = PORTFOLIO_ROOT / "data" / "master_manifest.json"
+PUBLIC_MANIFEST_PATH = PORTFOLIO_ROOT / "tools" / "public_manifest.json"
 OUTPUT_JS_PATH = PORTFOLIO_ROOT / "portfolio-data.js"
 OUTPUT_VAULT_JS_PATH = PORTFOLIO_ROOT / "portfolio-vault.js"
 
@@ -251,11 +257,20 @@ def extract_ipo_steps(example_md: str) -> dict:
 
 
 def compile_portfolio() -> int:
-    if not MANIFEST_PATH.exists():
-        print(f"[ERROR] Manifest not found: {MANIFEST_PATH}", file=sys.stderr)
+    manifest_path = MANIFEST_PATH if MANIFEST_PATH.exists() else PUBLIC_MANIFEST_PATH
+    if not manifest_path.exists():
+        print(
+            f"[ERROR] No manifest found: tried {MANIFEST_PATH} and {PUBLIC_MANIFEST_PATH}",
+            file=sys.stderr,
+        )
         return 1
 
-    manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest_label = (
+        "data/master_manifest.json (local, full)"
+        if manifest_path == MANIFEST_PATH
+        else "tools/public_manifest.json (committed, redacted)"
+    )
     manifest_by_id = {e["id"]: e for e in manifest.get("entries", [])}
 
     md_files = sorted(DOCS_DIR.rglob("*.md"))
@@ -289,6 +304,7 @@ def compile_portfolio() -> int:
             elif diag_path.suffix.lower() == ".svg":
                 diagram_svg = diag_path.read_text(encoding="utf-8")
 
+        compiled_media = []
         for m_item in media_list:
             src = str(m_item.get("src") or "").strip()
             if not src:
@@ -297,6 +313,14 @@ def compile_portfolio() -> int:
             asset_path = PORTFOLIO_ROOT / src
             if not asset_path.exists() or asset_path.stat().st_size == 0:
                 errors.append(f"{slug}: Missing or empty media asset '{src}'")
+                compiled_media.append(dict(m_item))
+                continue
+            # Hash the bytes so replacing a file behind an unchanged path is
+            # caught by tools/check_bundle_freshness.py, which would otherwise
+            # only ever see the path.
+            compiled_media.append(
+                {**m_item, "sha256": hashlib.sha256(asset_path.read_bytes()).hexdigest()}
+            )
 
         compiled_entries.append({
             "id": slug,
@@ -311,7 +335,7 @@ def compile_portfolio() -> int:
             "date_updated": str(meta.get("date_updated") or "2026-11-12"),
             "tags": list(meta.get("tags") or []),
             "metrics": list(meta.get("metrics") or []),
-            "media": media_list,
+            "media": compiled_media,
             "diagram": diagram_rel,
             "diagram_svg": diagram_svg,
             "tech_stack": list(meta.get("tech_stack") or []),
@@ -395,7 +419,8 @@ def compile_portfolio() -> int:
 
     print(
         f"[build_portfolio] Compiled {len(main_entries)} public entries -> {OUTPUT_JS_PATH.name} "
-        f"(+{len(vault_entries)} local-only entries -> gitignored {OUTPUT_VAULT_JS_PATH.name})"
+        f"(+{len(vault_entries)} local-only entries -> gitignored {OUTPUT_VAULT_JS_PATH.name})\n"
+        f"[build_portfolio] Manifest: {manifest_label}"
     )
     return 0
 

@@ -42,11 +42,15 @@ studio-portfolio/
 │   ├── media/<slug>/           # Authentic screenshots, renders, sprites, audio samples
 │   ├── diagrams/<slug>.svg     # Theme-adaptive SVG system & workflow diagrams
 │   └── concepts/<slug>.png     # Badged Concept Preview illustrations for unbuilt plans
+├── .githooks/
+│   └── pre-commit              # Refuses a commit whose portfolio-data.js is older than docs/
 └── tools/
     ├── extract_raw_ledger.py   # Exports full LanceDB, SQLite conversation, and disk inventories
     ├── build_portfolio.py      # Sub-second Markdown -> portfolio-data.js compiler
     ├── audit_new_work.py       # Spots new memories, sessions, or workspace folders
     ├── verify_portfolio.py     # Enforces 100% ID coverage, valid assets, gitignore & anti-slop prose
+    ├── update_portfolio.py     # One command: rebuild, run all 5 gates, prove the payload is current
+    ├── public_manifest.json    # Committed redacted manifest so CI can rebuild without data/
     └── check_bundle_freshness.py # Fails when committed portfolio-data.js no longer matches docs/ + assets/
 ```
 
@@ -66,12 +70,24 @@ It compares live LanceDB (`memories.lance`), Antigravity's `conversation_summari
 ### 2. Add or Edit an Entry
 1. Create or edit a Markdown file inside the matching `docs/<pillar>/` folder using the standard frontmatter and four `##` sections (`What It Is & Why It Matters`, `Real Example: How It Works in Practice`, `Where It Stands & Next Steps`, `Under the Hood & Local Files`).
 2. Drop screenshots or audio into `assets/media/<slug>/` (or `assets/concepts/<slug>.png` with `kind: "concept"` for unbuilt blueprints).
-3. Recompile the web bundle, run all 5 verification gates, then prove the committed payload matches your docs:
+3. Rebuild, run all 5 verification gates, and prove the payload is current, with one command:
 
 ```powershell
-python "D:\Projects\Studio_Portfolio\tools\build_portfolio.py"
-python "D:\Projects\Studio_Portfolio\tools\verify_portfolio.py"
-python "D:\Projects\Studio_Portfolio\tools\check_bundle_freshness.py"
+python "D:\Projects\Studio_Portfolio\tools\update_portfolio.py"
 ```
 
-Run `check_bundle_freshness.py` immediately before `git commit`. It recompiles into a temporary directory and compares the result against the committed `portfolio-data.js`, ignoring the `compiled_at` timestamp and the IDs that only come from the gitignored `data/master_manifest.json`. If you edited a doc or diagram without recompiling, it exits non-zero and names every drifted entry and field. The same check runs on each push and pull request to `main` through `.github/workflows/portfolio-bundle-freshness.yml`, so GitHub Pages cannot serve a payload older than the docs behind it.
+It runs `build_portfolio.py`, then `verify_portfolio.py`, then `check_bundle_freshness.py`, and stops at the first failure so a broken gate never scrolls past. `--no-verify` skips the gate step on a machine without the local LanceDB and conversation databases.
+
+The freshness step recompiles into a temporary directory and compares that against your `portfolio-data.js`: every entry field, every media item plus the sha256 of the file behind it, the pillar list, the summary counts, and the inception date. It ignores only the `compiled_at` timestamp and the ids that come from the gitignored `data/master_manifest.json`, and it names each drifted entry and field when it fails.
+
+### 3. Publish the Rebuilt Bundle
+
+Enable the commit guard once per clone, so a commit cannot ship a payload older than the docs behind it:
+
+```powershell
+git config core.hooksPath .githooks
+```
+
+The hook runs the freshness check on `git commit` and refuses the commit when the bundle is stale or was left unstaged. Two workflows back it up: `.github/workflows/portfolio-bundle-freshness.yml` rebuilds on every push and pull request to `main`, and `.github/workflows/portfolio-live-freshness.yml` fetches the deployed `portfolio-data.js` once a day and compares it with a clean rebuild, so a Pages deploy that never landed becomes a failed run instead of a quietly stale atlas.
+
+CI has no `data/` directory (Gate 5 requires it to stay gitignored), so both workflows build from the committed `tools/public_manifest.json`, which carries the pillar list, the inception date, and the reconciliation counts. Regenerate it from `data/master_manifest.json` whenever those change.
