@@ -1,0 +1,32 @@
+name: Portfolio bundle freshness
+
+# portfolio-data.js is generated and GitHub Pages serves whatever was committed,
+# so a doc or diagram edit that ships without recompiling never reaches the live
+# atlas. This job rebuilds the bundle from docs/ + assets/ and fails when the
+# committed portfolio-data.js no longer matches.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  freshness:
+    name: portfolio-data.js matches docs/
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install build dependency
+        run: python -m pip install --upgrade pip pyyaml
+
+      - name: Rebuild bundle and compare with the committed payload
+        run: python tools/check_bundle_freshness.py
