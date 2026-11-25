@@ -303,6 +303,12 @@ def build_facts(candidate: dict) -> dict:
     }
 
 
+def discard_local_entry() -> None:
+    """Undo everything this run wrote, without touching the rest of the tree."""
+    run(["git", "reset", "--hard", "HEAD"])
+    run(["git", "clean", "-fd", "--", "docs", "assets"])
+
+
 def publish(candidate: dict, dry_run: bool, draft_path: Path | None = None) -> int:
     facts = build_facts(candidate)
     candidate = {**candidate, "facts": facts}
@@ -324,11 +330,18 @@ def publish(candidate: dict, dry_run: bool, draft_path: Path | None = None) -> i
     if result.returncode != 0:
         return 1
 
+    # Gate 3 checks the index, not just the disk, so the new files must be staged
+    # before the gates run. The run starts from a clean tree, so a failure here
+    # can safely discard exactly what this run wrote.
+    run(["git", "add", "docs", "assets"])
     if run([sys.executable, "tools/verify_portfolio.py", "--update-baseline"]).returncode != 0:
+        discard_local_entry()
         return 1
     if run([sys.executable, "tools/update_portfolio.py", "--no-verify"]).returncode != 0:
+        discard_local_entry()
         return 1
     if run([sys.executable, "tools/verify_portfolio.py", "--skip-coverage"]).returncode != 0:
+        discard_local_entry()
         return 1
 
     changed = [line[3:] for line in git("status", "--porcelain").splitlines() if line.strip()]
@@ -340,6 +353,7 @@ def publish(candidate: dict, dry_run: bool, draft_path: Path | None = None) -> i
             f"{candidate.get('workspace') or 'an unknown workspace'}.\n\n"
             f"Candidate {candidate['key']}; revert this commit if the entry is wrong.")
     if run(["git", "commit", "-m", message, "-m", body]).returncode != 0:
+        discard_local_entry()
         return 1
     base = git("rev-parse", "HEAD^")
     head = git("rev-parse", "HEAD")
