@@ -50,5 +50,8 @@ to. Work from the repository root and finish the checklist before reporting back
   `compiled_at`, so commit only when the content changed.
 - Ask one question only when the artifact or its pillar is genuinely unclear.
   Otherwise pick the closest pillar and say what you assumed.
+- Spawned subagents do not inherit project instructions (verified: one asked to
+  quote them returned none). If you delegate any of these steps, paste the
+  relevant lines into the subagent's prompt.
 - This checklist is for adding an entry. Changing the site itself (`app.js`,
   `styles.css`, `index.html`) is a normal code change, not this phrase.
