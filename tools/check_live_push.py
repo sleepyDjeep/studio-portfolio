@@ -70,6 +70,37 @@ def changed_docs(base: str, head: str) -> list[str]:
     return paths
 
 
+def commit_exists(ref: str) -> bool:
+    return subprocess.run(
+        ["git", "cat-file", "-e", f"{ref}^{{commit}}"],
+        cwd=str(PORTFOLIO_ROOT),
+        capture_output=True,
+    ).returncode == 0
+
+
+def ensure_base(base: str) -> bool:
+    """Shallow checkouts, force pushes and first pushes can lack the old commit."""
+    if commit_exists(base):
+        return True
+    subprocess.run(
+        ["git", "fetch", "--quiet", "--depth=1", "origin", base],
+        cwd=str(PORTFOLIO_ROOT),
+        capture_output=True,
+        text=True,
+    )
+    return commit_exists(base)
+
+
+def head_doc_changes(head: str) -> list[str]:
+    """Docs touched by the head commit alone, used when there is no base to diff."""
+    paths = []
+    for line in git("diff-tree", "--no-commit-id", "--name-status", "-r", "--root", head, "--", "docs").splitlines():
+        parts = line.split("\t")
+        if len(parts) >= 2 and parts[0] in {"A", "M"} and parts[1].endswith(".md"):
+            paths.append(parts[1])
+    return paths
+
+
 def entry_from_doc(path: str, text: str) -> tuple[str, dict] | None:
     try:
         meta, _body = split_document(text, path)
@@ -172,16 +203,20 @@ def main() -> int:
         ids = {item.strip() for item in args.ids.split(",") if item.strip()}
     else:
         base = args.base or "HEAD^"
-        try:
+        if ensure_base(base):
             paths = changed_docs(base, args.head)
-        except subprocess.CalledProcessError as exc:
-            print(f"[entry-live] cannot diff {base}..{args.head}: {exc.stderr.strip()}")
-            print("[entry-live] nothing to check.")
-            return 0
+            range_label = f"{base}..{args.head}"
+        else:
+            print(
+                f"::notice::base commit {base} is not available (shallow clone, force push "
+                f"or first push); checking only the docs changed by {args.head}"
+            )
+            paths = head_doc_changes(args.head)
+            range_label = f"{args.head} alone"
         entries = [entry_from_doc(path, git("show", f"{args.head}:{path}")) for path in paths]
         found = {ident: detail for ident, detail in (item for item in entries if item)}
         if not found:
-            print(f"[entry-live] no entry docs changed in {base}..{args.head}; nothing to check.")
+            print(f"[entry-live] no entry docs changed in {range_label}; nothing to check.")
             return 0
         ids = set(found)
         print(f"[entry-live] changed entries: {', '.join(sorted(ids))}.")
