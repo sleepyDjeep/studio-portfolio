@@ -5,22 +5,31 @@ Live shell check: the deployed page, not just its data file.
 tools/check_bundle_freshness.py proves the live portfolio-data.js matches docs/,
 but it says nothing about the rest of the deploy. A Pages build that serves a 404
 for app.js, styles.css or an image keeps the data check green while the atlas is
-blank or full of broken tiles, so this script fetches the shell and a few
-representative assets (one of each image type plus every sound clip) and requires
-a 200 with the content type the page needs.
+blank or full of broken tiles, so this script fetches the shell, every sound clip
+and a slice of the images and diagrams the payload references, requiring a 200
+with the content type the page needs.
 
-Assets are sampled from the committed portfolio-data.js, so the check follows the
-real payload instead of a hardcoded path list. Media bytes are also hashed and
-compared against the sha256 the bundle records for that path: a 200 of the right
-type proves something is served, not that it is the file the page was built with.
+Assets come from the committed portfolio-data.js, so the check follows the real
+payload instead of a hardcoded path list. Media bytes are also hashed and compared
+against the sha256 the bundle records for that path: a 200 of the right type
+proves something is served, not that it is the file the page was built with.
+
+Hashing every image would pull about 141 MB each run, so the images and diagrams
+are split into four slices and one slice is hashed per day, chosen from the UTC
+date. Over four consecutive days the whole payload is covered, and the run prints
+which slice it took. The sound clips are hashed every run because all four add up
+to less than a megabyte.
 
     python tools/check_live_shell.py
     python tools/check_live_shell.py --base https://example.com/portfolio/
+    python tools/check_live_shell.py --full     # every asset in one run
+    python tools/check_live_shell.py --slice 3  # a specific slice of four
 
 Exit codes: 0 = everything served correctly, 1 = a check failed.
 """
 
 import argparse
+import datetime
 import hashlib
 import json
 import os
@@ -34,6 +43,7 @@ PORTFOLIO_ROOT = Path(__file__).resolve().parent.parent
 BUNDLE_PATH = PORTFOLIO_ROOT / "portfolio-data.js"
 BUNDLE_PREFIX = "window.PORTFOLIO_DATA = "
 DEFAULT_BASE = "https://sleepydjeep.github.io/studio-portfolio/"
+DEFAULT_SLICES = 4
 
 # (path, required substring of Content-Type, substrings the body must contain)
 SHELL = [
@@ -43,16 +53,17 @@ SHELL = [
     ("portfolio-data.js", "javascript", ()),
 ]
 
-# (suffix, required substring of Content-Type, how many to check: None = all).
-# Images are sampled because there are hundreds; the four sound clips are all
-# fetched because each is a few kilobytes. Audio matches on the type prefix
+# Extension -> required substring of Content-Type. Audio matches on the prefix
 # because Pages serves the same .wav as either audio/wav or audio/x-wav.
-ASSET_TYPES = [
-    (".png", "image/png", 1),
-    (".jpg", "image/jpeg", 1),
-    (".svg", "image/svg+xml", 1),
-    (".wav", "audio/", None),
-]
+CONTENT_TYPES = {
+    ".png": "image/png",
+    ".jpg": "image/jpeg",
+    ".jpeg": "image/jpeg",
+    ".gif": "image/gif",
+    ".webp": "image/webp",
+    ".svg": "image/svg+xml",
+    ".wav": "audio/",
+}
 
 
 def load_bundle(path: Path) -> dict:
@@ -63,23 +74,39 @@ def load_bundle(path: Path) -> dict:
     return json.loads(raw[idx + len(BUNDLE_PREFIX):].rstrip().rstrip(";"))
 
 
-def sample_assets(bundle: dict) -> list[tuple[str, str, str | None]]:
-    """One asset per image type, every sound clip, with the recorded digest if any.
+def asset_targets(bundle: dict) -> list[tuple[str, str | None, str | None]]:
+    """Every media file and diagram the payload references, sorted, with its digest.
 
+    The same image can be used by several entries, so paths are deduplicated.
     Diagrams live inside the bundle as inline SVG, so their .svg file has no
     recorded sha256 and can only be checked for type and reachability.
     """
-    entries = bundle.get("entries", [])
-    media = [(str(m.get("src") or ""), m.get("sha256")) for e in entries for m in e.get("media", [])]
-    diagrams = [(str(e.get("diagram")), None) for e in entries if e.get("diagram")]
+    found: dict[str, str | None] = {}
+    for entry in bundle.get("entries", []):
+        for item in entry.get("media", []):
+            src = str(item.get("src") or "")
+            if src and src not in found:
+                found[src] = item.get("sha256")
+        diagram = entry.get("diagram")
+        if diagram and str(diagram) not in found:
+            found[str(diagram)] = None
 
-    picked: list[tuple[str, str, str | None]] = []
-    for suffix, content_type, limit in ASSET_TYPES:
-        source = diagrams if suffix == ".svg" else media
-        matches = [item for item in source if item[0].lower().endswith(suffix)]
-        for path, digest in matches[:limit] if limit else matches:
-            picked.append((path, content_type, digest))
-    return picked
+    targets = []
+    for path in sorted(found):
+        targets.append((path, CONTENT_TYPES.get(Path(path).suffix.lower()), found[path]))
+    return targets
+
+
+def split_targets(targets):
+    """Sound clips are cheap enough for every run; everything else takes turns."""
+    always = [target for target in targets if (target[1] or "").startswith("audio/")]
+    rotating = [target for target in targets if not (target[1] or "").startswith("audio/")]
+    return always, rotating
+
+
+def pick_slice(rotating, slices: int, index: int):
+    """Interleaved slices: consecutive days never overlap, together they cover all."""
+    return rotating[index::slices]
 
 
 def fetch(url: str) -> tuple[int, str, bytes]:
@@ -88,7 +115,7 @@ def fetch(url: str) -> tuple[int, str, bytes]:
         headers={"User-Agent": "studio-portfolio-live-shell", "Cache-Control": "no-cache"},
     )
     try:
-        with urllib.request.urlopen(request, timeout=60) as response:
+        with urllib.request.urlopen(request, timeout=120) as response:
             return response.status, response.headers.get("Content-Type", ""), response.read()
     except urllib.error.HTTPError as exc:
         return exc.code, exc.headers.get("Content-Type", "") if exc.headers else "", b""
@@ -98,16 +125,43 @@ def fetch(url: str) -> tuple[int, str, bytes]:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Fetch the deployed shell and sample assets, asserting each is served.")
+    parser = argparse.ArgumentParser(description="Fetch the deployed shell and a slice of its assets, asserting each is served.")
     parser.add_argument("--base", default=DEFAULT_BASE, help=f"site root URL (default: {DEFAULT_BASE})")
     parser.add_argument("--bundle", default=str(BUNDLE_PATH), help="local bundle to sample asset paths from")
+    parser.add_argument("--slices", type=int, default=DEFAULT_SLICES, help=f"rotating slices to split the assets into (default: {DEFAULT_SLICES})")
+    parser.add_argument("--slice", type=int, help="1-based slice to check instead of the one the date selects")
+    parser.add_argument("--full", action="store_true", help="check every asset in this run instead of one slice")
     args = parser.parse_args()
+
+    if args.full:
+        slices = 1
+        index = 0
+    else:
+        slices = args.slices
+        if slices < 1:
+            parser.error("--slices must be at least 1")
+        if args.slice is not None:
+            if not 1 <= args.slice <= slices:
+                parser.error(f"--slice must be between 1 and {slices}")
+            index = args.slice - 1
+        else:
+            # The UTC date picks the slice, so a manual rerun of the same day and
+            # the scheduled run look at the same assets.
+            index = datetime.datetime.now(datetime.timezone.utc).toordinal() % slices
 
     base = args.base if args.base.endswith("/") else args.base + "/"
     stamp = os.environ.get("GITHUB_RUN_ID") or str(int(time.time()))
 
+    always, rotating = split_targets(asset_targets(load_bundle(Path(args.bundle))))
+    chosen = pick_slice(rotating, slices, index)
+    if slices == 1:
+        print(f"[slate] hashing all {len(rotating)} images and diagrams plus {len(always)} sound clips")
+    else:
+        print(f"[slate] slice {index + 1}/{slices}: {len(chosen)} of {len(rotating)} images and diagrams "
+              f"plus {len(always)} sound clips; the other {len(rotating) - len(chosen)} follow on the next {slices - 1} runs")
+
     targets = [(path, ctype, (), None) for path, ctype, _ in SHELL]
-    targets += [(path, ctype, (), digest) for path, ctype, digest in sample_assets(load_bundle(Path(args.bundle)))]
+    targets += [(path, ctype, (), digest) for path, ctype, digest in always + chosen]
     failures = []
     drifted = []
 
@@ -121,7 +175,7 @@ def main() -> int:
             # One reason is enough: a 404 tells you nothing about the content type.
             problems.append(f"HTTP {status} (expected 200)")
         else:
-            if expected_type not in lowered:
+            if expected_type and expected_type not in lowered:
                 problems.append(f"Content-Type '{content_type or '<none>'}' (expected '{expected_type}')")
             if not body:
                 problems.append("empty body")
@@ -143,8 +197,10 @@ def main() -> int:
         else:
             if expected_sha:
                 digest = f"sha256 {expected_sha[:12]}"
+            elif path.startswith("assets/"):
+                digest = "no digest in bundle"
             else:
-                digest = "no digest in bundle" if path.startswith("assets/") else ""
+                digest = ""
             print(f"[ok] {label:<48} {status} {content_type:<28} {len(body):>9,} bytes  {digest}")
 
     print()
@@ -164,8 +220,9 @@ def main() -> int:
         return 1
 
     hashed = sum(1 for target in targets if target[3])
+    span = "all assets" if slices == 1 else f"slice {index + 1}/{slices} of {len(rotating)} assets"
     print(f"=== LIVE SHELL OK: {len(targets)} paths served as expected, "
-          f"{hashed} byte-identical to the bundle ===")
+          f"{hashed} byte-identical to the bundle ({span}) ===")
     return 0
 
 

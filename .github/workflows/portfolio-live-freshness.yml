@@ -7,8 +7,10 @@ name: Live atlas freshness
 # drifting quietly.
 #
 # The data file is only half a deploy, so a second step fetches the page shell and
-# samples the assets the payload references. Without it, a deploy serving 404s for
-# app.js, styles.css or an image would stay silent while the data check passed.
+# a rotating slice of the assets the payload references: the four sound clips every
+# day, and a quarter of the images and diagrams, so the whole set is covered every
+# four days. Without it, a deploy serving 404s for app.js, styles.css or an image
+# would stay silent while the data check passed.
 
 on:
   schedule:
@@ -36,7 +38,7 @@ jobs:
           LIVE_BUNDLE: https://sleepydjeep.github.io/studio-portfolio/portfolio-data.js
         run: python tools/check_bundle_freshness.py --bundle "$LIVE_BUNDLE?run=${GITHUB_RUN_ID}"
 
-      - name: Fetch the page shell and sample assets
+      - name: Fetch the page shell and a rotating slice of assets
         env:
           LIVE_SITE: https://sleepydjeep.github.io/studio-portfolio/
         run: python tools/check_live_shell.py --base "$LIVE_SITE"
