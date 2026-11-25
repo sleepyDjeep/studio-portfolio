@@ -13,6 +13,7 @@ Cases:
   gate2_frontmatter    replace a doc's closing '---' fence with '--'
   gate2_entry_missing  delete an entry doc outright (the baseline must notice)
   gate3_missing_asset  truncate an image the bundle references to zero bytes
+  gate3_untracked_asset  drop that image from the git index while leaving it on disk
   gate4_slop           append a banned word to README.md
   gate5_vault_tracked  force-add a file under docs/vault/
   freshness_media      append one byte to a referenced image (still >0 bytes, so gate 3
@@ -105,6 +106,9 @@ def force_rmtree(root: Path) -> bool:
 
 def init_repo(root: Path) -> None:
     subprocess.run(["git", "init", "-q"], cwd=str(root), check=True, capture_output=True)
+    # Gate 3 reads the index, so a copy with nothing staged would fail it for the
+    # wrong reason and make the baseline meaningless.
+    subprocess.run(["git", "add", "-A"], cwd=str(root), check=True, capture_output=True)
 
 
 def rewrite_text(path: Path, text: str) -> None:
@@ -187,6 +191,18 @@ def empty_referenced_asset(root: Path) -> str:
     return f"{src}: truncated to 0 bytes"
 
 
+def untrack_referenced_asset(root: Path) -> str:
+    src = referenced_png(root)
+    subprocess.run(
+        ["git", "update-index", "--force-remove", "--", src],
+        cwd=str(root),
+        check=True,
+        capture_output=True,
+    )
+    size = (root / src).stat().st_size
+    return f"{src}: dropped from the git index, still on disk ({size} bytes)"
+
+
 def add_slop(root: Path) -> str:
     readme = root / "README.md"
     text = readme.read_text(encoding="utf-8")
@@ -244,6 +260,7 @@ CONTROLS = [
     Control("gate2_frontmatter", break_frontmatter, "verify", "Invalid YAML frontmatter"),
     Control("gate2_entry_missing", delete_entry_doc, "verify", "Gate 2 (Baseline)"),
     Control("gate3_missing_asset", empty_referenced_asset, "verify", "Gate 3: Missing/empty media"),
+    Control("gate3_untracked_asset", untrack_referenced_asset, "verify", "is not tracked in git"),
     Control("gate4_slop", add_slop, "verify", "Gate 4 (Anti-Slop)"),
     Control("gate5_vault_tracked", track_vault_file, "verify", "Gate 5 (Vault Leak)"),
     Control("freshness_media", append_media_byte, "freshness", "sha256"),

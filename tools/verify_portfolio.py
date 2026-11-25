@@ -74,6 +74,35 @@ def entry_id(md_path: Path, meta: dict) -> str:
     return str(meta.get("id") or md_path.stem).strip()
 
 
+def tracked_files() -> set[str] | None:
+    """Every path in the git index, or None outside a checkout."""
+    result = subprocess.run(
+        ["git", "ls-files", "-z"], cwd=str(PORTFOLIO_ROOT), capture_output=True, text=True
+    )
+    if result.returncode != 0:
+        return None
+    return {path for path in result.stdout.split("\0") if path}
+
+
+def asset_problems(label: str, rel: str, owner: str, tracked: set[str] | None) -> list[str]:
+    """Gate 3 rule: the file needs bytes on disk *and* a place in the git index.
+
+    Existence alone is not shipping. An asset caught by an ignore rule sits on the
+    author's disk, passes every local check, and 404s on Pages.
+    """
+    rel = rel.replace("\\", "/").strip()
+    problems = []
+    path = PORTFOLIO_ROOT / rel
+    if not path.exists() or path.stat().st_size == 0:
+        problems.append(f"Gate 3: Missing/empty {label} '{rel}' for {owner}")
+    if tracked is not None and rel not in tracked:
+        problems.append(
+            f"Gate 3: {label} '{rel}' is not tracked in git for {owner} "
+            f"(an ignore rule or a forgotten add ships a 404 to Pages)"
+        )
+    return problems
+
+
 def public_entry_ids() -> tuple[list[str], list[str]]:
     """Every id that ships publicly, plus the docs that no longer parse."""
     ids, problems = [], []
@@ -264,19 +293,26 @@ def main() -> int:
         else:
             json_str = raw_js[idx + len(prefix):].rstrip().rstrip(";")
             bundle = json.loads(json_str)
+            tracked = tracked_files()
+            if tracked is None:
+                failures.append(
+                    "Gate 3: not a git checkout, so whether these assets actually ship cannot be verified"
+                )
+
             checked_assets = 0
             for e in bundle.get("entries", []):
                 if e.get("diagram"):
-                    dp = PORTFOLIO_ROOT / e["diagram"]
                     checked_assets += 1
-                    if not dp.exists() or dp.stat().st_size == 0:
-                        failures.append(f"Gate 3: Missing/empty diagram '{e['diagram']}' for {e['id']}")
+                    failures.extend(asset_problems("diagram", str(e["diagram"]), e["id"], tracked))
                 for m in e.get("media", []):
-                    mp = PORTFOLIO_ROOT / m["src"]
                     checked_assets += 1
-                    if not mp.exists() or mp.stat().st_size == 0:
-                        failures.append(f"Gate 3: Missing/empty media '{m['src']}' for {e['id']}")
-            print(f"[Gate 3] Verified {checked_assets} asset paths in portfolio-data.js (>0 bytes on disk).")
+                    failures.extend(
+                        asset_problems("media", str(m.get("src") or ""), e["id"], tracked)
+                    )
+            print(
+                f"[Gate 3] Verified {checked_assets} asset paths in portfolio-data.js "
+                f"(>0 bytes on disk, tracked in git)."
+            )
 
     # --- GATE 4: Zero AI-Slop Lexicon ---
     scan_targets = list(DOCS_DIR.rglob("*.md")) + [
