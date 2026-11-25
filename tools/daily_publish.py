@@ -253,7 +253,10 @@ def gather_candidates() -> list[dict]:
             if not folder.is_dir() or folder.name in IGNORE_FOLDERS:
                 continue
             norm = normalize_path(str(folder))
-            if any(norm in known or known in norm for known in known_paths):
+            # Only a path recorded for this folder, or one inside it, means the
+            # folder is documented. A recorded parent (the projects root itself)
+            # must not hide every folder under it.
+            if any(known == norm or known.startswith(norm + "/") for known in known_paths):
                 continue
             readme = read_readme(folder)
             if not readme:
