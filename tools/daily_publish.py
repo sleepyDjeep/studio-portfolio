@@ -248,8 +248,9 @@ def gather_candidates() -> list[dict]:
         item["earliest"] = earlier(item["earliest"], modified)
         item["latest"] = max(item["latest"], modified)
 
-    if PROJECTS_ROOT.exists():
-        for folder in sorted(PROJECTS_ROOT.iterdir()):
+    projects_root = Path(os.environ.get("PORTFOLIO_PROJECTS_ROOT", "").strip() or PROJECTS_ROOT)
+    if projects_root.exists():
+        for folder in sorted(projects_root.iterdir()):
             if not folder.is_dir() or folder.name in IGNORE_FOLDERS:
                 continue
             norm = normalize_path(str(folder))
