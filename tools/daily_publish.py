@@ -9,8 +9,11 @@ fails.
 
 The source material (LanceDB memories, conversation summaries, project folders) is
 local and private, so this runs on this machine, not in CI. A value for
-OPENAI_API_KEY must be in the environment or in the repository's .env file;
-without it the run logs a skip and exits 0 rather than failing every day.
+A model key is optional: with OPENAI_API_KEY in the environment or .env the run
+asks the endpoint directly. Without one it writes data/intake/handoff.json (the
+candidate facts plus the exact prompt and schema) and exits 0; a payload authored
+from that handoff at data/intake/authored.json is used on the next run and then
+removed. With neither, it skips cleanly rather than failing every day.
 
 Guardrails: refuses a dirty tree, takes a lock, caps publishing at seven auto
 entries per week, retries a candidate at most three times, and refuses drafts with
@@ -32,6 +35,9 @@ import time
 import urllib.parse
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from auto_entry import DRAFT_SCHEMA, build_prompt  # noqa: E402
 
 PORTFOLIO_ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = PORTFOLIO_ROOT / "data"
@@ -297,20 +303,24 @@ def build_facts(candidate: dict) -> dict:
     }
 
 
-def publish(candidate: dict, dry_run: bool) -> int:
+def publish(candidate: dict, dry_run: bool, draft_path: Path | None = None) -> int:
     facts = build_facts(candidate)
     candidate = {**candidate, "facts": facts}
     INTAKE_DIR.mkdir(parents=True, exist_ok=True)
     candidate_path = INTAKE_DIR / "candidate.json"
     candidate_path.write_text(json.dumps(candidate, indent=2) + "\n", encoding="utf-8")
     log(f"candidate {candidate['key']}: {candidate.get('title') or '(untitled)'} "
-        f"({len(candidate['memory_ids'])} memories, {len(candidate['conversation_ids'])} conversations, "
+        f"({len(candidate.get('memory_ids', []))} memories, "
+        f"{len(candidate.get('conversation_ids', []))} conversations, "
         f"{len(facts['images'])} images)")
     if dry_run:
         log("dry run: facts written, nothing generated or published")
         return 0
 
-    result = run([sys.executable, "tools/auto_entry.py", "--candidate", str(candidate_path)])
+    command = [sys.executable, "tools/auto_entry.py", "--candidate", str(candidate_path)]
+    if draft_path is not None:
+        command += ["--draft", str(draft_path)]
+    result = run(command)
     if result.returncode != 0:
         return 1
 
@@ -352,9 +362,15 @@ def publish(candidate: dict, dry_run: bool) -> int:
         base = git("rev-parse", "HEAD^")
         head = git("rev-parse", "HEAD")
     log(f"pushed {head[:8]}; verifying on the live site")
-    check = run([sys.executable, "tools/check_live_push.py", "--base", base, "--head", head,
-                 "--timeout", "600"], capture=False)
-    if check.returncode != 0:
+    forced_failure = os.environ.get("AUTO_ENTRY_FORCE_LIVE_FAILURE") == "1"
+    if forced_failure:
+        log("[test] AUTO_ENTRY_FORCE_LIVE_FAILURE=1: treating the live check as failed")
+        check_code = 1
+    else:
+        check = run([sys.executable, "tools/check_live_push.py", "--base", base, "--head", head,
+                     "--timeout", "600"], capture=False)
+        check_code = check.returncode
+    if check_code != 0:
         log("live check failed; reverting the auto entry")
         if run(["git", "revert", "--no-edit", "HEAD"]).returncode == 0:
             run(["git", "push", "origin", "main"])
@@ -366,6 +382,7 @@ def publish(candidate: dict, dry_run: bool) -> int:
 def main() -> int:
     parser = argparse.ArgumentParser(description="Publish one new studio entry per day.")
     parser.add_argument("--dry-run", action="store_true", help="pick a candidate and write its facts only")
+    parser.add_argument("--candidate", help="use this candidate JSON instead of the intake scan")
     args = parser.parse_args()
 
     load_env()
@@ -378,32 +395,79 @@ def main() -> int:
         if run(["git", "pull", "--rebase", "origin", "main"]).returncode != 0:
             log("could not update from origin/main; not publishing")
             return 1
-        if not args.dry_run and not os.environ.get("OPENAI_API_KEY", "").strip():
-            log("skipped: OPENAI_API_KEY is not set (see README for the .env entry)")
-            return 0
         if not args.dry_run and weekly_auto_commits() >= WEEKLY_LIMIT:
             log(f"skipped: {WEEKLY_LIMIT} auto entries already published this week")
             return 0
 
         ledger = load_ledger()
-        candidate = next(
-            (
-                item for item in gather_candidates()
-                if item["key"] not in ledger["done"]
-                and ledger["attempts"].get(item["key"], 0) < MAX_ATTEMPTS
-            ),
-            None,
-        )
+        if args.candidate:
+            candidate = json.loads(Path(args.candidate).read_text(encoding="utf-8"))
+            if not candidate.get("key"):
+                log("candidate file has no key; refusing")
+                return 1
+        else:
+            candidate = next(
+                (
+                    item for item in gather_candidates()
+                    if item["key"] not in ledger["done"]
+                    and ledger["attempts"].get(item["key"], 0) < MAX_ATTEMPTS
+                ),
+                None,
+            )
         if not candidate:
             log("no unpublished candidates")
             return 0
 
-        code = publish(candidate, args.dry_run)
+        INTAKE_DIR.mkdir(parents=True, exist_ok=True)
+        handoff_path = INTAKE_DIR / "handoff.json"
+        authored_path = INTAKE_DIR / "authored.json"
+        draft_path = None
+        if authored_path.exists():
+            try:
+                payload = json.loads(authored_path.read_text(encoding="utf-8"))
+            except json.JSONDecodeError:
+                payload = {}
+            if str(payload.get("candidate_key") or "") == candidate["key"]:
+                draft_path = authored_path
+                log("using the session-authored payload")
+            else:
+                log("ignoring an authored payload written for a different candidate")
+
+        key_present = bool(os.environ.get("OPENAI_API_KEY", "").strip())
+        if draft_path is None and not key_present and not args.dry_run:
+            facts = build_facts(candidate)
+            candidate_with_facts = {**candidate, "facts": facts}
+            handoff_path.write_text(
+                json.dumps(
+                    {
+                        "candidate_key": candidate["key"],
+                        "created": datetime.now().isoformat(timespec="seconds"),
+                        "candidate": candidate_with_facts,
+                        "schema": DRAFT_SCHEMA,
+                        "prompt": build_prompt(candidate_with_facts),
+                        "instructions": (
+                            "Write one JSON object in this schema, plus \"candidate_key\": "
+                            f"\"{candidate['key']}\", to data/intake/authored.json, then run "
+                            "tools/daily_publish.py again. The payload is validated before publishing."
+                        ),
+                    },
+                    indent=2,
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+            log(f"no key and no authored payload: wrote {handoff_path.relative_to(PORTFOLIO_ROOT).as_posix()}")
+            log("author the payload, then re-run; nothing was published")
+            return 0
+
+        code = publish(candidate, args.dry_run, draft_path)
         if code == 0 and not args.dry_run:
             ledger["done"][candidate["key"]] = {
                 "date": datetime.now(timezone.utc).isoformat(timespec="seconds"),
                 "workspace": candidate.get("workspace", ""),
             }
+            for path in (handoff_path, authored_path):
+                path.unlink(missing_ok=True)
         elif code != 0:
             ledger["attempts"][candidate["key"]] = ledger["attempts"].get(candidate["key"], 0) + 1
         save_ledger(ledger)
