@@ -6,8 +6,8 @@ tools/check_bundle_freshness.py proves the live portfolio-data.js matches docs/,
 but it says nothing about the rest of the deploy. A Pages build that serves a 404
 for app.js, styles.css or an image keeps the data check green while the atlas is
 blank or full of broken tiles, so this script fetches the shell and a few
-representative assets (an image, a diagram and a sound clip) and requires a 200
-with the content type the page needs.
+representative assets (one of each image type plus every sound clip) and requires
+a 200 with the content type the page needs.
 
 Assets are sampled from the committed portfolio-data.js, so the check follows the
 real payload instead of a hardcoded path list.
@@ -40,13 +40,15 @@ SHELL = [
     ("portfolio-data.js", "javascript", ()),
 ]
 
-# (suffix, required substring of Content-Type). Audio matches on the type prefix
+# (suffix, required substring of Content-Type, how many to check: None = all).
+# Images are sampled because there are hundreds; the four sound clips are all
+# fetched because each is a few kilobytes. Audio matches on the type prefix
 # because Pages serves the same .wav as either audio/wav or audio/x-wav.
 ASSET_TYPES = [
-    (".png", "image/png"),
-    (".jpg", "image/jpeg"),
-    (".svg", "image/svg+xml"),
-    (".wav", "audio/"),
+    (".png", "image/png", 1),
+    (".jpg", "image/jpeg", 1),
+    (".svg", "image/svg+xml", 1),
+    (".wav", "audio/", None),
 ]
 
 
@@ -65,10 +67,10 @@ def sample_assets(bundle: dict) -> list[tuple[str, str]]:
     diagrams = [str(e.get("diagram") or "") for e in entries if e.get("diagram")]
 
     picked: list[tuple[str, str]] = []
-    for suffix, content_type in ASSET_TYPES:
+    for suffix, content_type, limit in ASSET_TYPES:
         source = diagrams if suffix == ".svg" else media
-        match = next((path for path in source if path.lower().endswith(suffix)), None)
-        if match:
+        matches = [path for path in source if path.lower().endswith(suffix)]
+        for match in matches[:limit] if limit else matches:
             picked.append((match, content_type))
     return picked
 
