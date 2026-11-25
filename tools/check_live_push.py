@@ -191,8 +191,8 @@ def verify_assets(base_url: str, bundle: dict, ids: set[str]) -> tuple[list[str]
         for src, digest in assets:
             url = f"{base_url}{src}?v={digest[:12]}"
             required = CONTENT_TYPES.get(Path(src).suffix.lower()) or "any"
-            row = {"src": src, "expected_type": required, "served_type": "", "error": "",
-                   "type_ok": None, "digest_ok": None}
+            row = {"id": str(entry.get("id")), "src": src, "expected_type": required,
+                   "served_type": "", "error": "", "type_ok": None, "digest_ok": None}
             try:
                 data, content_type = fetch(url)
             except urllib.error.HTTPError as exc:
@@ -219,7 +219,10 @@ def verify_assets(base_url: str, bundle: dict, ids: set[str]) -> tuple[list[str]
 
 
 def render_table(rows: list[dict]) -> list[str]:
-    lines = ["| Asset | Expected type | Served type | SHA-256 |", "| --- | --- | --- | --- |"]
+    lines = [
+        "| Entry | Asset | Expected type | Served type | SHA-256 |",
+        "| --- | --- | --- | --- | --- |",
+    ]
     for row in rows:
         served = row["error"] or row["served_type"] or "?"
         if row["served_type"] and row["type_ok"] is False:
@@ -230,7 +233,9 @@ def render_table(rows: list[dict]) -> list[str]:
             digest = "MISMATCH"
         else:
             digest = "not checked"
-        lines.append(f"| `{row['src']}` | `{row['expected_type']}` | {served} | {digest} |")
+        lines.append(
+            f"| `{row['id']}` | `{row['src']}` | `{row['expected_type']}` | {served} | {digest} |"
+        )
     return lines
 
 
