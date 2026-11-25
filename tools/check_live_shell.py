@@ -6,7 +6,8 @@ tools/check_bundle_freshness.py proves the live portfolio-data.js matches docs/,
 but it says nothing about the rest of the deploy. A Pages build that serves a 404
 for app.js, styles.css or an image keeps the data check green while the atlas is
 blank or full of broken tiles, so this script fetches the shell and a few
-representative assets and requires a 200 with the content type the page needs.
+representative assets (an image, a diagram and a sound clip) and requires a 200
+with the content type the page needs.
 
 Assets are sampled from the committed portfolio-data.js, so the check follows the
 real payload instead of a hardcoded path list.
@@ -39,7 +40,14 @@ SHELL = [
     ("portfolio-data.js", "javascript", ()),
 ]
 
-ASSET_TYPES = [(".png", "image/png"), (".jpg", "image/jpeg"), (".svg", "image/svg+xml")]
+# (suffix, required substring of Content-Type). Audio matches on the type prefix
+# because Pages serves the same .wav as either audio/wav or audio/x-wav.
+ASSET_TYPES = [
+    (".png", "image/png"),
+    (".jpg", "image/jpeg"),
+    (".svg", "image/svg+xml"),
+    (".wav", "audio/"),
+]
 
 
 def load_bundle(path: Path) -> dict:
