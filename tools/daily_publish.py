@@ -381,8 +381,12 @@ def publish(candidate: dict, dry_run: bool, draft_path: Path | None = None) -> i
         log("[test] AUTO_ENTRY_FORCE_LIVE_FAILURE=1: treating the live check as failed")
         check_code = 1
     else:
-        check = run([sys.executable, "tools/check_live_push.py", "--base", base, "--head", head,
-                     "--timeout", "600"], capture=False)
+        check_command = [sys.executable, "tools/check_live_push.py", "--base", base, "--head", head,
+                         "--timeout", "600"]
+        live_url = os.environ.get("PORTFOLIO_LIVE_URL", "").strip()
+        if live_url:
+            check_command += ["--base-url", live_url]
+        check = run(check_command, capture=False)
         check_code = check.returncode
     if check_code != 0:
         log("live check failed; reverting the auto entry")
