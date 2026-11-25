@@ -248,9 +248,8 @@ def gather_candidates() -> list[dict]:
         item["earliest"] = earlier(item["earliest"], modified)
         item["latest"] = max(item["latest"], modified)
 
-    projects_root = Path(os.environ.get("PORTFOLIO_PROJECTS_ROOT", "").strip() or PROJECTS_ROOT)
-    if projects_root.exists():
-        for folder in sorted(projects_root.iterdir()):
+    if PROJECTS_ROOT.exists():
+        for folder in sorted(PROJECTS_ROOT.iterdir()):
             if not folder.is_dir() or folder.name in IGNORE_FOLDERS:
                 continue
             norm = normalize_path(str(folder))
@@ -384,19 +383,9 @@ def publish(candidate: dict, dry_run: bool, draft_path: Path | None = None) -> i
         base = git("rev-parse", "HEAD^")
         head = git("rev-parse", "HEAD")
     log(f"pushed {head[:8]}; verifying on the live site")
-    forced_failure = os.environ.get("AUTO_ENTRY_FORCE_LIVE_FAILURE") == "1"
-    if forced_failure:
-        log("[test] AUTO_ENTRY_FORCE_LIVE_FAILURE=1: treating the live check as failed")
-        check_code = 1
-    else:
-        check_command = [sys.executable, "tools/check_live_push.py", "--base", base, "--head", head,
-                         "--timeout", "600"]
-        live_url = os.environ.get("PORTFOLIO_LIVE_URL", "").strip()
-        if live_url:
-            check_command += ["--base-url", live_url]
-        check = run(check_command, capture=False)
-        check_code = check.returncode
-    if check_code != 0:
+    check = run([sys.executable, "tools/check_live_push.py", "--base", base, "--head", head,
+                 "--timeout", "600"], capture=False)
+    if check.returncode != 0:
         log("live check failed; reverting the auto entry")
         if run(["git", "revert", "--no-edit", "HEAD"]).returncode == 0:
             run(["git", "push", "origin", "main"])
