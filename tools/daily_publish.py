@@ -259,6 +259,7 @@ def gather_candidates() -> list[dict]:
             if not readme:
                 continue
             item = bucket(f"ws:{norm}", str(folder))
+            item["from_folder"] = True
             item["texts"].append(f"Project folder {folder} with a README.")
             item["latest"] = item["earliest"] = datetime.fromtimestamp(
                 folder.stat().st_mtime
@@ -270,7 +271,7 @@ def gather_candidates() -> list[dict]:
             len(item["memory_ids"]) >= 3
             or any("steps" in conv and int(re.search(r"\((\d+) steps\)", conv).group(1)) >= 20
                    for conv in item["conversations"])
-            or key.startswith("dir:")
+            or item.get("from_folder")
         )
         if not significant:
             continue
