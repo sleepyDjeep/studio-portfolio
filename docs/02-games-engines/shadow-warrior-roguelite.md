@@ -1,92 +1,82 @@
 ---
 id: "shadow-warrior-roguelite"
-title: "Shadow Warrior Roguelite: Procedural Cyberpunk Arena FPS"
-subtitle: "Fast-paced Godot 4.7 katana and boomer-shooter roguelite featuring 10 procedural 3D weapons, elemental cel-shaded VFX, and zero-WAV real-time synthwave audio."
+title: "NEON GRAVE: Ten-Floor Cyberpunk Roguelite (Working Title)"
+subtitle: "Godot 4.7 first-person roguelite in pre-alpha: a ten-floor descent with a boss behind every door, built on procedurally generated GLBs, live-synthesized synthwave, and a 32-unit mission ledger that gates every step."
 pillar: "02-games-engines"
 entry_type: "project"
 readiness: "active-build"
 visibility: "main"
 date_started: "2026-09-10"
-date_updated: "2026-09-20"
+date_updated: "2026-11-25"
 tags:
   - "godot-4-7"
   - "roguelite-fps"
   - "procedural-3d"
   - "synthwave-dsp"
   - "cel-shading"
-  - "boomer-shooter"
+  - "mission-ledger"
 metrics:
-  - label: "Total Disk Size"
-    value: "1.61 MB"
-  - label: "Source Code"
-    value: "15,939 LOC"
-  - label: "Procedural Weapons"
-    value: "10 3D GLBs"
-  - label: "Automated Tests"
-    value: "26 Test Files"
-  - label: "Pre-Recorded WAVs"
-    value: "0 (100% Live DSP)"
+  - label: "Gate Baseline"
+    value: "588 tests, 583 passing"
+  - label: "Test Suites"
+    value: "14 headless suites"
+  - label: "Planned Boss Fights"
+    value: "10 (4 bespoke)"
+  - label: "Mission Ledger"
+    value: "6 of 32 units (M0 complete)"
+  - label: "Disk Footprint"
+    value: "1.61 MB, zero audio WAVs"
 media:
   - src: "assets/media/shadow-warrior-roguelite/gameplay-capture.png"
     kind: "authentic"
-    caption: "Live Godot 4.7 Forward+ capture of Shadow Warrior Roguelite featuring procedural 3D weaponry and cyberpunk arena lighting."
+    caption: "Prototype capture from the September 2026 build: procedural weapon viewmodel, cyberpunk arena lighting and the cel-shaded look in Godot 4.7 Forward+. It predates the NEON GRAVE plan, so it shows the existing prototype rather than a finished 1.0 run."
 diagram: ""
 tech_stack:
   - "Godot 4.7 (Vulkan Forward+)"
   - "GDScript"
   - "Godot AudioStreamGenerator DSP"
   - "Godot Shader Language (GLSL)"
-  - "Python 3 Procedural GLB Generators"
+  - "Python 3 procedural GLB generators"
+  - "PowerShell mission control and gate harness"
 local_paths:
-  - label: "ShadowWarriorRoguelite Root"
+  - label: "Project Root"
     path: "file:///D:/Projects/ShadowWarriorRoguelite"
-  - label: "Architecture & Feature Matrix"
-    path: "file:///D:/Projects/ShadowWarriorRoguelite/PROJECT.md"
-  - label: "End-to-End Test Runner"
-    path: "file:///D:/Projects/ShadowWarriorRoguelite/tests/run_e2e_tests.py"
+  - label: "1.0 Roadmap and Unit Ledger"
+    path: "file:///D:/Projects/ShadowWarriorRoguelite/docs/mission/ROADMAP.md"
+  - label: "Verified Current State"
+    path: "file:///D:/Projects/ShadowWarriorRoguelite/docs/mission/FACTS.md"
 run_commands:
-  - label: "Launch Game via PowerShell Helper"
-    command: "powershell -ExecutionPolicy Bypass -File \"D:\\Projects\\ShadowWarriorRoguelite\\run_game.ps1\""
   - label: "Open Project in Godot 4.7"
     command: "\"D:\\SteamFiles\\steamapps\\common\\Godot Engine\\godot.windows.opt.tools.64.exe\" --path \"D:\\Projects\\ShadowWarriorRoguelite\""
-  - label: "Run End-to-End Test Suite"
-    command: "python \"D:\\Projects\\ShadowWarriorRoguelite\\tests\\run_e2e_tests.py\""
+  - label: "Fast Gate (boot probe, harness selftest, autopilot)"
+    command: "powershell -NoProfile -ExecutionPolicy Bypass -File \"D:\\Projects\\ShadowWarriorRoguelite\\tools\\gate.ps1\" -Fast"
+  - label: "Mission Status"
+    command: "powershell -NoProfile -ExecutionPolicy Bypass -File \"D:\\Projects\\ShadowWarriorRoguelite\\tools\\mission.ps1\" status"
 memory_ids: []
 conversation_ids: []
 ---
 
 ## What It Is & Why It Matters
 
-*Shadow Warrior Roguelite* is a high-velocity first-person cyberpunk katana and arena shooter built in Godot 4.7 Forward+ that packs an entire 3D roguelite—10 weapons, enemy squads, multi-phase bosses, a safe-zone upgrade hub, anime cel-shading, elemental GPU particles, and a reactive synthwave soundtrack—into `1.61 MB` on disk. Between 10-floor arena runs, you regroup in a neon sanctuary with weaponsmith `Grizz` and operator `Vex`, spend harvested souls at the **CyberForge Upgrade Shrine** on double-jumps or elemental blade/ammo infusions (`fire`, `acid`, `cryo`, `shock`), and ride an elevator into procedurally assembled combat rooms.
+*NEON GRAVE* is the working title for a first-person roguelite in Godot 4.7 built on the *Shadow Warrior Roguelite* prototype in `D:\Projects\ShadowWarriorRoguelite`. The destination is one authored two-hour descent through ten floors of the Sprawl, a boss behind every door, and a hub with a Forge where each death converts into the next attempt: banked souls and weapon XP survive a death, carried souls do not, so every elevator ride is a wager. The aesthetic target is 90s OVA cel animation over a live-synthesized synthwave score, with zero audio WAV files on disk.
 
-Most 3D shooters balloon to gigabytes before gameplay feel is even locked in because teams import bloated third-party weapon meshes and static `.wav` libraries early. We built *Shadow Warrior Roguelite* to prove a procedural-first alternative: Python standard-library scripts generate all `17` `.glb` 3D weapon, enemy, boss, and modular room meshes mathematically, while Godot's `AudioStreamGenerator` synthesizes every synthwave bassline, drum stem, katana whoosh, and plasma blast in real time at zero bytes of audio disk overhead.
-
-Several core shaders from this build (`AnimeCelShader.gdshader` and `HitFlash.gdshader`) proved clean enough that we extracted them directly into `D:\Projects\_Shared_Library` as studio-wide Godot 4.7 visual building blocks.
+The project matters to the studio as a test of something harder than a demo: finishing a commercial 1.0 from a prototype that had drifted. The prototype already carries ten procedural weapons, seventeen generated GLB meshes, a hub with two NPCs and an elevator, and a shader set that other studio projects reuse. What it did not have was a trustworthy account of itself, so the first milestone rebuilt the foundation: a mission ledger of 32 units, a headless gate with a real baseline, a boot chain that reaches the main menu, and an autopilot that proves menu to hub.
 
 ## Real Example: How It Works in Practice
 
-- **Input**: You launch `run_game.ps1`, talk to `Grizz` in the Hub, spend `120` souls at `CyberForgeShrine.gd` to infuse your loadout with `cryo` frost crystals plus `150` souls for `double_jump`, step into `Elevator.gd`, and slide (`C`) + dash (`Shift`) into Floor 1 armed with the high-frequency **Katana** and **Shuriken Launcher**.
-- **What Happens**: `GameManager.gd` transitions its 8-state finite state machine from `HUB` through `ELEVATOR_TRANSITION` to `COMBAT_LEVEL`, prompting `LevelGenerator.gd` to stitch modular floor, wall, doorway, and pillar `.glb` tiles and lock room doors behind active enemy waves (`PipeMutant` melee swarmers, `PlasmaGrunt` troopers, and laser-sighted `SniperCyborg` marksmen). As combat intensity rises, `DynamicMusicManager.gd` crossfades real-time `AudioStreamGenerator` synthwave layers from ambient hub pads into driving arpeggios, while `SynthesizedSFX.gd` pitch-bends procedural sword swings and hit thumps. Slashing enemies triggers `HitFlash.gdshader` white/red mesh flashes, spawns `GPUParticles3D` cryo frost shards, updates `DiegeticHUD.tscn` combo/soul counters, and evaluates special run endings (including a zero-hit, zero-upgrade base-katana mastery check in `GameManager.check_victory_conditions()`).
-- **Output**: A crisp 1080p (`2x MSAA`) 3D cyberpunk movement shooter running directly from `99` compact scripts and `17` generated `.glb` assets with zero external asset packs.
+- **Input**: Run `godot --headless --path . -s tools/boot_probe.gd` in the project root, or let `tools/gate.ps1 -Fast` run it as step two. Both ask the same question: does the project's configured main scene reach the main menu on its own?
+- **What Happens**: Godot loads `Boot.tscn`, the boot screen types its six-line sequence at 0.3 s per line, holds, fades, and calls `change_scene_to_file("res://ui/MainMenu.tscn")`. The transition result is checked: if the menu cannot load, the boot prints the error and exits 1 instead of sitting on a finished boot screen. The probe watches the current scene until `MainMenu` appears or 15 s pass, and the fast gate then runs ten harness tests plus an autopilot that presses Play and asserts the hub's player and generated `HubEnvironment`.
+- **Output**: `[BOOT PROBE] PASS reached MainMenu in about 3.7 s`, exit 0, no `SCRIPT ERROR`; the gate prints `BOOT PROBE PASS`, `AUTOPILOT PASS` and an assertion line of 10 passed, 0 failed. A deliberately renamed `MainMenu.tscn` turns the same run into `[BOOT] cannot load ... (error 19)` and gate exit 2.
 
 ## Where It Stands & Next Steps
 
-*Shadow Warrior Roguelite* is in **active-build** integration at `D:\Projects\ShadowWarriorRoguelite` (`268` total files, `1.61 MB`, `15,939` LOC across `84` GDScript files, `10` Python procedural mesh generators, `4` `.gdshader` shaders, `1` PowerShell launcher, and `33` `.tscn` scenes). Milestones `M3` (complete UI & menu suite) and `M4` (dynamic `AudioStreamGenerator` synthwave and procedural SFX engine) are marked `DONE`, all `17` procedural `.glb` meshes and `10` weapon controllers are generated on disk, and `26` automated unit, shader/VFX stress, and E2E test scripts (`tests/run_e2e_tests.py`, `test_m2_challenger5_vfx_stress.gd`) verify subsystem contracts while Milestone `M5` core-loop polish continues.
+Pre-alpha, and the ledger says so plainly. Milestone M0 is complete at 6 of 32 units: repository truth, the gate harness, the boot chain, the documentation canon, mission control scripts, and the autopilot. No M1-or-later unit has started. The prototype still runs on a decorative state machine, has no victory path, no elevator save, and no boss implemented to the ten-fight ladder in the design docs; four known test failures and a nine-node leak are recorded and deferred rather than hidden. The measured baseline is 588 tests across 14 suites with 583 passing, one error, and no hangs.
 
-Next steps to complete the vertical slice:
-- Finish Milestone `M5` arena room-lock wave pacing and elevator floor-to-floor progression across all `10` run depths (`MAX_LEVELS = 10`).
-- Run a high-poly bevel and Cycles curvature-bake pass on the 10 Python-generated weapon `.glb` viewmodels (`generate_weapons.py`) so first-person silhouettes read sharply under `AnimeCelShader.gdshader`.
-- Export a tiny (`<40 MB`) standalone Windows demo binary showcasing the sub-2-megabyte procedural asset footprint.
+Next is the M1 spine, one unit at a time with the ledger as the authority: make `GameManager.go_to(state)` the only scene transition, add a `RunState` that round-trips through a dictionary, turn the hub into a real scene, wire the elevator to a seeded floor builder, then make death bank souls and return to the hub. M1.7 closes when one headless process walks Boot, Menu, Hub, Elevator, Floor, Death and back to Hub with a printed route.
 
 ## Under the Hood & Local Files
 
-### Ten-Autoload Architecture, Procedural GLBs & Live DSP Audio
-- **10 Autoload Singletons (`project.godot`)**: `AudioEngine`, `DynamicMusicManager`, `HubManager`, `WeaponXP`, `EnemyAbilityManager`, `EnvironmentManager`, `GameManager`, `DialogueManager`, `QuestManager`, and `InputManager` cleanly separate RPG meta-progression from per-frame arena combat.
-- **Zero-Dependency Python 3D Mesh Factory**: Four standalone Python generators—[generate_weapons.py](file:///D:/Projects/ShadowWarriorRoguelite/generate_weapons.py) (Katana, Plasma Rifle, Shuriken Launcher, Neon Plasma Shotgun, Railgun Sniper, Smart Pistol, Gravity Hammer, Arc Emitter, Sludge Thrower, Nano Swarm), [generate_enemies.py](file:///D:/Projects/ShadowWarriorRoguelite/generate_enemies.py), [generate_zany_bosses.py](file:///D:/Projects/ShadowWarriorRoguelite/generate_zany_bosses.py), and [generate_level_tiles.py](file:///D:/Projects/ShadowWarriorRoguelite/generate_level_tiles.py)—emit valid binary glTF 2.0 `.glb` files directly into `weapons/`, `enemies/`, and `level/` without requiring Blender to be open.
-- **Real-Time `AudioStreamGenerator` Synthwave & SFX**: `audio/AudioEngine.gd`, `DynamicMusicManager.gd`, and `SynthesizedSFX.gd` synthesize oscillators, noise bursts, envelopes, and filter sweeps into audio ring buffers on the fly, shifting musical intensity dynamically via `DynamicMusicManager.set_intensity(intensity)`.
-
-### Key Local Files
-- Engine & Architecture Definitions: [project.godot](file:///D:/Projects/ShadowWarriorRoguelite/project.godot), [PROJECT.md](file:///D:/Projects/ShadowWarriorRoguelite/PROJECT.md), [ORIGINAL_REQUEST.md](file:///D:/Projects/ShadowWarriorRoguelite/ORIGINAL_REQUEST.md), [TEST_INFRA.md](file:///D:/Projects/ShadowWarriorRoguelite/TEST_INFRA.md)
-- Entry Scene & Launcher: [Main.tscn](file:///D:/Projects/ShadowWarriorRoguelite/Main.tscn), [Main.gd](file:///D:/Projects/ShadowWarriorRoguelite/Main.gd), [run_game.ps1](file:///D:/Projects/ShadowWarriorRoguelite/run_game.ps1)
-- Procedural 3D Generators: [generate_weapons.py](file:///D:/Projects/ShadowWarriorRoguelite/generate_weapons.py), [generate_enemies.py](file:///D:/Projects/ShadowWarriorRoguelite/generate_enemies.py), [generate_level_tiles.py](file:///D:/Projects/ShadowWarriorRoguelite/generate_level_tiles.py), [generate_zany_bosses.py](file:///D:/Projects/ShadowWarriorRoguelite/generate_zany_bosses.py)
-- Subsystems & Shaders: [rpg/GameManager.gd](file:///D:/Projects/ShadowWarriorRoguelite/rpg/GameManager.gd), [audio](file:///D:/Projects/ShadowWarriorRoguelite/audio), [shaders](file:///D:/Projects/ShadowWarriorRoguelite/shaders), [weapons](file:///D:/Projects/ShadowWarriorRoguelite/weapons), [ui](file:///D:/Projects/ShadowWarriorRoguelite/ui)
+- **Project root**: [D:\Projects\ShadowWarriorRoguelite](file:///D:/Projects/ShadowWarriorRoguelite), Godot 4.7.2, GDScript, ten autoloads, 17 procedurally generated `.glb` assets and four `.gdshader` files.
+- **Mission control**: [ROADMAP.md](file:///D:/Projects/ShadowWarriorRoguelite/docs/mission/ROADMAP.md) holds the 32-unit ledger and the ten-floor design; [FACTS.md](file:///D:/Projects/ShadowWarriorRoguelite/docs/mission/FACTS.md) holds the verified present with numbered bugs; [STATE.md](file:///D:/Projects/ShadowWarriorRoguelite/docs/mission/STATE.md) carries the cursor and is rewritten by [mission.ps1](file:///D:/Projects/ShadowWarriorRoguelite/tools/mission.ps1) on every `done`.
+- **Gate harness**: [gate.ps1](file:///D:/Projects/ShadowWarriorRoguelite/tools/gate.ps1) runs a boot smoke, the boot probe, and either the harness selftest with the autopilot (`-Fast`) or all 14 suites in separate processes (`-Full`); it returns 0 for a pass, 1 for failed tests, 2 for script errors, hangs or a failed boot probe.
+- **Boot and autopilot probes**: [boot_probe.gd](file:///D:/Projects/ShadowWarriorRoguelite/tools/boot_probe.gd) and [autopilot.gd](file:///D:/Projects/ShadowWarriorRoguelite/tests/autopilot.gd). Audio stays synthesized by [AudioEngine.gd](file:///D:/Projects/ShadowWarriorRoguelite/audio/AudioEngine.gd) and [SynthesizedSFX.gd](file:///D:/Projects/ShadowWarriorRoguelite/audio/SynthesizedSFX.gd), which is why the disk footprint stays at 1.61 MB.
