@@ -23,6 +23,7 @@ Exit codes: 0 = verified or nothing to check, 1 = missing/mismatched/never deplo
 import argparse
 import hashlib
 import json
+import os
 import subprocess
 import sys
 import time
@@ -135,7 +136,23 @@ def fetch(url: str, timeout: int = 30) -> tuple[bytes, str]:
         return response.read(), response.headers.get("Content-Type", "")
 
 
-def wait_for_bundle(base_url: str, ids: set[str], timeout: float, interval: float) -> dict:
+SUMMARY: list[str] = []
+
+
+def summary(text: str) -> None:
+    SUMMARY.append(text)
+
+
+def write_summary() -> None:
+    """Record the run on the Actions page, so auditing needs no log download."""
+    path = os.environ.get("GITHUB_STEP_SUMMARY")
+    if not path:
+        return
+    with open(path, "a", encoding="utf-8") as handle:
+        handle.write("\n".join(SUMMARY).rstrip() + "\n")
+
+
+def wait_for_bundle(base_url: str, ids: set[str], timeout: float, interval: float) -> tuple[dict, int]:
     deadline = time.time() + timeout
     attempt = 0
     while time.time() < deadline:
@@ -150,16 +167,19 @@ def wait_for_bundle(base_url: str, ids: set[str], timeout: float, interval: floa
             missing = ids - live_ids
             if not missing:
                 print(f"[entry-live] deploy lists {', '.join(sorted(ids))} (attempt {attempt}).")
-                return bundle
+                return bundle, attempt
             print(f"[entry-live] waiting for the deploy to list {', '.join(sorted(missing))}.")
         except (urllib.error.URLError, TimeoutError, ValueError) as exc:
             print(f"[entry-live] bundle fetch failed ({exc}); retrying.")
         time.sleep(interval)
+    summary(f"- **Deploy wait:** {attempt} attempt(s), {interval:g}s apart")
+    summary(f"- **Result:** FAILED — the deploy never listed {', '.join(sorted(ids))}")
     raise SystemExit(f"[entry-live] {', '.join(sorted(ids))} never appeared in the deployed bundle")
 
 
-def verify_assets(base_url: str, bundle: dict, ids: set[str]) -> list[str]:
+def verify_assets(base_url: str, bundle: dict, ids: set[str]) -> tuple[list[str], list[dict]]:
     problems: list[str] = []
+    rows: list[dict] = []
     for entry in bundle.get("entries", []):
         if str(entry.get("id")) not in ids:
             continue
@@ -170,22 +190,48 @@ def verify_assets(base_url: str, bundle: dict, ids: set[str]) -> list[str]:
             assets.append((str(item.get("src") or ""), str(item.get("sha256") or "")))
         for src, digest in assets:
             url = f"{base_url}{src}?v={digest[:12]}"
+            required = CONTENT_TYPES.get(Path(src).suffix.lower()) or "any"
+            row = {"src": src, "expected_type": required, "served_type": "", "error": "",
+                   "type_ok": None, "digest_ok": None}
             try:
                 data, content_type = fetch(url)
             except urllib.error.HTTPError as exc:
+                row["error"] = f"HTTP {exc.code}"
                 problems.append(f"{src}: HTTP {exc.code} from the deployed site")
+                rows.append(row)
                 continue
             except (urllib.error.URLError, TimeoutError) as exc:
+                row["error"] = type(exc).__name__
                 problems.append(f"{src}: {exc}")
+                rows.append(row)
                 continue
-            required = CONTENT_TYPES.get(Path(src).suffix.lower())
-            if required and required not in content_type:
-                problems.append(f"{src}: Content-Type {content_type!r} is not {required}")
             served = hashlib.sha256(data).hexdigest()
-            if digest and served != digest:
+            row["served_type"] = content_type
+            row["type_ok"] = (not required) or required == "any" or required in content_type
+            row["digest_ok"] = (not digest) or served == digest
+            if not row["type_ok"]:
+                problems.append(f"{src}: Content-Type {content_type!r} is not {required}")
+            if not row["digest_ok"]:
                 problems.append(f"{src}: served sha256 {served[:12]} != bundle {digest[:12]}")
+            rows.append(row)
         print(f"[entry-live] {entry['id']}: checked {len(assets)} asset(s).")
-    return problems
+    return problems, rows
+
+
+def render_table(rows: list[dict]) -> list[str]:
+    lines = ["| Asset | Expected type | Served type | SHA-256 |", "| --- | --- | --- | --- |"]
+    for row in rows:
+        served = row["error"] or row["served_type"] or "?"
+        if row["served_type"] and row["type_ok"] is False:
+            served += " (wrong)"
+        if row["digest_ok"] is True:
+            digest = "match"
+        elif row["digest_ok"] is False:
+            digest = "MISMATCH"
+        else:
+            digest = "not checked"
+        lines.append(f"| `{row['src']}` | `{row['expected_type']}` | {served} | {digest} |")
+    return lines
 
 
 def main() -> int:
@@ -197,10 +243,17 @@ def main() -> int:
     parser.add_argument("--interval", type=float, default=15.0)
     parser.add_argument("--ids", help="comma-separated ids to check, skipping the diff (for testing)")
     args = parser.parse_args()
+    try:
+        return run(args)
+    finally:
+        write_summary()
 
+
+def run(args: argparse.Namespace) -> int:
     base_url = args.base_url.rstrip("/") + "/"
     if args.ids:
         ids = {item.strip() for item in args.ids.split(",") if item.strip()}
+        range_label = "explicit ids"
     else:
         base = args.base or "HEAD^"
         if ensure_base(base):
@@ -217,12 +270,30 @@ def main() -> int:
         found = {ident: detail for ident, detail in (item for item in entries if item)}
         if not found:
             print(f"[entry-live] no entry docs changed in {range_label}; nothing to check.")
+            summary("## Entry live check")
+            summary("")
+            summary(f"- **Range:** `{range_label}`")
+            summary("- **Changed ids:** none")
+            summary("- **Result:** nothing to check")
             return 0
         ids = set(found)
         print(f"[entry-live] changed entries: {', '.join(sorted(ids))}.")
 
-    bundle = wait_for_bundle(base_url, ids, args.timeout, args.interval)
-    problems = verify_assets(base_url, bundle, ids)
+    summary("## Entry live check")
+    summary("")
+    summary(f"- **Range:** `{range_label}`")
+    summary(f"- **Changed ids:** {', '.join(f'`{ident}`' for ident in sorted(ids))}")
+
+    bundle, attempts = wait_for_bundle(base_url, ids, args.timeout, args.interval)
+    problems, rows = verify_assets(base_url, bundle, ids)
+    summary(f"- **Deploy wait:** {attempts} attempt(s), {args.interval:g}s apart")
+    if problems:
+        summary(f"- **Result:** FAILED — {len(problems)} problem(s)")
+    else:
+        summary(f"- **Result:** all {len(rows)} asset(s) verified")
+    summary("")
+    for line in render_table(rows):
+        summary(line)
     if problems:
         print("\n=== LIVE ENTRY CHECK FAILED ===")
         for problem in problems:
