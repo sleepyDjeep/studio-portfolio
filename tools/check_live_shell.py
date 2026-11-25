@@ -10,7 +10,9 @@ representative assets (one of each image type plus every sound clip) and require
 a 200 with the content type the page needs.
 
 Assets are sampled from the committed portfolio-data.js, so the check follows the
-real payload instead of a hardcoded path list.
+real payload instead of a hardcoded path list. Media bytes are also hashed and
+compared against the sha256 the bundle records for that path: a 200 of the right
+type proves something is served, not that it is the file the page was built with.
 
     python tools/check_live_shell.py
     python tools/check_live_shell.py --base https://example.com/portfolio/
@@ -19,6 +21,7 @@ Exit codes: 0 = everything served correctly, 1 = a check failed.
 """
 
 import argparse
+import hashlib
 import json
 import os
 import sys
@@ -60,18 +63,22 @@ def load_bundle(path: Path) -> dict:
     return json.loads(raw[idx + len(BUNDLE_PREFIX):].rstrip().rstrip(";"))
 
 
-def sample_assets(bundle: dict) -> list[tuple[str, str]]:
-    """One asset per media type the payload actually references."""
-    entries = bundle.get("entries", [])
-    media = [str(m.get("src") or "") for e in entries for m in e.get("media", [])]
-    diagrams = [str(e.get("diagram") or "") for e in entries if e.get("diagram")]
+def sample_assets(bundle: dict) -> list[tuple[str, str, str | None]]:
+    """One asset per image type, every sound clip, with the recorded digest if any.
 
-    picked: list[tuple[str, str]] = []
+    Diagrams live inside the bundle as inline SVG, so their .svg file has no
+    recorded sha256 and can only be checked for type and reachability.
+    """
+    entries = bundle.get("entries", [])
+    media = [(str(m.get("src") or ""), m.get("sha256")) for e in entries for m in e.get("media", [])]
+    diagrams = [(str(e.get("diagram")), None) for e in entries if e.get("diagram")]
+
+    picked: list[tuple[str, str, str | None]] = []
     for suffix, content_type, limit in ASSET_TYPES:
         source = diagrams if suffix == ".svg" else media
-        matches = [path for path in source if path.lower().endswith(suffix)]
-        for match in matches[:limit] if limit else matches:
-            picked.append((match, content_type))
+        matches = [item for item in source if item[0].lower().endswith(suffix)]
+        for path, digest in matches[:limit] if limit else matches:
+            picked.append((path, content_type, digest))
     return picked
 
 
@@ -99,10 +106,12 @@ def main() -> int:
     base = args.base if args.base.endswith("/") else args.base + "/"
     stamp = os.environ.get("GITHUB_RUN_ID") or str(int(time.time()))
 
-    targets = list(SHELL) + [(path, ctype, ()) for path, ctype in sample_assets(load_bundle(Path(args.bundle)))]
+    targets = [(path, ctype, (), None) for path, ctype, _ in SHELL]
+    targets += [(path, ctype, (), digest) for path, ctype, digest in sample_assets(load_bundle(Path(args.bundle)))]
     failures = []
+    drifted = []
 
-    for path, expected_type, must_contain in targets:
+    for path, expected_type, must_contain, expected_sha in targets:
         label = path or "index.html"
         status, content_type, body = fetch(f"{base}{path}?run={stamp}")
         lowered = content_type.lower()
@@ -119,12 +128,24 @@ def main() -> int:
             for needle in must_contain:
                 if needle.encode() not in body:
                     problems.append(f"body never mentions '{needle}'")
+            if expected_sha and body:
+                served_sha = hashlib.sha256(body).hexdigest()
+                if served_sha != expected_sha:
+                    problems.append(
+                        f"CONTENT DRIFTED: bundle records {expected_sha[:12]}, "
+                        f"deploy serves {served_sha[:12]}"
+                    )
+                    drifted.append(path)
 
         if problems:
             print(f"[X] {label:<48} " + "; ".join(problems))
             failures.append(label)
         else:
-            print(f"[ok] {label:<48} {status} {content_type:<28} {len(body):>9,} bytes")
+            if expected_sha:
+                digest = f"sha256 {expected_sha[:12]}"
+            else:
+                digest = "no digest in bundle" if path.startswith("assets/") else ""
+            print(f"[ok] {label:<48} {status} {content_type:<28} {len(body):>9,} bytes  {digest}")
 
     print()
     if failures:
@@ -132,10 +153,19 @@ def main() -> int:
         for failure in failures:
             print(f"  [X] {failure}")
         print()
-        print("The deploy is incomplete: the data file may be current while the page it feeds is not.")
+        if drifted:
+            print("These assets are served with bytes the current bundle does not describe:")
+            for path in drifted:
+                print(f"  [DRIFT] {path}")
+            print("Rebuild, commit, and let Pages redeploy:")
+            print("  python tools/update_portfolio.py")
+        else:
+            print("The deploy is incomplete: the data file may be current while the page it feeds is not.")
         return 1
 
-    print(f"=== LIVE SHELL OK: {len(targets)} paths served with the expected content types ===")
+    hashed = sum(1 for target in targets if target[3])
+    print(f"=== LIVE SHELL OK: {len(targets)} paths served as expected, "
+          f"{hashed} byte-identical to the bundle ===")
     return 0
 
 
