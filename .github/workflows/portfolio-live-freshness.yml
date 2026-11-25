@@ -5,6 +5,10 @@ name: Live atlas freshness
 # rebuilds it from the committed docs, so a payload that never reached the site
 # (broken Pages deploy, stale CDN copy) shows up as a failed run instead of
 # drifting quietly.
+#
+# The data file is only half a deploy, so a second step fetches the page shell and
+# samples the assets the payload references. Without it, a deploy serving 404s for
+# app.js, styles.css or an image would stay silent while the data check passed.
 
 on:
   schedule:
@@ -31,3 +35,8 @@ jobs:
         env:
           LIVE_BUNDLE: https://sleepydjeep.github.io/studio-portfolio/portfolio-data.js
         run: python tools/check_bundle_freshness.py --bundle "$LIVE_BUNDLE?run=${GITHUB_RUN_ID}"
+
+      - name: Fetch the page shell and sample assets
+        env:
+          LIVE_SITE: https://sleepydjeep.github.io/studio-portfolio/
+        run: python tools/check_live_shell.py --base "$LIVE_SITE"
