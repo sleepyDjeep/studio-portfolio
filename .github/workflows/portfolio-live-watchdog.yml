@@ -1,0 +1,61 @@
+name: Live atlas watchdog
+
+# The daily live check is best-effort: GitHub documents that a scheduled run can be
+# delayed for hours, and a dropped run leaves no red row behind. This job looks for
+# a successful run of the live workflow since 08:00 Central and fails when the
+# morning window passed with nothing to show, so a silent morning becomes a
+# failed run and a live-check issue.
+
+on:
+  schedule:
+    - cron: "35 10 * * *"
+      timezone: "America/Chicago"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+  issues: write
+
+jobs:
+  watchdog:
+    name: a live run succeeded since 08:00
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Require a successful live run since 08:00 Central
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python tools/check_live_watchdog.py --repo "${{ github.repository }}"
+
+      - name: Open or update the issue about a missed run
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          run_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          body=$(printf 'No successful live atlas run has happened since 08:00 Central.\n\nGitHub may have delayed or dropped the scheduled run, the live check may still be running, or it failed without filing its own issue.\n\nWatchdog run: %s\n\nDispatch the live workflow by hand to see the current state.\n' "$run_url")
+          gh label create live-check --description "Daily live atlas check" --color B60205 2>/dev/null || true
+          existing=$(gh issue list --label live-check --state open --json number --jq '.[0].number // empty' 2>/dev/null || true)
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body "$body"
+          else
+            gh issue create --title "Live atlas check failed" --label live-check --body "$body"
+          fi
+
+      - name: Close the issue once a live run has succeeded
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue list --label live-check --state open --json number --jq '.[].number' 2>/dev/null |
+          while read -r number; do
+            gh issue close "$number" --comment "A live check has succeeded since 08:00."
+          done
