@@ -9,6 +9,9 @@ data/
 # Throwaway trees made by tools/gate_self_test.py (kept in-project so assets/ can hard-link)
 .gate-self-test-*/
 
+# Local secrets for the daily publisher (OPENAI_API_KEY and friends)
+.env
+
 # Python / OS / IDE artifacts
 __pycache__/
 *.py[cod]

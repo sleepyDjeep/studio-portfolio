@@ -57,6 +57,9 @@ studio-portfolio/
     ├── check_bundle_freshness.py # Fails when committed portfolio-data.js no longer matches docs/ + assets/
     ├── check_live_push.py      # Hashes the entries a push changed against the deployed site
     ├── new_entry.py            # Scaffolds a Gate 2-valid entry doc, media folder and next commands
+    ├── auto_entry.py           # Turns one intake candidate into an entry (model or fixed draft)
+    ├── daily_publish.py        # Daily: intake, generate, rebuild, gates, commit, push, live check
+    ├── run_daily.cmd           # Task Scheduler wrapper for daily_publish.py
     └── gate_self_test.py       # Breaks one thing per case and proves each gate actually turns red
 ```
 
@@ -107,6 +110,18 @@ git config core.hooksPath .githooks
 ```
 
 The hook runs gates 2-5 and then the freshness check on `git commit`, so a missing section, an invalid asset path or a vault leak is refused before it becomes a public CI failure; it also refuses a bundle that is stale or was left unstaged. Two workflows back it up: `.github/workflows/portfolio-bundle-freshness.yml` rebuilds the payload and re-runs gates 2-5 (`python tools/verify_portfolio.py --skip-coverage`) on every push and pull request to `main`, and `.github/workflows/portfolio-live-freshness.yml` fetches the deployed `portfolio-data.js` once a day at 08:05 Central and compares it with a clean rebuild, so a Pages deploy that never landed becomes a failed run instead of a quietly stale atlas. That job also fetches the page shell (`index.html`, `app.js`, `styles.css`) and the payload's own media: all four sound clips on every run, plus a rotating slice of the images and diagrams, so every one of the 148 referenced files is hashed once every four days instead of pulling 141 MB in a single night. It fails on a non-200, a wrong content type, or bytes whose sha256 differs from the digest the bundle records for that path, and names the asset that drifted, because a current data file proves nothing if the page that reads it is not being served or if the same URL now hands back a different file. `--full` hashes everything in one pass, and `--slice 3` repeats a specific day's slice when you need to investigate one. A fetch that fails with a network error, a timeout or a 5xx response is retried twice with doubling backoff before the run is called failed, while a 404 is reported immediately. A failed scheduled run opens a GitHub issue labeled `live-check`, comments on that same issue if it fails again, and closes it on the next run that passes, so a red cron is not silent. A second workflow, the watchdog, runs at 10:35 Central and fails when no live run has succeeded since 08:00, which catches the morning GitHub drops or delays the run so far that nothing would otherwise report it. A third workflow, `.github/workflows/portfolio-entry-live-check.yml`, runs on every push: it takes the entry docs that push changed, waits for the deployed bundle to list them, then hashes their media and diagram against the committed digests, so a new entry is verified in minutes instead of waiting for its four-day slice. The push workflow then runs `python tools/gate_self_test.py`, which breaks one thing at a time on a throwaway copy — a dropped section, a byte appended to an image, an edited doc that was never recompiled — and fails if the matching gate stays green.
+
+### 4. Publish New Work Automatically
+
+`tools/daily_publish.py` runs on this machine, because the source material (LanceDB memories, conversation summaries, project folders) is local and private. Each run picks one unpublished candidate, asks the model for a draft, refuses drafts with placeholders, banned phrases or unsafe SVG, then updates the baseline, rebuilds, runs the gates, commits with `[auto-entry]`, pushes, and waits for the entry live check. If that check fails it reverts its own commit and pushes the revert. It publishes at most seven entries a week, tries a candidate three times at most, holds a lock, and refuses to start on a dirty tree.
+
+Set the key in `.env` (gitignored): `OPENAI_API_KEY=...`, plus optional `OPENAI_BASE_URL` and `AUTO_ENTRY_MODEL`. Create the daily task once:
+
+```powershell
+schtasks /Create /F /SC DAILY /ST 07:00 /TN "Studio Portfolio Daily Publish" /TR "D:\Projects\Studio_Portfolio\tools\run_daily.cmd"
+```
+
+Logs land in `data/logs/`; the ledger in `data/intake/ledger.json` records what was published or skipped. Without the key a run logs a skip and exits cleanly. Content still comes from the studio's own work: the job cannot invent an entry without a candidate.
 
 CI has no `data/` directory (Gate 5 requires it to stay gitignored), so both workflows build from the committed `tools/public_manifest.json`, which carries the pillar list, the inception date, and the reconciliation counts. Regenerate it from `data/master_manifest.json` whenever those change.
 
