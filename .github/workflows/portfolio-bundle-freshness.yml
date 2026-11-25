@@ -8,6 +8,10 @@ name: Portfolio bundle freshness
 # It also runs gates 2-5 of tools/verify_portfolio.py (structure, assets, prose and
 # git hygiene). Only gate 1 needs the local memory databases, so CI skips that one
 # and everything else is enforced here rather than on one workstation.
+#
+# The last step is a negative control: it breaks one thing at a time on a throwaway
+# copy and requires each gate to fail. A gate that has gone quiet fails the build
+# instead of quietly passing everything.
 
 on:
   push:
@@ -37,3 +41,6 @@ jobs:
 
       - name: Rebuild bundle and compare with the committed payload
         run: python tools/check_bundle_freshness.py
+
+      - name: Prove every gate still turns red
+        run: python tools/gate_self_test.py

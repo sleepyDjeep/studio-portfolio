@@ -6,6 +6,9 @@ portfolio-vault.js
 # Local extraction dumps, discovery shards & reconciliation ledger (kept locally on disk)
 data/
 
+# Throwaway trees made by tools/gate_self_test.py (kept in-project so assets/ can hard-link)
+.gate-self-test-*/
+
 # Python / OS / IDE artifacts
 __pycache__/
 *.py[cod]

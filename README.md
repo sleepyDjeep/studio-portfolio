@@ -51,7 +51,8 @@ studio-portfolio/
     ├── verify_portfolio.py     # Enforces 100% ID coverage, valid assets, gitignore & anti-slop prose
     ├── update_portfolio.py     # One command: rebuild, run all 5 gates, prove the payload is current
     ├── public_manifest.json    # Committed redacted manifest so CI can rebuild without data/
-    └── check_bundle_freshness.py # Fails when committed portfolio-data.js no longer matches docs/ + assets/
+    ├── check_bundle_freshness.py # Fails when committed portfolio-data.js no longer matches docs/ + assets/
+    └── gate_self_test.py       # Breaks one thing per case and proves each gate actually turns red
 ```
 
 ---
@@ -88,6 +89,6 @@ Enable the commit guard once per clone, so a commit cannot ship a payload older 
 git config core.hooksPath .githooks
 ```
 
-The hook runs the freshness check on `git commit` and refuses the commit when the bundle is stale or was left unstaged. Two workflows back it up: `.github/workflows/portfolio-bundle-freshness.yml` rebuilds the payload and re-runs gates 2-5 (`python tools/verify_portfolio.py --skip-coverage`) on every push and pull request to `main`, and `.github/workflows/portfolio-live-freshness.yml` fetches the deployed `portfolio-data.js` once a day and compares it with a clean rebuild, so a Pages deploy that never landed becomes a failed run instead of a quietly stale atlas.
+The hook runs the freshness check on `git commit` and refuses the commit when the bundle is stale or was left unstaged. Two workflows back it up: `.github/workflows/portfolio-bundle-freshness.yml` rebuilds the payload and re-runs gates 2-5 (`python tools/verify_portfolio.py --skip-coverage`) on every push and pull request to `main`, and `.github/workflows/portfolio-live-freshness.yml` fetches the deployed `portfolio-data.js` once a day and compares it with a clean rebuild, so a Pages deploy that never landed becomes a failed run instead of a quietly stale atlas. The push workflow then runs `python tools/gate_self_test.py`, which breaks one thing at a time on a throwaway copy — a dropped section, a byte appended to an image, an edited doc that was never recompiled — and fails if the matching gate stays green.
 
 CI has no `data/` directory (Gate 5 requires it to stay gitignored), so both workflows build from the committed `tools/public_manifest.json`, which carries the pillar list, the inception date, and the reconciliation counts. Regenerate it from `data/master_manifest.json` whenever those change.
