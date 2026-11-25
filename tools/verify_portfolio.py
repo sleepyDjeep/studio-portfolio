@@ -19,12 +19,15 @@ import sqlite3
 import subprocess
 import sys
 from pathlib import Path
-import yaml
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))  # tools/ is not a package
+from frontmatter import FrontmatterError, split_document  # noqa: E402
 
 PORTFOLIO_ROOT = Path(__file__).resolve().parent.parent
 DOCS_DIR = PORTFOLIO_ROOT / "docs"
 MANIFEST_PATH = PORTFOLIO_ROOT / "data" / "master_manifest.json"
 BUNDLE_PATH = PORTFOLIO_ROOT / "portfolio-data.js"
+BASELINE_PATH = PORTFOLIO_ROOT / "tools" / "expected_entries.json"
 MEMORY_DB_PATH = r"C:\Users\ogreb\.gemini\antigravity\memory_db"
 CONV_DB_PATH = r"C:\Users\ogreb\.gemini\antigravity\conversation_summaries.db"
 INCEPTION_DATE = "2026-08-16"
@@ -58,6 +61,32 @@ BANNED_PATTERNS = [
     r"in today['\u2019]s fast[- ]paced world",
     r"\bat its core\b",
 ]
+
+
+def is_vault_doc(md_path: Path, meta: dict) -> bool:
+    """Vault entries are local-only, so they never belong in the public baseline."""
+    if str(meta.get("visibility") or "").strip().lower() == "vault":
+        return True
+    return "vault" in md_path.relative_to(DOCS_DIR).parts
+
+
+def entry_id(md_path: Path, meta: dict) -> str:
+    return str(meta.get("id") or md_path.stem).strip()
+
+
+def public_entry_ids() -> tuple[list[str], list[str]]:
+    """Every id that ships publicly, plus the docs that no longer parse."""
+    ids, problems = [], []
+    for md_path in sorted(DOCS_DIR.rglob("*.md")):
+        try:
+            meta, _body = split_document(md_path.read_text(encoding="utf-8"), str(md_path))
+        except FrontmatterError as exc:
+            problems.append(str(exc))
+            continue
+        if is_vault_doc(md_path, meta):
+            continue
+        ids.append(entry_id(md_path, meta))
+    return sorted(ids), problems
 
 
 def gate_corpus_coverage(failures: list) -> None:
@@ -115,7 +144,38 @@ def main() -> int:
         action="store_true",
         help="skip gate 1, which needs data/master_manifest.json and the local LanceDB and conversation databases",
     )
+    parser.add_argument(
+        "--update-baseline",
+        action="store_true",
+        help="rewrite tools/expected_entries.json from the current docs/ and exit; review and commit it",
+    )
     args = parser.parse_args()
+
+    if args.update_baseline:
+        ids, problems = public_entry_ids()
+        if problems:
+            print("[baseline] refusing to write: these docs do not parse")
+            for problem in problems:
+                print(f"  [X] {problem}")
+            return 1
+        if not ids:
+            print("[baseline] refusing to write an empty baseline")
+            return 1
+        BASELINE_PATH.write_text(
+            json.dumps(
+                {
+                    "note": "Every id that must ship. Refresh after an entry is added, renamed or retired: python tools/verify_portfolio.py --update-baseline",
+                    "count": len(ids),
+                    "entries": ids,
+                },
+                indent=2,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        print(f"[baseline] wrote {BASELINE_PATH.relative_to(PORTFOLIO_ROOT).as_posix()} "
+              f"with {len(ids)} entries; review and commit it.")
+        return 0
 
     failures = []
 
@@ -130,14 +190,17 @@ def main() -> int:
     if not md_files:
         failures.append("Gate 2: Zero Markdown entries found under docs/")
 
+    public_ids: list[str] = []
     for md_path in md_files:
         raw = md_path.read_text(encoding="utf-8")
-        parts = raw.split("---", 2)
-        if len(parts) < 3:
-            failures.append(f"Gate 2: Invalid YAML frontmatter in {md_path}")
+        try:
+            meta, body = split_document(raw, str(md_path))
+        except FrontmatterError as exc:
+            failures.append(f"Gate 2: Invalid YAML frontmatter in {md_path.name}: {exc}")
             continue
-        meta = yaml.safe_load(parts[1]) or {}
-        body = parts[2]
+
+        if not is_vault_doc(md_path, meta):
+            public_ids.append(entry_id(md_path, meta))
 
         for req_key in ["id", "title", "subtitle", "pillar", "entry_type", "readiness", "visibility"]:
             if not str(meta.get(req_key) or "").strip():
@@ -166,6 +229,28 @@ def main() -> int:
                     failures.append(f"Gate 2: Section '## {sec}' too thin ({len(sec_body)} chars) in {md_path.name}")
 
     print(f"[Gate 2] Audited {len(md_files)} Markdown entries for structural & visual completeness.")
+
+    # --- GATE 2 (BASELINE): no entry may vanish ---
+    # Completeness of the docs that exist says nothing about the docs that used to.
+    # tools/expected_entries.json is the committed record of what must be there.
+    if not BASELINE_PATH.exists():
+        failures.append("Gate 2 (Baseline): tools/expected_entries.json is missing")
+    else:
+        baseline = json.loads(BASELINE_PATH.read_text(encoding="utf-8"))
+        expected = {str(slug) for slug in baseline.get("entries", [])}
+        present = set(public_ids)
+        for slug in sorted(expected - present):
+            failures.append(
+                f"Gate 2 (Baseline): entry '{slug}' is listed in tools/expected_entries.json "
+                f"but no doc provides it (deleted, renamed, or unparseable)"
+            )
+        for slug in sorted(present - expected):
+            failures.append(
+                f"Gate 2 (Baseline): entry '{slug}' exists under docs/ but not in the baseline; "
+                f"review it, then run: python tools/verify_portfolio.py --update-baseline"
+            )
+        listed = f"{len(expected)} expected, {len(present)} present"
+        print(f"[Gate 2] Baseline: {listed}.")
 
     # --- GATE 3: 100% Valid Asset Paths in portfolio-data.js ---
     if not BUNDLE_PATH.exists():

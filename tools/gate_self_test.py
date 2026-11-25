@@ -11,12 +11,15 @@ Cases:
   baseline             untouched copy: gates 2-5 and the freshness check both pass
   gate2_doc_section    drop a required '## ' heading from one entry
   gate2_frontmatter    replace a doc's closing '---' fence with '--'
+  gate2_entry_missing  delete an entry doc outright (the baseline must notice)
   gate3_missing_asset  truncate an image the bundle references to zero bytes
   gate4_slop           append a banned word to README.md
   gate5_vault_tracked  force-add a file under docs/vault/
   freshness_media      append one byte to a referenced image (still >0 bytes, so gate 3
                        stays green and only the media hash can catch it)
   freshness_doc        append a sentence to an entry without recompiling the bundle
+  build_frontmatter    the same broken fence, but only the builder is asked: it must
+                       refuse rather than compile the other 47 entries
 
 Gate 1 (corpus coverage) has no case here: it needs the private
 data/master_manifest.json and the local LanceDB/SQLite stores, so there is nothing
@@ -205,6 +208,13 @@ def track_vault_file(root: Path) -> str:
     return f"{leak.relative_to(root).as_posix()}: force-added despite the ignore rule"
 
 
+def delete_entry_doc(root: Path) -> str:
+    doc = first_doc(root)
+    ident = doc_id(doc)
+    doc.unlink()
+    return f"{doc.relative_to(root).as_posix()} (id {ident}): deleted outright"
+
+
 def append_media_byte(root: Path) -> str:
     src = referenced_png(root)
     path = root / src
@@ -232,11 +242,13 @@ class Control:
 CONTROLS = [
     Control("gate2_doc_section", break_doc_section, "verify", "Gate 2: Missing section"),
     Control("gate2_frontmatter", break_frontmatter, "verify", "Invalid YAML frontmatter"),
+    Control("gate2_entry_missing", delete_entry_doc, "verify", "Gate 2 (Baseline)"),
     Control("gate3_missing_asset", empty_referenced_asset, "verify", "Gate 3: Missing/empty media"),
     Control("gate4_slop", add_slop, "verify", "Gate 4 (Anti-Slop)"),
     Control("gate5_vault_tracked", track_vault_file, "verify", "Gate 5 (Vault Leak)"),
     Control("freshness_media", append_media_byte, "freshness", "sha256"),
     Control("freshness_doc", edit_doc_without_rebuild, "freshness", "STALE"),
+    Control("build_frontmatter", break_frontmatter, "freshness", "Could not rebuild"),
 ]
 
 

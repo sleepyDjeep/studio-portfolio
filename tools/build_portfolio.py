@@ -17,7 +17,9 @@ import re
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
-import yaml
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))  # tools/ is not a package
+from frontmatter import split_document  # noqa: E402
 
 PORTFOLIO_ROOT = Path(__file__).resolve().parent.parent
 DOCS_DIR = PORTFOLIO_ROOT / "docs"
@@ -193,15 +195,14 @@ def render_markdown_to_html(md_text: str) -> str:
 
 def parse_markdown_entry(md_path: Path) -> dict:
     raw = md_path.read_text(encoding="utf-8")
-    if not raw.startswith("---"):
-        raise ValueError(f"{md_path}: Missing YAML frontmatter opening '---'")
-
-    parts = raw.split("---", 2)
-    if len(parts) < 3:
-        raise ValueError(f"{md_path}: Unclosed YAML frontmatter")
-
-    meta = yaml.safe_load(parts[1]) or {}
-    body = parts[2].strip()
+    # Raises FrontmatterError naming the file, so a broken fence can never turn
+    # into an entry that is silently skipped or half-parsed.
+    meta, body = split_document(raw, str(md_path))
+    if not str(meta.get("id") or "").strip():
+        raise ValueError(
+            f"{md_path}: frontmatter has no 'id'; refusing to invent one from the filename"
+        )
+    body = body.strip()
 
     # Split body by ## headings
     section_map = {}
@@ -276,6 +277,7 @@ def compile_portfolio() -> int:
     md_files = sorted(DOCS_DIR.rglob("*.md"))
     compiled_entries = []
     errors = []
+    seen_ids = {}
 
     for md_path in md_files:
         try:
@@ -286,6 +288,12 @@ def compile_portfolio() -> int:
 
         meta = parsed["meta"]
         slug = str(meta.get("id") or md_path.stem)
+        if slug in seen_ids:
+            errors.append(
+                f"{md_path}: duplicate id '{slug}', already used by {seen_ids[slug]}"
+            )
+            continue
+        seen_ids[slug] = md_path
         m_entry = manifest_by_id.get(slug, {})
 
         # Merge authoritative memory_ids & conversation_ids from master_manifest if present
@@ -359,7 +367,7 @@ def compile_portfolio() -> int:
         })
 
     if errors:
-        print("[BUILD ERRORS]", file=sys.stderr)
+        print("[BUILD ERRORS] nothing was written; fix these before the bundle can move", file=sys.stderr)
         for err in errors:
             print(f"  - {err}", file=sys.stderr)
         return 1

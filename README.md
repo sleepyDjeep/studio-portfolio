@@ -51,6 +51,8 @@ studio-portfolio/
     ├── verify_portfolio.py     # Enforces 100% ID coverage, valid assets, gitignore & anti-slop prose
     ├── update_portfolio.py     # One command: rebuild, run all 5 gates, prove the payload is current
     ├── public_manifest.json    # Committed redacted manifest so CI can rebuild without data/
+    ├── expected_entries.json   # Every entry id that must exist; a deleted or renamed doc fails here
+    ├── frontmatter.py          # Fence-aware frontmatter parsing shared by builder and verifier
     ├── check_bundle_freshness.py # Fails when committed portfolio-data.js no longer matches docs/ + assets/
     └── gate_self_test.py       # Breaks one thing per case and proves each gate actually turns red
 ```
@@ -80,6 +82,8 @@ python "D:\Projects\Studio_Portfolio\tools\update_portfolio.py"
 It runs `build_portfolio.py`, then `verify_portfolio.py`, then `check_bundle_freshness.py`, and stops at the first failure so a broken gate never scrolls past. `--no-verify` skips the gate step on a machine without the local LanceDB and conversation databases.
 
 The freshness step recompiles into a temporary directory and compares that against your `portfolio-data.js`: every entry field, every media item plus the sha256 of the file behind it, the pillar list, the summary counts, and the inception date. It ignores only the `compiled_at` timestamp and the ids that come from the gitignored `data/master_manifest.json`, and it names each drifted entry and field when it fails.
+
+Adding, renaming, or retiring an entry is an explicit act: `tools/expected_entries.json` lists every id that must ship, and the verifier fails both when a listed id has no doc behind it and when a doc appears that the list does not know about. Refresh it with `python tools/verify_portfolio.py --update-baseline`, which refuses to write while any doc fails to parse, and commit the result with the change that caused it. The builder is just as strict: an unreadable fence, a missing `id`, or a duplicate `id` stops it with the file named and nothing written, so a damaged doc cannot be compiled out of the atlas by accident.
 
 ### 3. Publish the Rebuilt Bundle
 
