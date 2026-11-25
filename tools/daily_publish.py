@@ -334,7 +334,23 @@ def publish(candidate: dict, dry_run: bool) -> int:
     base = git("rev-parse", "HEAD^")
     head = git("rev-parse", "HEAD")
     if run(["git", "push", "origin", "main"]).returncode != 0:
-        return 1
+        log("push rejected; rebasing onto origin/main and retrying once")
+        if run(["git", "pull", "--rebase", "origin", "main"]).returncode != 0:
+            log("could not rebase onto origin/main; discarding the local auto entry")
+            run(["git", "rebase", "--abort"])
+            run(["git", "reset", "--hard", "origin/main"])
+            return 1
+        if run([sys.executable, "tools/update_portfolio.py", "--no-verify"]).returncode != 0:
+            run(["git", "reset", "--hard", "origin/main"])
+            return 1
+        run(["git", "add", "portfolio-data.js"])
+        run(["git", "commit", "--amend", "--no-edit"])
+        if run(["git", "push", "origin", "main"]).returncode != 0:
+            log("push failed again; discarding the local auto entry")
+            run(["git", "reset", "--hard", "origin/main"])
+            return 1
+        base = git("rev-parse", "HEAD^")
+        head = git("rev-parse", "HEAD")
     log(f"pushed {head[:8]}; verifying on the live site")
     check = run([sys.executable, "tools/check_live_push.py", "--base", base, "--head", head,
                  "--timeout", "600"], capture=False)
@@ -358,6 +374,9 @@ def main() -> int:
     try:
         if git("status", "--porcelain"):
             log("working tree is dirty; refusing to publish over unrelated changes")
+            return 1
+        if run(["git", "pull", "--rebase", "origin", "main"]).returncode != 0:
+            log("could not update from origin/main; not publishing")
             return 1
         if not args.dry_run and not os.environ.get("OPENAI_API_KEY", "").strip():
             log("skipped: OPENAI_API_KEY is not set (see README for the .env entry)")
