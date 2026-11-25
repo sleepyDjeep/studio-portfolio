@@ -257,6 +257,21 @@ def extract_ipo_steps(example_md: str) -> dict:
     return res
 
 
+def asset_digest(path: Path) -> str:
+    """sha256 of the bytes Pages will serve for this file.
+
+    Git checks text files out with platform newlines when core.autocrlf is on,
+    while the deployed blob holds LF, so hashing the working tree on Windows
+    would record a digest the site can never match. Text assets are normalized
+    to LF (the .gitattributes pin keeps future commits in that form); binary
+    assets are hashed byte for byte.
+    """
+    data = path.read_bytes()
+    if path.suffix.lower() in {".svg", ".xml"}:
+        data = data.replace(b"\r\n", b"\n")
+    return hashlib.sha256(data).hexdigest()
+
+
 def compile_portfolio() -> int:
     manifest_path = MANIFEST_PATH if MANIFEST_PATH.exists() else PUBLIC_MANIFEST_PATH
     if not manifest_path.exists():
@@ -315,7 +330,7 @@ def compile_portfolio() -> int:
                     diagram_svg = diag_path.read_text(encoding="utf-8")
                 # The page renders the inlined copy, but the file still ships, so
                 # hash it like media: the live check compares what Pages serves.
-                diagram_sha256 = hashlib.sha256(diag_path.read_bytes()).hexdigest()
+                diagram_sha256 = asset_digest(diag_path)
 
         compiled_media = []
         for m_item in media_list:
@@ -332,7 +347,7 @@ def compile_portfolio() -> int:
             # caught by tools/check_bundle_freshness.py, which would otherwise
             # only ever see the path.
             compiled_media.append(
-                {**m_item, "sha256": hashlib.sha256(asset_path.read_bytes()).hexdigest()}
+                {**m_item, "sha256": asset_digest(asset_path)}
             )
 
         compiled_entries.append({

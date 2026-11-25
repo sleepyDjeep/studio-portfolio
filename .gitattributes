@@ -1,1 +1,6 @@
 .githooks/** text eol=lf
+
+# SVGs are hashed at build time and served exactly as committed, so every
+# checkout must hold the same LF bytes; without this a Windows clone writes
+# CRLF and the recorded digest never matches the deployed file.
+*.svg text eol=lf
