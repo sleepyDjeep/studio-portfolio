@@ -130,7 +130,10 @@ def weekly_auto_commits() -> int:
 
 
 def known_material() -> tuple[set[str], set[str], set[str]]:
-    manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+    # The manifest is local-only, so a fresh checkout (or a machine that has never
+    # run the build) has no record of what is already published. An unattended run
+    # must still proceed from the empty set instead of crashing.
+    manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8")) if MANIFEST_PATH.exists() else {}
     memories = set(manifest.get("excluded_memories", {}).keys())
     conversations = set(manifest.get("excluded_conversations", {}).keys())
     paths = set()
