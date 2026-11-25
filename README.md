@@ -43,7 +43,7 @@ studio-portfolio/
 │   ├── diagrams/<slug>.svg     # Theme-adaptive SVG system & workflow diagrams
 │   └── concepts/<slug>.png     # Badged Concept Preview illustrations for unbuilt plans
 ├── .githooks/
-│   └── pre-commit              # Refuses a commit whose portfolio-data.js is older than docs/
+│   └── pre-commit              # Runs gates 2-5, then refuses a commit whose bundle is older than docs/
 └── tools/
     ├── extract_raw_ledger.py   # Exports full LanceDB, SQLite conversation, and disk inventories
     ├── build_portfolio.py      # Sub-second Markdown -> portfolio-data.js compiler
@@ -55,6 +55,8 @@ studio-portfolio/
     ├── expected_entries.json   # Every entry id that must exist; a deleted or renamed doc fails here
     ├── frontmatter.py          # Fence-aware frontmatter parsing shared by builder and verifier
     ├── check_bundle_freshness.py # Fails when committed portfolio-data.js no longer matches docs/ + assets/
+    ├── check_live_push.py      # Hashes the entries a push changed against the deployed site
+    ├── new_entry.py            # Scaffolds a Gate 2-valid entry doc, media folder and next commands
     └── gate_self_test.py       # Breaks one thing per case and proves each gate actually turns red
 ```
 
@@ -72,8 +74,16 @@ python "D:\Projects\Studio_Portfolio\tools\audit_new_work.py"
 It compares live LanceDB (`memories.lance`), Antigravity's `conversation_summaries.db`, and `D:\Projects\` against `data/master_manifest.json` and lists every unmapped memory, conversation, or folder.
 
 ### 2. Add or Edit an Entry
-1. Create or edit a Markdown file inside the matching `docs/<pillar>/` folder using the standard frontmatter and four `##` sections (`What It Is & Why It Matters`, `Real Example: How It Works in Practice`, `Where It Stands & Next Steps`, `Under the Hood & Local Files`).
-2. Drop screenshots or audio into `assets/media/<slug>/` (or `assets/concepts/<slug>.png` with `kind: "concept"` for unbuilt blueprints).
+1. Scaffold the doc, so the frontmatter, sections and media path are valid before you write a word:
+
+```powershell
+python tools/new_entry.py 02-games-engines my-new-game --title "My New Game" `
+  --subtitle "One sentence on what it is." `
+  --media "D:/captures/menu.png::Main menu at 1440p."
+```
+
+It writes `docs/<pillar>/<slug>.md` with the four `##` sections (`What It Is & Why It Matters`, `Real Example: How It Works in Practice`, `Where It Stands & Next Steps`, `Under the Hood & Local Files`), copies the media into `assets/media/<slug>/` and prints the baseline and rebuild commands. Editing an existing doc works the same way; the scaffold just cannot be used twice for one slug.
+2. Every image needs a `caption`, because the page uses it as the `alt` text; audio does not. A file under `assets/concepts/` must use `kind: "concept"`.
 3. Rebuild, run all 5 verification gates, and prove the payload is current, with one command:
 
 ```powershell
@@ -84,7 +94,9 @@ It runs `build_portfolio.py`, then `verify_portfolio.py`, then `check_bundle_fre
 
 The freshness step recompiles into a temporary directory and compares that against your `portfolio-data.js`: every entry field, every media item and diagram plus the sha256 of the file behind each, the pillar list, the summary counts, and the inception date. It ignores only the `compiled_at` timestamp and the ids that come from the gitignored `data/master_manifest.json`, and it names each drifted entry and field when it fails.
 
-Adding, renaming, or retiring an entry is an explicit act: `tools/expected_entries.json` lists every id that must ship, and the verifier fails both when a listed id has no doc behind it and when a doc appears that the list does not know about. Refresh it with `python tools/verify_portfolio.py --update-baseline`, which refuses to write while any doc fails to parse, and commit the result with the change that caused it. The builder is just as strict: an unreadable fence, a missing `id`, or a duplicate `id` stops it with the file named and nothing written, so a damaged doc cannot be compiled out of the atlas by accident. Gate 3 also asks git, not just the disk: every media and diagram path in the bundle must be in the index, because an image caught by an over-broad ignore rule passes locally and 404s on Pages.
+Gate 2 also treats the frontmatter as a schema: known keys only, list types, the `entry_type`/`readiness`/`visibility` values the page renders, and ISO dates. Without it, `tags: "a, b"` compiles to one tag per character and an unknown readiness drops the entry from its view without an error.
+
+Adding, renaming, or retiring an entry is an explicit act: `tools/expected_entries.json` lists every id that must ship, and the verifier fails both when a listed id has no doc behind it and when a doc appears that the list does not know about. Refresh it with `python tools/verify_portfolio.py --update-baseline`, which refuses to write while any doc fails to parse, and commit the result with the change that caused it. The baseline also records each entry's media paths, diagram and headings, so deleting half an entry's visuals fails the same way a deleted doc does, and the refresh prints which ids were added or removed. The builder is just as strict: an unreadable fence, a missing `id`, or a duplicate `id` stops it with the file named and nothing written, so a damaged doc cannot be compiled out of the atlas by accident. Gate 3 also asks git, not just the disk: every media and diagram path in the bundle must be in the index, because an image caught by an over-broad ignore rule passes locally and 404s on Pages.
 
 ### 3. Publish the Rebuilt Bundle
 
@@ -94,7 +106,7 @@ Enable the commit guard once per clone, so a commit cannot ship a payload older 
 git config core.hooksPath .githooks
 ```
 
-The hook runs the freshness check on `git commit` and refuses the commit when the bundle is stale or was left unstaged. Two workflows back it up: `.github/workflows/portfolio-bundle-freshness.yml` rebuilds the payload and re-runs gates 2-5 (`python tools/verify_portfolio.py --skip-coverage`) on every push and pull request to `main`, and `.github/workflows/portfolio-live-freshness.yml` fetches the deployed `portfolio-data.js` once a day at 08:05 Central and compares it with a clean rebuild, so a Pages deploy that never landed becomes a failed run instead of a quietly stale atlas. That job also fetches the page shell (`index.html`, `app.js`, `styles.css`) and the payload's own media: all four sound clips on every run, plus a rotating slice of the images and diagrams, so every one of the 148 referenced files is hashed once every four days instead of pulling 141 MB in a single night. It fails on a non-200, a wrong content type, or bytes whose sha256 differs from the digest the bundle records for that path, and names the asset that drifted, because a current data file proves nothing if the page that reads it is not being served or if the same URL now hands back a different file. `--full` hashes everything in one pass, and `--slice 3` repeats a specific day's slice when you need to investigate one. A fetch that fails with a network error, a timeout or a 5xx response is retried twice with doubling backoff before the run is called failed, while a 404 is reported immediately. A failed scheduled run opens a GitHub issue labeled `live-check`, comments on that same issue if it fails again, and closes it on the next run that passes, so a red cron is not silent. A second workflow, the watchdog, runs at 10:35 Central and fails when no live run has succeeded since 08:00, which catches the morning GitHub drops or delays the run so far that nothing would otherwise report it. The push workflow then runs `python tools/gate_self_test.py`, which breaks one thing at a time on a throwaway copy — a dropped section, a byte appended to an image, an edited doc that was never recompiled — and fails if the matching gate stays green.
+The hook runs gates 2-5 and then the freshness check on `git commit`, so a missing section, an invalid asset path or a vault leak is refused before it becomes a public CI failure; it also refuses a bundle that is stale or was left unstaged. Two workflows back it up: `.github/workflows/portfolio-bundle-freshness.yml` rebuilds the payload and re-runs gates 2-5 (`python tools/verify_portfolio.py --skip-coverage`) on every push and pull request to `main`, and `.github/workflows/portfolio-live-freshness.yml` fetches the deployed `portfolio-data.js` once a day at 08:05 Central and compares it with a clean rebuild, so a Pages deploy that never landed becomes a failed run instead of a quietly stale atlas. That job also fetches the page shell (`index.html`, `app.js`, `styles.css`) and the payload's own media: all four sound clips on every run, plus a rotating slice of the images and diagrams, so every one of the 148 referenced files is hashed once every four days instead of pulling 141 MB in a single night. It fails on a non-200, a wrong content type, or bytes whose sha256 differs from the digest the bundle records for that path, and names the asset that drifted, because a current data file proves nothing if the page that reads it is not being served or if the same URL now hands back a different file. `--full` hashes everything in one pass, and `--slice 3` repeats a specific day's slice when you need to investigate one. A fetch that fails with a network error, a timeout or a 5xx response is retried twice with doubling backoff before the run is called failed, while a 404 is reported immediately. A failed scheduled run opens a GitHub issue labeled `live-check`, comments on that same issue if it fails again, and closes it on the next run that passes, so a red cron is not silent. A second workflow, the watchdog, runs at 10:35 Central and fails when no live run has succeeded since 08:00, which catches the morning GitHub drops or delays the run so far that nothing would otherwise report it. A third workflow, `.github/workflows/portfolio-entry-live-check.yml`, runs on every push: it takes the entry docs that push changed, waits for the deployed bundle to list them, then hashes their media and diagram against the committed digests, so a new entry is verified in minutes instead of waiting for its four-day slice. The push workflow then runs `python tools/gate_self_test.py`, which breaks one thing at a time on a throwaway copy — a dropped section, a byte appended to an image, an edited doc that was never recompiled — and fails if the matching gate stays green.
 
 CI has no `data/` directory (Gate 5 requires it to stay gitignored), so both workflows build from the committed `tools/public_manifest.json`, which carries the pillar list, the inception date, and the reconciliation counts. Regenerate it from `data/master_manifest.json` whenever those change.
 

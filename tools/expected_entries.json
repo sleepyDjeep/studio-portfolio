@@ -1,5 +1,5 @@
 {
-  "note": "Every id that must ship. Refresh after an entry is added, renamed or retired: python tools/verify_portfolio.py --update-baseline",
+  "note": "Every id that must ship, with the media, diagram and headings it shipped with. Refresh after an entry is added, renamed or retired: python tools/verify_portfolio.py --update-baseline",
   "count": 48,
   "entries": [
     "aether-engine",
@@ -50,5 +50,652 @@
     "vectorfeed-saas-ecosystem",
     "workstation-storage-and-flash-forensics",
     "youtube-watch-later-classifier"
-  ]
+  ],
+  "fingerprints": {
+    "aether-engine": {
+      "media": [
+        "assets/media/aether-engine/studio-ide-live.png",
+        "assets/media/aether-engine/lua-engine-ui.jpg"
+      ],
+      "diagram": "assets/diagrams/aether-engine.svg",
+      "sections": [
+        "What It Is & Why It Matters",
+        "Real Example: How It Works in Practice",
+        "Where It Stands & Next Steps",
+        "Under the Hood & Local Files"
+      ]
+    },
+    "artisan-timber-co": {
+      "media": [
+        "assets/media/artisan-timber-co/executive-deck.png"
+      ],
+      "diagram": "",
+      "sections": [
+        "What It Is & Why It Matters",
+        "Real Example: How It Works in Practice",
+        "Where It Stands & Next Steps",
+        "Under the Hood & Local Files"
+      ]
+    },
+    "automatic-chicken-feeder": {
+      "media": [],
+      "diagram": "assets/diagrams/automatic-chicken-feeder.svg",
+      "sections": [
+        "What It Is & Why It Matters",
+        "Real Example: How It Works in Practice",
+        "Where It Stands & Next Steps",
+        "Under the Hood & Local Files"
+      ]
+    },
+    "babylon-adubar-crpg": {
+      "media": [
+        "assets/media/babylon-adubar-crpg/adubar-district-map.png",
+        "assets/media/babylon-adubar-crpg/city-reference.png"
+      ],
+      "diagram": "",
+      "sections": [
+        "What It Is & Why It Matters",
+        "Real Example: How It Works in Practice",
+        "Where It Stands & Next Steps",
+        "Under the Hood & Local Files"
+      ]
+    },
+    "cellstation-arbor": {
+      "media": [],
+      "diagram": "assets/diagrams/cellstation-arbor.svg",
+      "sections": [
+        "What It Is & Why It Matters",
+        "Real Example: How It Works in Practice",
+        "Where It Stands & Next Steps",
+        "Under the Hood & Local Files"
+      ]
+    },
+    "classic-pc-modernization-pack": {
+      "media": [
+        "assets/media/classic-pc-modernization-pack/halo-ce-running.png",
+        "assets/media/classic-pc-modernization-pack/halo-2-running.png"
+      ],
+      "diagram": "",
+      "sections": [
+        "What It Is & Why It Matters",
+        "Real Example: How It Works in Practice",
+        "Where It Stands & Next Steps",
+        "Under the Hood & Local Files"
+      ]
+    },
+    "comfyui-face-video-svg-studio": {
+      "media": [
+        "assets/media/comfyui-face-video-svg-studio/demo-restyle-transpose.png",
+        "assets/media/comfyui-face-video-svg-studio/demo-anime-video-strip.png"
+      ],
+      "diagram": "",
+      "sections": [
+        "What It Is & Why It Matters",
+        "Real Example: How It Works in Practice",
+        "Where It Stands & Next Steps",
+        "Under the Hood & Local Files"
+      ]
+    },
+    "contra-cleanroom": {
+      "media": [
+        "assets/media/contra-cleanroom/operation-vulture.png"
+      ],
+      "diagram": "",
+      "sections": [
+        "What It Is & Why It Matters",
+        "Real Example: How It Works in Practice",
+        "Where It Stands & Next Steps",
+        "Under the Hood & Local Files"
+      ]
+    },
+    "creative-collab-and-10-lens-qa-swarm": {
+      "media": [
+        "assets/media/creative-collab-and-10-lens-qa-swarm/bento-contact-sheet.png",
+        "assets/media/creative-collab-and-10-lens-qa-swarm/asset-health-dashboard.png"
+      ],
+      "diagram": "assets/diagrams/creative-collab-and-10-lens-qa-swarm.svg",
+      "sections": [
+        "What It Is & Why It Matters",
+        "Real Example: How It Works in Practice",
+        "Where It Stands & Next Steps",
+        "Under the Hood & Local Files"
+      ]
+    },
+    "facescan-studio": {
+      "media": [
+        "assets/concepts/facescan-studio.png"
+      ],
+      "diagram": "assets/diagrams/facescan-studio.svg",
+      "sections": [
+        "What It Is & Why It Matters",
+        "Real Example: How It Works in Practice",
+        "Where It Stands & Next Steps",
+        "Under the Hood & Local Files"
+      ]
+    },
+    "golden-crescent-farm": {
+      "media": [
+        "assets/media/golden-crescent-farm/scenario-simulator.png",
+        "assets/concepts/golden-crescent-farm.png"
+      ],
+      "diagram": "assets/diagrams/golden-crescent-farm.svg",
+      "sections": [
+        "What It Is & Why It Matters",
+        "Real Example: How It Works in Practice",
+        "Where It Stands & Next Steps",
+        "Under the Hood & Local Files"
+      ]
+    },
+    "houston-cctv-map": {
+      "media": [
+        "assets/media/houston-cctv-map/live-map-dashboard.png"
+      ],
+      "diagram": "",
+      "sections": [
+        "What It Is & Why It Matters",
+        "Real Example: How It Works in Practice",
+        "Where It Stands & Next Steps",
+        "Under the Hood & Local Files"
+      ]
+    },
+    "how-our-ai-studio-works": {
+      "media": [
+        "assets/concepts/how-our-ai-studio-works.png"
+      ],
+      "diagram": "assets/diagrams/how-our-ai-studio-works.svg",
+      "sections": [
+        "What It Is & Why It Matters",
+        "Real Example: How It Works in Practice",
+        "Where It Stands & Next Steps",
+        "Under the Hood & Local Files"
+      ]
+    },
+    "hydrohavoc": {
+      "media": [
+        "assets/media/hydrohavoc/gameplay-landscape.png",
+        "assets/media/hydrohavoc/gameplay-props-slice.png",
+        "assets/media/hydrohavoc/gameplay-vertical-9x16.png"
+      ],
+      "diagram": "assets/diagrams/hydrohavoc.svg",
+      "sections": [
+        "What It Is & Why It Matters",
+        "Real Example: How It Works in Practice",
+        "Where It Stands & Next Steps",
+        "Under the Hood & Local Files"
+      ]
+    },
+    "kaiju-convenience": {
+      "media": [
+        "assets/media/kaiju-convenience/store-exterior.png",
+        "assets/media/kaiju-convenience/gondola-aisles.png",
+        "assets/media/kaiju-convenience/cashier-checkout.png",
+        "assets/media/kaiju-convenience/kaiju-horizon.png",
+        "assets/media/kaiju-convenience/aisles-dollhouse.png"
+      ],
+      "diagram": "",
+      "sections": [
+        "What It Is & Why It Matters",
+        "Real Example: How It Works in Practice",
+        "Where It Stands & Next Steps",
+        "Under the Hood & Local Files"
+      ]
+    },
+    "koala-gabber-phonk-pipeline": {
+      "media": [
+        "assets/concepts/koala-gabber-phonk-pipeline.png",
+        "assets/media/koala-gabber-phonk-pipeline/01_909_Gabba_Kick_F1.wav",
+        "assets/media/koala-gabber-phonk-pipeline/12_Giallo_Ostinato_2Bar_172_Fm.wav"
+      ],
+      "diagram": "",
+      "sections": [
+        "What It Is & Why It Matters",
+        "Real Example: How It Works in Practice",
+        "Where It Stands & Next Steps",
+        "Under the Hood & Local Files"
+      ]
+    },
+    "lineart-to-3d-trellis2-pipeline": {
+      "media": [
+        "assets/media/lineart-to-3d-trellis2-pipeline/mech-input-clean.png"
+      ],
+      "diagram": "assets/diagrams/lineart-to-3d-trellis2-pipeline.svg",
+      "sections": [
+        "What It Is & Why It Matters",
+        "Real Example: How It Works in Practice",
+        "Where It Stands & Next Steps",
+        "Under the Hood & Local Files"
+      ]
+    },
+    "local-ai-virtual-assistant": {
+      "media": [
+        "assets/media/local-ai-virtual-assistant/aethercore-studio.png"
+      ],
+      "diagram": "",
+      "sections": [
+        "What It Is & Why It Matters",
+        "Real Example: How It Works in Practice",
+        "Where It Stands & Next Steps",
+        "Under the Hood & Local Files"
+      ]
+    },
+    "local-llm-vram-orchestration": {
+      "media": [],
+      "diagram": "assets/diagrams/local-llm-vram-orchestration.svg",
+      "sections": [
+        "What It Is & Why It Matters",
+        "Real Example: How It Works in Practice",
+        "Where It Stands & Next Steps",
+        "Under the Hood & Local Files"
+      ]
+    },
+    "marcopololive": {
+      "media": [
+        "assets/media/marcopololive/broadcast-layout.png"
+      ],
+      "diagram": "assets/diagrams/marcopololive-stream-pack.svg",
+      "sections": [
+        "What It Is & Why It Matters",
+        "Real Example: How It Works in Practice",
+        "Where It Stands & Next Steps",
+        "Under the Hood & Local Files"
+      ]
+    },
+    "mechdestroyer": {
+      "media": [
+        "assets/media/mechdestroyer/combat-cockpit.png",
+        "assets/media/mechdestroyer/betty-target-acquired.wav",
+        "assets/media/mechdestroyer/betty-heat-critical.wav"
+      ],
+      "diagram": "",
+      "sections": [
+        "What It Is & Why It Matters",
+        "Real Example: How It Works in Practice",
+        "Where It Stands & Next Steps",
+        "Under the Hood & Local Files"
+      ]
+    },
+    "mechwarrior2-modern-godot": {
+      "media": [
+        "assets/concepts/mechwarrior2-modern-godot.png"
+      ],
+      "diagram": "assets/diagrams/mechwarrior2-modern-godot.svg",
+      "sections": [
+        "What It Is & Why It Matters",
+        "Real Example: How It Works in Practice",
+        "Where It Stands & Next Steps",
+        "Under the Hood & Local Files"
+      ]
+    },
+    "mw2-mw4-preservation-suite": {
+      "media": [
+        "assets/media/mw2-mw4-preservation-suite/mw2-trilogy-launcher.png"
+      ],
+      "diagram": "",
+      "sections": [
+        "What It Is & Why It Matters",
+        "Real Example: How It Works in Practice",
+        "Where It Stands & Next Steps",
+        "Under the Hood & Local Files"
+      ]
+    },
+    "nanobanana-concept-art-factory": {
+      "media": [
+        "assets/concepts/story-worlds/01-the-redoubt-protocol-01_establishing.png",
+        "assets/concepts/erig-demos/demo-02-smoked-resin-cutaway.png",
+        "assets/concepts/s21u-configs/config-b-kvm-crashcart-hardware-lab.png"
+      ],
+      "diagram": "assets/diagrams/nanobanana-concept-art-factory.svg",
+      "sections": [
+        "What It Is & Why It Matters",
+        "Real Example: How It Works in Practice",
+        "Where It Stands & Next Steps",
+        "Under the Hood & Local Files"
+      ]
+    },
+    "neon-breach": {
+      "media": [
+        "assets/media/neon-breach/hacker-den-hybrid.jpg",
+        "assets/media/neon-breach/hacker-den-crt.jpg"
+      ],
+      "diagram": "",
+      "sections": [
+        "What It Is & Why It Matters",
+        "Real Example: How It Works in Practice",
+        "Where It Stands & Next Steps",
+        "Under the Hood & Local Files"
+      ]
+    },
+    "oil-paint-frazetta-battletech-pipeline": {
+      "media": [
+        "assets/media/oil-paint-frazetta-battletech-pipeline/frazetta-oil-render.png"
+      ],
+      "diagram": "",
+      "sections": [
+        "What It Is & Why It Matters",
+        "Real Example: How It Works in Practice",
+        "Where It Stands & Next Steps",
+        "Under the Hood & Local Files"
+      ]
+    },
+    "orangepi-retro-edab-rig": {
+      "media": [
+        "assets/media/orangepi-retro-edab-rig/chassis-layout-preview.png",
+        "assets/concepts/orangepi-retro-edab-rig.png",
+        "assets/concepts/erig-demos/demo-01-walnut-whip-action.png",
+        "assets/concepts/erig-demos/demo-02-smoked-resin-cutaway.png",
+        "assets/concepts/erig-demos/demo-03-dual-shell-artisan-lineup.png"
+      ],
+      "diagram": "assets/diagrams/orangepi-retro-edab-rig.svg",
+      "sections": [
+        "What It Is & Why It Matters",
+        "Real Example: How It Works in Practice",
+        "Where It Stands & Next Steps",
+        "Under the Hood & Local Files"
+      ]
+    },
+    "pallet-wood-sauna": {
+      "media": [
+        "assets/media/pallet-wood-sauna/cad-blueprint-sheet.jpg",
+        "assets/concepts/pallet-wood-sauna.png"
+      ],
+      "diagram": "",
+      "sections": [
+        "What It Is & Why It Matters",
+        "Real Example: How It Works in Practice",
+        "Where It Stands & Next Steps",
+        "Under the Hood & Local Files"
+      ]
+    },
+    "pixel-art-asset-pipeline": {
+      "media": [
+        "assets/media/pixel-art-asset-pipeline/arena-cyberpunk.png",
+        "assets/media/pixel-art-asset-pipeline/boss-mech.png"
+      ],
+      "diagram": "assets/diagrams/pixel-art-asset-pipeline.svg",
+      "sections": [
+        "What It Is & Why It Matters",
+        "Real Example: How It Works in Practice",
+        "Where It Stands & Next Steps",
+        "Under the Hood & Local Files"
+      ]
+    },
+    "pocketrpg-studio": {
+      "media": [
+        "assets/media/pocketrpg-studio/studio-hub.png",
+        "assets/media/pocketrpg-studio/s24-wireless-live.png",
+        "assets/media/pocketrpg-studio/art-forward-station.png"
+      ],
+      "diagram": "",
+      "sections": [
+        "What It Is & Why It Matters",
+        "Real Example: How It Works in Practice",
+        "Where It Stands & Next Steps",
+        "Under the Hood & Local Files"
+      ]
+    },
+    "project-megacity": {
+      "media": [
+        "assets/media/project-megacity/anthil-pitch-deck.png"
+      ],
+      "diagram": "",
+      "sections": [
+        "What It Is & Why It Matters",
+        "Real Example: How It Works in Practice",
+        "Where It Stands & Next Steps",
+        "Under the Hood & Local Files"
+      ]
+    },
+    "public-domain-mashup-worlds": {
+      "media": [
+        "assets/concepts/public-domain-mashup-worlds.png",
+        "assets/concepts/story-worlds/01-the-redoubt-protocol-01_establishing.png",
+        "assets/concepts/story-worlds/01-the-redoubt-protocol-02_character.png",
+        "assets/concepts/story-worlds/01-the-redoubt-protocol-03_gameplay.png",
+        "assets/concepts/story-worlds/02-war-of-the-glass-wall-01_establishing.png",
+        "assets/concepts/story-worlds/02-war-of-the-glass-wall-02_character.png",
+        "assets/concepts/story-worlds/02-war-of-the-glass-wall-03_gameplay.png",
+        "assets/concepts/story-worlds/03-eternal-mercury-01_establishing.png",
+        "assets/concepts/story-worlds/03-eternal-mercury-02_character.png",
+        "assets/concepts/story-worlds/03-eternal-mercury-03_gameplay.png",
+        "assets/concepts/story-worlds/04-junkyard-vikings-01_establishing.png",
+        "assets/concepts/story-worlds/04-junkyard-vikings-02_character.png",
+        "assets/concepts/story-worlds/04-junkyard-vikings-03_gameplay.png",
+        "assets/concepts/story-worlds/05-arcturus-sensoria-01_establishing.png",
+        "assets/concepts/story-worlds/05-arcturus-sensoria-02_character.png",
+        "assets/concepts/story-worlds/05-arcturus-sensoria-03_gameplay.png",
+        "assets/concepts/story-worlds/06-the-sargasso-hulks-01_establishing.png",
+        "assets/concepts/story-worlds/06-the-sargasso-hulks-02_character.png",
+        "assets/concepts/story-worlds/06-the-sargasso-hulks-03_gameplay.png",
+        "assets/concepts/story-worlds/07-chitin-and-spore-01_establishing.png",
+        "assets/concepts/story-worlds/07-chitin-and-spore-02_character.png",
+        "assets/concepts/story-worlds/07-chitin-and-spore-03_gameplay.png",
+        "assets/concepts/story-worlds/08-carcosa-in-2419-01_establishing.png",
+        "assets/concepts/story-worlds/08-carcosa-in-2419-02_character.png",
+        "assets/concepts/story-worlds/08-carcosa-in-2419-03_gameplay.png",
+        "assets/concepts/story-worlds/09-the-singing-sampo-01_establishing.png",
+        "assets/concepts/story-worlds/09-the-singing-sampo-02_character.png",
+        "assets/concepts/story-worlds/09-the-singing-sampo-03_gameplay.png",
+        "assets/concepts/story-worlds/10-cell-block-zero-01_establishing.png",
+        "assets/concepts/story-worlds/10-cell-block-zero-02_character.png",
+        "assets/concepts/story-worlds/10-cell-block-zero-03_gameplay.png",
+        "assets/concepts/story-worlds/11-city-of-brass-and-neon-01_establishing.png",
+        "assets/concepts/story-worlds/11-city-of-brass-and-neon-02_character.png",
+        "assets/concepts/story-worlds/11-city-of-brass-and-neon-03_gameplay.png",
+        "assets/concepts/story-worlds/12-serpent-court-of-valusia-01_establishing.png",
+        "assets/concepts/story-worlds/12-serpent-court-of-valusia-02_character.png",
+        "assets/concepts/story-worlds/12-serpent-court-of-valusia-03_gameplay.png",
+        "assets/concepts/story-worlds/13-lunar-sutra-01_establishing.png",
+        "assets/concepts/story-worlds/13-lunar-sutra-02_character.png",
+        "assets/concepts/story-worlds/13-lunar-sutra-03_gameplay.png",
+        "assets/concepts/story-worlds/14-the-blazing-pole-01_establishing.png",
+        "assets/concepts/story-worlds/14-the-blazing-pole-02_character.png",
+        "assets/concepts/story-worlds/14-the-blazing-pole-03_gameplay.png",
+        "assets/concepts/story-worlds/15-eighteen-men-01_establishing.png",
+        "assets/concepts/story-worlds/15-eighteen-men-02_character.png",
+        "assets/concepts/story-worlds/15-eighteen-men-03_gameplay.png"
+      ],
+      "diagram": "assets/diagrams/public-domain-mashup-worlds.svg",
+      "sections": [
+        "What It Is & Why It Matters",
+        "Real Example: How It Works in Practice",
+        "Where It Stands & Next Steps",
+        "Under the Hood & Local Files"
+      ]
+    },
+    "retrobat-multi-system-appliance": {
+      "media": [
+        "assets/concepts/retrobat-multi-system-appliance.png",
+        "assets/media/retrobat-multi-system-appliance/xemu-console-capture.png"
+      ],
+      "diagram": "assets/diagrams/retrobat-multi-system-appliance.svg",
+      "sections": [
+        "What It Is & Why It Matters",
+        "Real Example: How It Works in Practice",
+        "Where It Stands & Next Steps",
+        "Under the Hood & Local Files"
+      ]
+    },
+    "s21u-cyberdeck-mk1": {
+      "media": [
+        "assets/renders/s21u-box-reference.webp",
+        "assets/renders/s21u-deck-revb-steel.png",
+        "assets/renders/s21u-deck-revb-deck.png",
+        "assets/concepts/s21u-cyberdeck-mk1.png",
+        "assets/concepts/s21u-configs/config-a-apache-hosas-simpit.png",
+        "assets/concepts/s21u-configs/config-b-kvm-crashcart-hardware-lab.png",
+        "assets/concepts/s21u-configs/config-c-slim-aluminum-field-tablet.png"
+      ],
+      "diagram": "assets/diagrams/s21u-cyberdeck-mk1.svg",
+      "sections": [
+        "What It Is & Why It Matters",
+        "Real Example: How It Works in Practice",
+        "Where It Stands & Next Steps",
+        "Under the Hood & Local Files"
+      ]
+    },
+    "scifi-mobile-cockpit-and-watch-ai": {
+      "media": [
+        "assets/media/scifi-mobile-cockpit-and-watch-ai/steel-battalion-cockpit.jpg",
+        "assets/media/scifi-mobile-cockpit-and-watch-ai/hitchhikers-sub-etha.jpg"
+      ],
+      "diagram": "",
+      "sections": [
+        "What It Is & Why It Matters",
+        "Real Example: How It Works in Practice",
+        "Where It Stands & Next Steps",
+        "Under the Hood & Local Files"
+      ]
+    },
+    "shadow-warrior-roguelite": {
+      "media": [
+        "assets/media/shadow-warrior-roguelite/gameplay-capture.png"
+      ],
+      "diagram": "",
+      "sections": [
+        "What It Is & Why It Matters",
+        "Real Example: How It Works in Practice",
+        "Where It Stands & Next Steps",
+        "Under the Hood & Local Files"
+      ]
+    },
+    "solarpunk-immersive-sim": {
+      "media": [
+        "assets/concepts/solarpunk-immersive-sim.png"
+      ],
+      "diagram": "assets/diagrams/solarpunk-immersive-sim.svg",
+      "sections": [
+        "What It Is & Why It Matters",
+        "Real Example: How It Works in Practice",
+        "Where It Stands & Next Steps",
+        "Under the Hood & Local Files"
+      ]
+    },
+    "stream-pack-chat-backend": {
+      "media": [],
+      "diagram": "assets/diagrams/stream-pack-chat-backend.svg",
+      "sections": [
+        "What It Is & Why It Matters",
+        "Real Example: How It Works in Practice",
+        "Where It Stands & Next Steps",
+        "Under the Hood & Local Files"
+      ]
+    },
+    "studio-shared-component-library": {
+      "media": [],
+      "diagram": "assets/diagrams/studio-shared-component-library.svg",
+      "sections": [
+        "What It Is & Why It Matters",
+        "Real Example: How It Works in Practice",
+        "Where It Stands & Next Steps",
+        "Under the Hood & Local Files"
+      ]
+    },
+    "techwriter-publishing-studio": {
+      "media": [
+        "assets/media/techwriter-publishing-studio/studio-dashboard.png",
+        "assets/media/techwriter-publishing-studio/mini-painting-guide.png"
+      ],
+      "diagram": "",
+      "sections": [
+        "What It Is & Why It Matters",
+        "Real Example: How It Works in Practice",
+        "Where It Stands & Next Steps",
+        "Under the Hood & Local Files"
+      ]
+    },
+    "toon-patrol-and-3d-tattoo-studio": {
+      "media": [
+        "assets/media/toon-patrol-and-3d-tattoo-studio/weasels-color-flash.png",
+        "assets/media/toon-patrol-and-3d-tattoo-studio/smartass-stencil.png"
+      ],
+      "diagram": "",
+      "sections": [
+        "What It Is & Why It Matters",
+        "Real Example: How It Works in Practice",
+        "Where It Stands & Next Steps",
+        "Under the Hood & Local Files"
+      ]
+    },
+    "ui-and-prose-anti-slop-governance": {
+      "media": [],
+      "diagram": "assets/diagrams/ui-and-prose-anti-slop-governance.svg",
+      "sections": [
+        "What It Is & Why It Matters",
+        "Real Example: How It Works in Practice",
+        "Where It Stands & Next Steps",
+        "Under the Hood & Local Files"
+      ]
+    },
+    "unified-memory-bank": {
+      "media": [
+        "assets/concepts/unified-memory-bank.png"
+      ],
+      "diagram": "assets/diagrams/unified-memory-bank.svg",
+      "sections": [
+        "What It Is & Why It Matters",
+        "Real Example: How It Works in Practice",
+        "Where It Stands & Next Steps",
+        "Under the Hood & Local Files"
+      ]
+    },
+    "universal-growth-command-center": {
+      "media": [
+        "assets/media/universal-growth-command-center/ugi-dashboard.png"
+      ],
+      "diagram": "",
+      "sections": [
+        "What It Is & Why It Matters",
+        "Real Example: How It Works in Practice",
+        "Where It Stands & Next Steps",
+        "Under the Hood & Local Files"
+      ]
+    },
+    "universal-retro-catalog-hub": {
+      "media": [
+        "assets/media/universal-retro-catalog-hub/universal-hub.png",
+        "assets/media/universal-retro-catalog-hub/ps1-gamecube-hub.png"
+      ],
+      "diagram": "",
+      "sections": [
+        "What It Is & Why It Matters",
+        "Real Example: How It Works in Practice",
+        "Where It Stands & Next Steps",
+        "Under the Hood & Local Files"
+      ]
+    },
+    "vectorfeed-saas-ecosystem": {
+      "media": [
+        "assets/media/vectorfeed-saas-ecosystem/propertyintel-portal.png",
+        "assets/media/vectorfeed-saas-ecosystem/nationwide-radar.jpg",
+        "assets/media/vectorfeed-saas-ecosystem/multi-device-hero.jpg"
+      ],
+      "diagram": "assets/diagrams/vectorfeed-saas-ecosystem.svg",
+      "sections": [
+        "What It Is & Why It Matters",
+        "Real Example: How It Works in Practice",
+        "Where It Stands & Next Steps",
+        "Under the Hood & Local Files"
+      ]
+    },
+    "workstation-storage-and-flash-forensics": {
+      "media": [],
+      "diagram": "assets/diagrams/workstation-storage-and-flash-forensics.svg",
+      "sections": [
+        "What It Is & Why It Matters",
+        "Real Example: How It Works in Practice",
+        "Where It Stands & Next Steps",
+        "Under the Hood & Local Files"
+      ]
+    },
+    "youtube-watch-later-classifier": {
+      "media": [],
+      "diagram": "assets/diagrams/youtube-watch-later-classifier.svg",
+      "sections": [
+        "What It Is & Why It Matters",
+        "Real Example: How It Works in Practice",
+        "Where It Stands & Next Steps",
+        "Under the Hood & Local Files"
+      ]
+    }
+  }
 }

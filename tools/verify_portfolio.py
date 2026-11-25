@@ -13,7 +13,9 @@ nothing but the committed tree, so `--skip-coverage` runs them anywhere, CI incl
 """
 
 import argparse
+import datetime
 import json
+import os
 import re
 import sqlite3
 import subprocess
@@ -38,6 +40,27 @@ REQUIRED_SECTIONS = [
     "Where It Stands & Next Steps",
     "Under the Hood & Local Files",
 ]
+
+# Gate 2 schema. Each rule exists because the failure it catches is otherwise
+# silent or is reported as a traceback: `tags: "3d, scan"` compiles to one tag per
+# character, a string `media` crashes the gate while iterating it, a misspelled
+# `date_updated` falls back to the builder default, and an unknown `readiness`
+# renders an unstyled badge and drops the entry from the readiness view.
+ALLOWED_FRONTMATTER_KEYS = {
+    "id", "title", "subtitle", "pillar", "entry_type", "readiness", "visibility",
+    "date_started", "date_updated", "tags", "metrics", "media", "diagram",
+    "tech_stack", "local_paths", "run_commands", "memory_ids", "conversation_ids",
+}
+ENTRY_TYPES = {"project", "workflow", "idea"}
+READINESS_VALUES = {"shipped", "active-build", "reusable-workflow", "blueprint"}
+VISIBILITY_VALUES = {"main", "vault"}
+MEDIA_KINDS = {"authentic", "concept", "audio"}
+TEXT_LIST_KEYS = ("tags", "tech_stack", "memory_ids", "conversation_ids")
+OBJECT_LIST_KEYS = ("metrics", "local_paths", "run_commands")
+
+# Soft budget, not a failure: the nightly live check downloads the whole payload
+# once every four days, and a handful of 12 MB PNGs is what makes that slow.
+ASSET_WARN_BYTES = 2 * 1024 * 1024
 
 # Constructed cleanly to enforce the exact Wave 5 anti-slop lexicon gate
 BANNED_PATTERNS = [
@@ -74,6 +97,117 @@ def entry_id(md_path: Path, meta: dict) -> str:
     return str(meta.get("id") or md_path.stem).strip()
 
 
+def parse_date(value: str) -> datetime.date | None:
+    try:
+        return datetime.date.fromisoformat(value)
+    except ValueError:
+        return None
+
+
+def validate_frontmatter(meta: dict, label: str) -> list[str]:
+    """Gate 2 schema: required keys, known keys, types, enums and dates."""
+    problems: list[str] = []
+    for key in ("id", "title", "subtitle", "pillar", "entry_type", "readiness", "visibility"):
+        if not str(meta.get(key) or "").strip():
+            problems.append(f"Gate 2: Missing frontmatter '{key}' in {label}")
+
+    for key in sorted(set(meta) - ALLOWED_FRONTMATTER_KEYS):
+        problems.append(
+            f"Gate 2: Unknown frontmatter key '{key}' in {label} "
+            f"(known: {', '.join(sorted(ALLOWED_FRONTMATTER_KEYS))})"
+        )
+
+    for key, allowed in (
+        ("entry_type", ENTRY_TYPES),
+        ("readiness", READINESS_VALUES),
+        ("visibility", VISIBILITY_VALUES),
+    ):
+        value = str(meta.get(key) or "").strip()
+        if value and value not in allowed:
+            problems.append(
+                f"Gate 2: {key} '{value}' in {label} is not one of {sorted(allowed)}"
+            )
+
+    for key in TEXT_LIST_KEYS:
+        value = meta.get(key)
+        if value is None:
+            continue
+        if not isinstance(value, list) or any(not isinstance(item, str) for item in value):
+            problems.append(
+                f"Gate 2: '{key}' in {label} must be a list of strings, "
+                f"got {type(value).__name__}"
+            )
+    for key in OBJECT_LIST_KEYS:
+        value = meta.get(key)
+        if value is None:
+            continue
+        if not isinstance(value, list) or any(not isinstance(item, dict) for item in value):
+            problems.append(
+                f"Gate 2: '{key}' in {label} must be a list of mappings, "
+                f"got {type(value).__name__}"
+            )
+
+    media = meta.get("media")
+    if media is not None and not isinstance(media, list):
+        problems.append(
+            f"Gate 2: 'media' in {label} must be a list of items, got {type(media).__name__}"
+        )
+    for item in media if isinstance(media, list) else []:
+        if not isinstance(item, dict):
+            problems.append(f"Gate 2: media items in {label} must be mappings")
+            continue
+        kind = str(item.get("kind") or "").strip()
+        src = str(item.get("src") or "").strip()
+        if kind not in MEDIA_KINDS:
+            problems.append(f"Gate 2: Invalid media kind '{kind}' in {label}")
+        if not src:
+            problems.append(f"Gate 2: Media item missing 'src' in {label}")
+        if kind in {"authentic", "concept"} and not str(item.get("caption") or "").strip():
+            problems.append(
+                f"Gate 2: Image '{src or '(no src)'}' in {label} has no caption "
+                f"(the page uses it as alt text)"
+            )
+        if "assets/concepts/" in src and kind != "concept":
+            problems.append(f"Gate 2: Concept illustration must have kind='concept' in {label}")
+
+    if meta.get("diagram") is not None and not isinstance(meta.get("diagram"), str):
+        problems.append(
+            f"Gate 2: 'diagram' in {label} must be a path string, "
+            f"got {type(meta.get('diagram')).__name__}"
+        )
+
+    for key in ("date_started", "date_updated"):
+        value = str(meta.get(key) or "").strip()
+        if value and not parse_date(value):
+            problems.append(f"Gate 2: {key} '{value}' in {label} is not a YYYY-MM-DD date")
+    started = str(meta.get("date_started") or "").strip()
+    updated = str(meta.get("date_updated") or "").strip()
+    if parse_date(started) and parse_date(updated) and started > updated:
+        problems.append(
+            f"Gate 2: date_updated {updated} precedes date_started {started} in {label}"
+        )
+
+    return problems
+
+
+def section_headings(body: str) -> list[str]:
+    return [m.group(1).strip() for m in re.finditer(r"^##\s+(.+?)\s*$", body, flags=re.MULTILINE)]
+
+
+def entry_fingerprint(meta: dict, body: str) -> dict:
+    """What an entry is made of, so the baseline can notice half of it vanishing."""
+    media = meta.get("media") if isinstance(meta.get("media"), list) else []
+    return {
+        "media": [
+            str(item.get("src") or "").strip()
+            for item in media
+            if isinstance(item, dict) and str(item.get("src") or "").strip()
+        ],
+        "diagram": str(meta.get("diagram") or "").strip(),
+        "sections": section_headings(body),
+    }
+
+
 def tracked_files() -> set[str] | None:
     """Every path in the git index, or None outside a checkout."""
     result = subprocess.run(
@@ -84,6 +218,28 @@ def tracked_files() -> set[str] | None:
     return {path for path in result.stdout.split("\0") if path}
 
 
+def case_mismatch(rel: str) -> str | None:
+    """Name the component whose case differs on disk, if any.
+
+    Windows resolves 'Assets/Media/Foo.PNG' to the lowercase file; Pages, served
+    from a case-sensitive filesystem, returns 404 for it. CI runs on Linux and
+    catches that after the push, so the local gates have to look for it too.
+    """
+    current = PORTFOLIO_ROOT
+    for part in Path(rel).parts:
+        try:
+            names = os.listdir(current)
+        except OSError:
+            return None
+        if part not in names:
+            near = next((name for name in names if name.lower() == part.lower()), None)
+            if near:
+                return f"does not match the case on disk (found '{near}')"
+            return f"has no component '{part}' on disk"
+        current = current / part
+    return None
+
+
 def asset_problems(label: str, rel: str, owner: str, tracked: set[str] | None) -> list[str]:
     """Gate 3 rule: the file needs bytes on disk *and* a place in the git index.
 
@@ -92,9 +248,19 @@ def asset_problems(label: str, rel: str, owner: str, tracked: set[str] | None) -
     """
     rel = rel.replace("\\", "/").strip()
     problems = []
+    if not rel:
+        return [f"Gate 3: Empty {label} path for {owner}"]
+    if rel.startswith("/") or re.match(r"^[A-Za-z]:", rel):
+        return [f"Gate 3: Absolute {label} path '{rel}' for {owner}; use a repository-relative path"]
+    if ".." in Path(rel).parts:
+        return [f"Gate 3: {label} path '{rel}' for {owner} escapes the repository"]
     path = PORTFOLIO_ROOT / rel
     if not path.exists() or path.stat().st_size == 0:
         problems.append(f"Gate 3: Missing/empty {label} '{rel}' for {owner}")
+    else:
+        mismatch = case_mismatch(rel)
+        if mismatch:
+            problems.append(f"Gate 3: {label} '{rel}' for {owner} {mismatch}")
     if tracked is not None and rel not in tracked:
         problems.append(
             f"Gate 3: {label} '{rel}' is not tracked in git for {owner} "
@@ -103,19 +269,20 @@ def asset_problems(label: str, rel: str, owner: str, tracked: set[str] | None) -
     return problems
 
 
-def public_entry_ids() -> tuple[list[str], list[str]]:
-    """Every id that ships publicly, plus the docs that no longer parse."""
-    ids, problems = [], []
+def public_entry_details() -> tuple[dict[str, dict], list[str]]:
+    """Every id that ships publicly mapped to its fingerprint, plus unparseable docs."""
+    details: dict[str, dict] = {}
+    problems = []
     for md_path in sorted(DOCS_DIR.rglob("*.md")):
         try:
-            meta, _body = split_document(md_path.read_text(encoding="utf-8"), str(md_path))
+            meta, body = split_document(md_path.read_text(encoding="utf-8"), str(md_path))
         except FrontmatterError as exc:
             problems.append(str(exc))
             continue
         if is_vault_doc(md_path, meta):
             continue
-        ids.append(entry_id(md_path, meta))
-    return sorted(ids), problems
+        details[entry_id(md_path, meta)] = entry_fingerprint(meta, body)
+    return details, problems
 
 
 def gate_corpus_coverage(failures: list) -> None:
@@ -181,21 +348,27 @@ def main() -> int:
     args = parser.parse_args()
 
     if args.update_baseline:
-        ids, problems = public_entry_ids()
+        details, problems = public_entry_details()
         if problems:
             print("[baseline] refusing to write: these docs do not parse")
             for problem in problems:
                 print(f"  [X] {problem}")
             return 1
-        if not ids:
+        if not details:
             print("[baseline] refusing to write an empty baseline")
             return 1
+        previous = {}
+        if BASELINE_PATH.exists():
+            previous = json.loads(BASELINE_PATH.read_text(encoding="utf-8"))
+        added = sorted(set(details) - set(previous.get("entries", [])))
+        removed = sorted(set(previous.get("entries", [])) - set(details))
         BASELINE_PATH.write_text(
             json.dumps(
                 {
-                    "note": "Every id that must ship. Refresh after an entry is added, renamed or retired: python tools/verify_portfolio.py --update-baseline",
-                    "count": len(ids),
-                    "entries": ids,
+                    "note": "Every id that must ship, with the media, diagram and headings it shipped with. Refresh after an entry is added, renamed or retired: python tools/verify_portfolio.py --update-baseline",
+                    "count": len(details),
+                    "entries": sorted(details),
+                    "fingerprints": {slug: details[slug] for slug in sorted(details)},
                 },
                 indent=2,
             )
@@ -203,7 +376,10 @@ def main() -> int:
             encoding="utf-8",
         )
         print(f"[baseline] wrote {BASELINE_PATH.relative_to(PORTFOLIO_ROOT).as_posix()} "
-              f"with {len(ids)} entries; review and commit it.")
+              f"with {len(details)} entries; review and commit it.")
+        for label, slugs in (("added", added), ("removed", removed)):
+            if slugs:
+                print(f"[baseline] {label}: {', '.join(slugs)}")
         return 0
 
     failures = []
@@ -220,6 +396,7 @@ def main() -> int:
         failures.append("Gate 2: Zero Markdown entries found under docs/")
 
     public_ids: list[str] = []
+    public_details: dict[str, dict] = {}
     for md_path in md_files:
         raw = md_path.read_text(encoding="utf-8")
         try:
@@ -228,23 +405,16 @@ def main() -> int:
             failures.append(f"Gate 2: Invalid YAML frontmatter in {md_path.name}: {exc}")
             continue
 
+        failures.extend(validate_frontmatter(meta, md_path.name))
+
         if not is_vault_doc(md_path, meta):
             public_ids.append(entry_id(md_path, meta))
+            public_details[entry_id(md_path, meta)] = entry_fingerprint(meta, body)
 
-        for req_key in ["id", "title", "subtitle", "pillar", "entry_type", "readiness", "visibility"]:
-            if not str(meta.get(req_key) or "").strip():
-                failures.append(f"Gate 2: Missing frontmatter '{req_key}' in {md_path.name}")
-
-        media = meta.get("media") or []
+        media = meta.get("media") if isinstance(meta.get("media"), list) else []
         diagram = str(meta.get("diagram") or "").strip()
         if not media and not diagram:
             failures.append(f"Gate 2: Entry {md_path.name} has zero visuals (neither media nor diagram)")
-
-        for m in media:
-            if m.get("kind") not in {"authentic", "concept", "audio"}:
-                failures.append(f"Gate 2: Invalid media kind '{m.get('kind')}' in {md_path.name}")
-            if "assets/concepts/" in str(m.get("src") or "") and m.get("kind") != "concept":
-                failures.append(f"Gate 2: Concept illustration must have kind='concept' in {md_path.name}")
 
         for sec in REQUIRED_SECTIONS:
             m_sec = re.search(rf"^##\s+{re.escape(sec)}\s*$", body, flags=re.MULTILINE)
@@ -278,6 +448,28 @@ def main() -> int:
                 f"Gate 2 (Baseline): entry '{slug}' exists under docs/ but not in the baseline; "
                 f"review it, then run: python tools/verify_portfolio.py --update-baseline"
             )
+        recorded = baseline.get("fingerprints") or {}
+        for slug in sorted(set(recorded) & set(public_details)):
+            was, now = recorded[slug], public_details[slug]
+            for src in was.get("media", []):
+                if src not in now.get("media", []):
+                    failures.append(
+                        f"Gate 2 (Baseline): entry '{slug}' no longer references media '{src}' "
+                        f"(restore it, or re-run --update-baseline if the removal is intended)"
+                    )
+            diagram = str(was.get("diagram") or "")
+            if diagram and now.get("diagram") != diagram:
+                failures.append(
+                    f"Gate 2 (Baseline): entry '{slug}' no longer uses diagram '{diagram}' "
+                    f"(restore it, or re-run --update-baseline if the removal is intended)"
+                )
+            for heading in was.get("sections", []):
+                if heading not in now.get("sections", []):
+                    failures.append(
+                        f"Gate 2 (Baseline): entry '{slug}' lost section '## {heading}' "
+                        f"(restore it, or re-run --update-baseline if the rename is intended)"
+                    )
+
         listed = f"{len(expected)} expected, {len(present)} present"
         print(f"[Gate 2] Baseline: {listed}.")
 
@@ -300,6 +492,7 @@ def main() -> int:
                 )
 
             checked_assets = 0
+            asset_sizes: list[tuple[str, int]] = []
             for e in bundle.get("entries", []):
                 if e.get("diagram"):
                     checked_assets += 1
@@ -313,6 +506,27 @@ def main() -> int:
                 f"[Gate 3] Verified {checked_assets} asset paths in portfolio-data.js "
                 f"(>0 bytes on disk, tracked in git)."
             )
+            if tracked is not None:
+                for e in bundle.get("entries", []):
+                    rels = [e["diagram"]] if e.get("diagram") else []
+                    rels += [m.get("src") for m in e.get("media", [])]
+                    for rel in rels:
+                        path = PORTFOLIO_ROOT / str(rel or "")
+                        if path.is_file():
+                            asset_sizes.append((str(rel), path.stat().st_size))
+                total_mb = sum(size for _, size in asset_sizes) / 1048576
+                heavy = sorted(
+                    ((rel, size) for rel, size in asset_sizes if size > ASSET_WARN_BYTES),
+                    key=lambda item: -item[1],
+                )
+                print(f"[Gate 3] Payload media: {total_mb:.1f} MB across {len(asset_sizes)} files.")
+                if heavy:
+                    print(
+                        f"[Gate 3] Warning: {len(heavy)} asset(s) over "
+                        f"{ASSET_WARN_BYTES / 1048576:.0f} MB (prefer WebP for new images):"
+                    )
+                    for rel, size in heavy[:5]:
+                        print(f"    {size / 1048576:.1f} MB  {rel}")
 
     # --- GATE 4: Zero AI-Slop Lexicon ---
     scan_targets = list(DOCS_DIR.rglob("*.md")) + [

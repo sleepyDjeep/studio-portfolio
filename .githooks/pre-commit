@@ -1,9 +1,9 @@
 #!/bin/sh
-# Refuses a commit that would publish a portfolio-data.js older than docs/.
+# Refuses a commit that would publish a broken entry or a stale bundle.
 #
 # Installed with: git config core.hooksPath .githooks
-# Runs the same guard CI runs, so a doc or diagram edit can never reach GitHub
-# Pages without the regenerated payload beside it.
+# Runs the same guards CI runs, so a doc edit can never reach GitHub Pages with a
+# missing section, an invalid asset path, a vault leak or an unregenerated payload.
 
 set -u
 
@@ -24,8 +24,14 @@ if command -v python >/dev/null 2>&1; then
 elif command -v python3 >/dev/null 2>&1; then
     py=python3
 else
-    echo "[pre-commit] python not found; skipping the bundle freshness check." >&2
+    echo "[pre-commit] python not found; skipping the portfolio checks." >&2
     exit 0
+fi
+
+# Gates 2-5 read only the committed tree, so they run here in about a second.
+if ! "$py" tools/verify_portfolio.py --skip-coverage; then
+    echo "[pre-commit] Portfolio gates failed; fix the entries above before committing." >&2
+    exit 1
 fi
 
 exec "$py" tools/check_bundle_freshness.py

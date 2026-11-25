@@ -3,7 +3,9 @@
 "Add this to the studio portfolio" means this checklist. Work from the repository
 root; `README.md` covers the rest.
 
-1. **Doc** — `docs/<pillar>/<slug>.md`, with `pillar` set to that folder's id
+1. **Doc** — scaffold it with `python tools/new_entry.py <pillar> <slug> --title ...
+   --subtitle ... --media "file::caption"`, or write `docs/<pillar>/<slug>.md`
+   by hand, with `pillar` set to that folder's id
    (`00-studio-primer`, `01-ai-workflows`, `02-games-engines`, `03-ventures-saas`,
    `04-creative-3d-media`, `05-hardware-retro`) and a unique `id` (the filename
    stem by default) that becomes the `#entry=<id>` URL.
@@ -12,10 +14,10 @@ root; `README.md` covers the rest.
    (`project`, `workflow`, `idea`) and `readiness` (`shipped`, `active-build`,
    `reusable-workflow`, `blueprint`) so the badges and views recognize it.
 3. **At least one visual** —
-   - `media:` items with `src` and `kind` (`authentic`, `concept`, `audio`); the
-     file must exist, be non-empty and be committed. Files under
-     `assets/concepts/` must be `concept`. New files go in
-     `assets/media/<slug>/`.
+   - `media:` items with `src`, `kind` (`authentic`, `concept`, `audio`) and a
+     `caption` for images (the page uses it as alt text); the file must exist, be
+     non-empty and be committed. Files under `assets/concepts/` must be
+     `concept`. New files go in `assets/media/<slug>/`.
    - or `diagram: "assets/diagrams/<slug>.svg"`, inlined into the page and
      hashed, so it must exist and be committed.
 4. **Four sections, exact headings, 80+ characters each**:
@@ -27,13 +29,15 @@ root; `README.md` covers the rest.
    page's three example cards.
 5. **Baseline** — a new id fails Gate 2 until recorded:
    `python tools/verify_portfolio.py --update-baseline`, then commit
-   `tools/expected_entries.json`.
+   `tools/expected_entries.json`. It also records each entry's media, diagram and
+   headings, so deleting half an entry fails like deleting the entry.
 6. **Rebuild** — `python tools/update_portfolio.py` builds the bundle, runs all
    five gates, proves the bundle matches a clean rebuild, then snapshots the
    private manifest; it stops at the first failure. Without the local databases,
    add `--no-verify` and run `python tools/verify_portfolio.py --skip-coverage`.
 7. **Commit** — doc, media, `tools/expected_entries.json` and the rebuilt
-   `portfolio-data.js` together; the pre-commit hook rejects a stale bundle.
+   `portfolio-data.js` together; the pre-commit hook runs gates 2-5 and rejects a
+   stale bundle.
    `portfolio-data.js` is generated, never hand-edited. Push to `main`; a
    scheduled check samples the deployed bytes.
 

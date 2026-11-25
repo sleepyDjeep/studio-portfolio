@@ -12,6 +12,8 @@ Cases:
   gate2_doc_section    drop a required '## ' heading from one entry
   gate2_frontmatter    replace a doc's closing '---' fence with '--'
   gate2_entry_missing  delete an entry doc outright (the baseline must notice)
+  gate2_frontmatter_types  turn tags into one comma-separated string
+  baseline_fingerprint remove one media item from an entry (fingerprint must notice)
   gate3_missing_asset  truncate an image the bundle references to zero bytes
   gate3_untracked_asset  drop that image from the git index while leaving it on disk
   gate4_slop           append a banned word to README.md
@@ -239,6 +241,48 @@ def append_media_byte(root: Path) -> str:
     return f"{src}: appended 1 trailing byte ({len(data)} -> {len(data) + 1} bytes, still non-empty)"
 
 
+def doc_with_media(root: Path, minimum: int = 2) -> Path:
+    for path in docs(root):
+        parts = path.read_text(encoding="utf-8").split("---", 2)
+        if len(parts) < 3:
+            continue
+        try:
+            meta = yaml.safe_load(parts[1]) or {}
+        except yaml.YAMLError:
+            continue
+        if isinstance(meta.get("media"), list) and len(meta["media"]) >= minimum:
+            return path
+    raise RuntimeError(f"no doc with at least {minimum} media items")
+
+
+def _mutate_frontmatter(root: Path, mutate) -> Path:
+    doc = doc_with_media(root)
+    text = doc.read_text(encoding="utf-8")
+    lines = text.splitlines(keepends=True)
+    closing = next(i for i, ln in enumerate(lines[1:], start=1) if ln.strip() == "---")
+    meta = yaml.safe_load("".join(lines[1:closing])) or {}
+    mutate(meta)
+    dumped = yaml.safe_dump(meta, sort_keys=False, allow_unicode=True)
+    rewrite_text(doc, "---\n" + dumped + "---\n" + "".join(lines[closing + 1:]))
+    return doc
+
+
+def scalar_tags(root: Path) -> str:
+    def mutate(meta: dict) -> None:
+        meta["tags"] = "one, two"
+
+    doc = _mutate_frontmatter(root, mutate)
+    return f"{doc.relative_to(root).as_posix()}: tags became one comma-separated string"
+
+
+def drop_one_media(root: Path) -> str:
+    def mutate(meta: dict) -> None:
+        meta["media"] = list(meta["media"])[:-1]
+
+    doc = _mutate_frontmatter(root, mutate)
+    return f"{doc.relative_to(root).as_posix()}: dropped one media item, bundle untouched"
+
+
 def edit_doc_without_rebuild(root: Path) -> str:
     doc = first_doc(root)
     ident = doc_id(doc)
@@ -259,6 +303,8 @@ CONTROLS = [
     Control("gate2_doc_section", break_doc_section, "verify", "Gate 2: Missing section"),
     Control("gate2_frontmatter", break_frontmatter, "verify", "Invalid YAML frontmatter"),
     Control("gate2_entry_missing", delete_entry_doc, "verify", "Gate 2 (Baseline)"),
+    Control("gate2_frontmatter_types", scalar_tags, "verify", "must be a list of strings"),
+    Control("baseline_fingerprint", drop_one_media, "verify", "no longer references media"),
     Control("gate3_missing_asset", empty_referenced_asset, "verify", "Gate 3: Missing/empty media"),
     Control("gate3_untracked_asset", untrack_referenced_asset, "verify", "is not tracked in git"),
     Control("gate4_slop", add_slop, "verify", "Gate 4 (Anti-Slop)"),
