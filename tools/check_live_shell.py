@@ -78,8 +78,8 @@ def asset_targets(bundle: dict) -> list[tuple[str, str | None, str | None]]:
     """Every media file and diagram the payload references, sorted, with its digest.
 
     The same image can be used by several entries, so paths are deduplicated.
-    Diagrams live inside the bundle as inline SVG, so their .svg file has no
-    recorded sha256 and can only be checked for type and reachability.
+    Diagrams are rendered from the inlined SVG, but the file itself still ships
+    and the builder records its sha256, so it is compared like any media file.
     """
     found: dict[str, str | None] = {}
     for entry in bundle.get("entries", []):
@@ -89,7 +89,7 @@ def asset_targets(bundle: dict) -> list[tuple[str, str | None, str | None]]:
                 found[src] = item.get("sha256")
         diagram = entry.get("diagram")
         if diagram and str(diagram) not in found:
-            found[str(diagram)] = None
+            found[str(diagram)] = entry.get("diagram_sha256")
 
     targets = []
     for path in sorted(found):

@@ -305,12 +305,17 @@ def compile_portfolio() -> int:
 
         # Inline SVG markup if diagram exists so it adapts cleanly via CSS on file://
         diagram_svg = ""
+        diagram_sha256 = ""
         if diagram_rel:
             diag_path = PORTFOLIO_ROOT / diagram_rel
             if not diag_path.exists() or diag_path.stat().st_size == 0:
                 errors.append(f"{slug}: Missing or empty diagram '{diagram_rel}'")
-            elif diag_path.suffix.lower() == ".svg":
-                diagram_svg = diag_path.read_text(encoding="utf-8")
+            else:
+                if diag_path.suffix.lower() == ".svg":
+                    diagram_svg = diag_path.read_text(encoding="utf-8")
+                # The page renders the inlined copy, but the file still ships, so
+                # hash it like media: the live check compares what Pages serves.
+                diagram_sha256 = hashlib.sha256(diag_path.read_bytes()).hexdigest()
 
         compiled_media = []
         for m_item in media_list:
@@ -346,6 +351,7 @@ def compile_portfolio() -> int:
             "media": compiled_media,
             "diagram": diagram_rel,
             "diagram_svg": diagram_svg,
+            "diagram_sha256": diagram_sha256,
             "tech_stack": list(meta.get("tech_stack") or []),
             "local_paths": list(meta.get("local_paths") or []),
             "run_commands": list(meta.get("run_commands") or []),
