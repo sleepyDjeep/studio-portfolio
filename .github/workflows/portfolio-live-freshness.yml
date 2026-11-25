@@ -21,6 +21,12 @@ on:
       timezone: "America/Chicago"
   workflow_dispatch:
 
+# Reading the repository is all the check needs; writing issues is how a failed
+# run stops being a red row nobody looks at.
+permissions:
+  contents: read
+  issues: write
+
 jobs:
   live:
     name: deployed bundle matches committed docs
@@ -46,3 +52,30 @@ jobs:
         env:
           LIVE_SITE: https://sleepydjeep.github.io/studio-portfolio/
         run: python tools/check_live_shell.py --base "$LIVE_SITE"
+
+      # A red run on a cron is easy to miss, so a failure leaves a durable issue.
+      # Repeated failures comment on the same open issue instead of piling up.
+      - name: Open or update the issue about a failed run
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          run_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          body=$(printf 'The daily live atlas check failed.\n\nRun: %s\n\nEither the deployed bundle no longer matches the committed docs, or an asset the page references is missing, mistyped or serving different bytes. Rebuild locally with `python tools/update_portfolio.py`, or read the run log for the failing path.\n' "$run_url")
+          gh label create live-check --description "Daily live atlas check" --color B60205 2>/dev/null || true
+          existing=$(gh issue list --label live-check --state open --json number --jq '.[0].number // empty' 2>/dev/null || true)
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body "$body"
+          else
+            gh issue create --title "Live atlas check failed" --label live-check --body "$body"
+          fi
+
+      - name: Close the issue once the check passes again
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue list --label live-check --state open --json number --jq '.[].number' 2>/dev/null |
+          while read -r number; do
+            gh issue close "$number" --comment "The daily live check passed again."
+          done

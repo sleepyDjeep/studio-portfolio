@@ -20,6 +20,10 @@ date. Over four consecutive days the whole payload is covered, and the run print
 which slice it took. The sound clips are hashed every run because all four add up
 to less than a megabyte.
 
+A fetch that fails with a network error, a timeout or a 5xx response is retried
+twice with exponential backoff, so one bad CDN answer does not fail the day. A 404
+is reported at once: that is a deploy problem, not a blip.
+
     python tools/check_live_shell.py
     python tools/check_live_shell.py --base https://example.com/portfolio/
     python tools/check_live_shell.py --full     # every asset in one run
@@ -44,6 +48,10 @@ BUNDLE_PATH = PORTFOLIO_ROOT / "portfolio-data.js"
 BUNDLE_PREFIX = "window.PORTFOLIO_DATA = "
 DEFAULT_BASE = "https://sleepydjeep.github.io/studio-portfolio/"
 DEFAULT_SLICES = 4
+
+# Transient failures get another chance; the delay doubles each time (2s, 4s).
+RETRY_ATTEMPTS = 3
+RETRY_BASE_DELAY = 2.0
 
 # (path, required substring of Content-Type, substrings the body must contain)
 SHELL = [
@@ -114,14 +122,32 @@ def fetch(url: str) -> tuple[int, str, bytes]:
         url,
         headers={"User-Agent": "studio-portfolio-live-shell", "Cache-Control": "no-cache"},
     )
-    try:
-        with urllib.request.urlopen(request, timeout=120) as response:
-            return response.status, response.headers.get("Content-Type", ""), response.read()
-    except urllib.error.HTTPError as exc:
-        return exc.code, exc.headers.get("Content-Type", "") if exc.headers else "", b""
-    except urllib.error.URLError as exc:
-        print(f"[shell] could not reach {url}: {exc.reason}", file=sys.stderr)
-        sys.exit(1)
+    last_result: tuple[int, str, bytes] | None = None
+    last_error = ""
+
+    for attempt in range(1, RETRY_ATTEMPTS + 1):
+        try:
+            with urllib.request.urlopen(request, timeout=120) as response:
+                return response.status, response.headers.get("Content-Type", ""), response.read()
+        except urllib.error.HTTPError as exc:
+            content_type = exc.headers.get("Content-Type", "") if exc.headers else ""
+            if exc.code < 500 and exc.code != 429:
+                # A 404 or 403 is the answer: retrying only delays the report.
+                return exc.code, content_type, b""
+            last_result = (exc.code, content_type, b"")
+            last_error = f"HTTP {exc.code}"
+        except (urllib.error.URLError, TimeoutError, ConnectionError) as exc:
+            last_error = str(getattr(exc, "reason", exc))
+
+        if attempt < RETRY_ATTEMPTS:
+            delay = RETRY_BASE_DELAY * 2 ** (attempt - 1)
+            print(f"[retry] {url} failed ({last_error}); retrying in {delay:.0f}s", file=sys.stderr)
+            time.sleep(delay)
+
+    if last_result is not None:
+        return last_result
+    print(f"[shell] could not reach {url} after {RETRY_ATTEMPTS} attempts: {last_error}", file=sys.stderr)
+    sys.exit(1)
 
 
 def main() -> int:
