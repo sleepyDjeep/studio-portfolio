@@ -1,10 +1,9 @@
 {
   "note": "Every id that must ship, with the media, diagram and headings it shipped with. Refresh after an entry is added, renamed or retired: python tools/verify_portfolio.py --update-baseline",
-  "count": 50,
+  "count": 49,
   "entries": [
     "aether-engine",
     "artisan-timber-co",
-    "auto-revert-probe",
     "automatic-chicken-feeder",
     "babylon-adubar-crpg",
     "cellstation-arbor",
@@ -72,16 +71,6 @@
         "assets/media/artisan-timber-co/executive-deck.png"
       ],
       "diagram": "",
-      "sections": [
-        "What It Is & Why It Matters",
-        "Real Example: How It Works in Practice",
-        "Where It Stands & Next Steps",
-        "Under the Hood & Local Files"
-      ]
-    },
-    "auto-revert-probe": {
-      "media": [],
-      "diagram": "assets/diagrams/auto-revert-probe.svg",
       "sections": [
         "What It Is & Why It Matters",
         "Real Example: How It Works in Practice",
