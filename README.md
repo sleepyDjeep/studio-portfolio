@@ -50,6 +50,7 @@ studio-portfolio/
     ├── audit_new_work.py       # Spots new memories, sessions, or workspace folders
     ├── verify_portfolio.py     # Enforces 100% ID coverage, valid assets, gitignore & anti-slop prose
     ├── update_portfolio.py     # One command: rebuild, run all 5 gates, prove the payload is current
+    ├── backup_manifest.py      # Snapshots the private manifest outside the repo; restores it too
     ├── public_manifest.json    # Committed redacted manifest so CI can rebuild without data/
     ├── expected_entries.json   # Every entry id that must exist; a deleted or renamed doc fails here
     ├── frontmatter.py          # Fence-aware frontmatter parsing shared by builder and verifier
@@ -96,3 +97,21 @@ git config core.hooksPath .githooks
 The hook runs the freshness check on `git commit` and refuses the commit when the bundle is stale or was left unstaged. Two workflows back it up: `.github/workflows/portfolio-bundle-freshness.yml` rebuilds the payload and re-runs gates 2-5 (`python tools/verify_portfolio.py --skip-coverage`) on every push and pull request to `main`, and `.github/workflows/portfolio-live-freshness.yml` fetches the deployed `portfolio-data.js` once a day and compares it with a clean rebuild, so a Pages deploy that never landed becomes a failed run instead of a quietly stale atlas. The push workflow then runs `python tools/gate_self_test.py`, which breaks one thing at a time on a throwaway copy — a dropped section, a byte appended to an image, an edited doc that was never recompiled — and fails if the matching gate stays green.
 
 CI has no `data/` directory (Gate 5 requires it to stay gitignored), so both workflows build from the committed `tools/public_manifest.json`, which carries the pillar list, the inception date, and the reconciliation counts. Regenerate it from `data/master_manifest.json` whenever those change.
+
+### 4. Back Up the Private Manifest
+
+`data/master_manifest.json` holds the reconciliation state Gate 1 measures against, and the repo ignores `data/`, so a single copy on one disk is the whole supply. Snapshots go outside the repository, into the private OneDrive folder `%USERPROFILE%\OneDrive\Backups\studio-portfolio`, which keeps them off the public repo and off the machine at the same time:
+
+```powershell
+python "D:\Projects\Studio_Portfolio\tools\backup_manifest.py"
+```
+
+Each snapshot is re-read and hashed after it is written, recorded in `backup_index.json` beside it, and only the 30 newest are kept; a manifest whose bytes match the newest snapshot is not stored twice. `update_portfolio.py` takes a snapshot as its last step, so the backup only ever follows a run where every gate passed. A destination inside the repository is refused outright.
+
+```powershell
+python tools/backup_manifest.py --list
+python tools/backup_manifest.py --verify
+python tools/backup_manifest.py --restore latest
+```
+
+`--restore` snapshots the current file as `pre-restore_*.json` first, so a restore can itself be undone. After restoring, run `python tools/verify_portfolio.py`: Gate 1 reconciles the returned manifest against the live memory and conversation databases, and an older snapshot may legitimately leave newer ids unaccounted for. Set `PORTFOLIO_BACKUP_DIR` to move the destination.

@@ -8,6 +8,8 @@ Steps run in order and the first failure stops the run:
   1. tools/build_portfolio.py        rebuilds portfolio-data.js from docs/ + assets/
   2. tools/verify_portfolio.py       the five coverage, completeness, asset, prose and privacy gates
   3. tools/check_bundle_freshness.py proves the committed payload matches a clean rebuild
+  4. tools/backup_manifest.py        snapshots data/master_manifest.json outside the repo, once
+                                     the gates have passed, so a broken state is never backed up
 
 Gate 1 of the verifier reads the local LanceDB and conversation SQLite databases.
 Machines without them (CI, a fresh clone) pass --no-verify and still get steps 1 and 3.
@@ -26,6 +28,7 @@ STEPS = (
     ("Rebuild portfolio-data.js from docs/ + assets/", "build_portfolio.py", False),
     ("Verify the five portfolio gates", "verify_portfolio.py", True),
     ("Prove the committed bundle matches a clean rebuild", "check_bundle_freshness.py", False),
+    ("Snapshot the private manifest outside the repo", "backup_manifest.py", False),
 )
 
 
