@@ -1,6 +1,6 @@
 {
   "note": "Every id that must ship, with the media, diagram and headings it shipped with. Refresh after an entry is added, renamed or retired: python tools/verify_portfolio.py --update-baseline",
-  "count": 49,
+  "count": 50,
   "entries": [
     "aether-engine",
     "artisan-timber-co",
@@ -34,6 +34,7 @@
     "pixel-art-asset-pipeline",
     "pocketrpg-studio",
     "project-megacity",
+    "propertyintel-discovery-engine",
     "public-domain-mashup-worlds",
     "retrobat-multi-system-appliance",
     "s21u-cyberdeck-mk1",
@@ -449,6 +450,16 @@
         "assets/media/project-megacity/anthil-pitch-deck.png"
       ],
       "diagram": "",
+      "sections": [
+        "What It Is & Why It Matters",
+        "Real Example: How It Works in Practice",
+        "Where It Stands & Next Steps",
+        "Under the Hood & Local Files"
+      ]
+    },
+    "propertyintel-discovery-engine": {
+      "media": [],
+      "diagram": "assets/diagrams/propertyintel-discovery-engine.svg",
       "sections": [
         "What It Is & Why It Matters",
         "Real Example: How It Works in Practice",
