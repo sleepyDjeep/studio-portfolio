@@ -8,19 +8,32 @@ fails.
     python tools/daily_publish.py --dry-run  # pick a candidate, write its facts JSON only
 
 The source material (LanceDB memories, conversation summaries, project folders) is
-local and private, so this runs on this machine, not in CI. A value for
-A model key is optional: with OPENAI_API_KEY in the environment or .env the run
-asks the endpoint directly. Without one it writes data/intake/handoff.json (the
-candidate facts plus the exact prompt and schema) and exits 0; a payload authored
-from that handoff at data/intake/authored.json is used on the next run and then
-removed. With neither, it skips cleanly rather than failing every day.
+local and private, so this runs on this machine, not in CI. A model key is
+optional: with OPENAI_API_KEY in the environment or .env the run asks the endpoint
+directly, and an authored payload at data/intake/authored.json is used without one.
+
+data/intake/handoff.json is both the way out and the way back in. A run that finds
+a candidate writes the facts, the exact prompt and the schema there; an LLM (or a
+session with no key at all) fills in data/intake/authored.json with the matching
+candidate_key; the next run publishes from those two files and then removes them.
+A handoff payload is itself a candidate, so the keyless path works even when the
+local scan finds nothing to publish.
+
+A run that cannot produce an entry is an error, never a quiet success. No intake
+candidate, an unreadable handoff or authored payload, a payload written for a
+different candidate and a candidate with neither a key nor an authored payload all
+exit 1 and log one explicit ERROR line saying what is missing. Only the deliberate
+guards (lock already held, weekly cap reached, --dry-run) exit 0 without publishing.
 
 Guardrails: refuses a dirty tree, takes a lock, caps publishing at seven auto
 entries per week, retries a candidate at most three times, and refuses drafts with
 placeholders, banned phrases or unsafe SVG. Everything else is enforced by the
 existing gates and the push-triggered entry live check.
 
-Exit codes: 0 = published or nothing to do, 1 = a failure that needs attention.
+Exit codes: 0 = published, a dry run, or a deliberate skip (lock, weekly cap);
+1 = a failure that needs attention, including an intake that cannot produce an
+entry. The scheduled task relies on this: a silent zero is what let the site sit
+unchanged for days.
 """
 
 import argparse
@@ -44,6 +57,8 @@ DATA_DIR = PORTFOLIO_ROOT / "data"
 INTAKE_DIR = DATA_DIR / "intake"
 LOG_DIR = DATA_DIR / "logs"
 LEDGER_PATH = INTAKE_DIR / "ledger.json"
+HANDOFF_PATH = INTAKE_DIR / "handoff.json"
+AUTHORED_PATH = INTAKE_DIR / "authored.json"
 LOCK_PATH = DATA_DIR / "daily.lock"
 MANIFEST_PATH = DATA_DIR / "master_manifest.json"
 MEMORY_DB_PATH = r"C:\Users\ogreb\.gemini\antigravity\memory_db"
@@ -121,6 +136,77 @@ def load_ledger() -> dict:
 def save_ledger(ledger: dict) -> None:
     LEDGER_PATH.parent.mkdir(parents=True, exist_ok=True)
     LEDGER_PATH.write_text(json.dumps(ledger, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+class IntakeError(RuntimeError):
+    """The intake is in a state where no entry can be produced."""
+
+
+def relative(path: Path) -> str:
+    return path.relative_to(PORTFOLIO_ROOT).as_posix()
+
+
+def load_handoff() -> dict | None:
+    """A handoff payload is a candidate in its own right.
+
+    It carries the facts, the prompt and the schema, so the run that consumes it
+    needs neither a model key nor a successful local scan. Without this, the
+    keyless path could write a handoff but never publish from it.
+    """
+    if not HANDOFF_PATH.exists():
+        return None
+    try:
+        payload = json.loads(HANDOFF_PATH.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise IntakeError(f"{relative(HANDOFF_PATH)} is not valid JSON: {exc}") from exc
+    candidate = payload.get("candidate")
+    if not isinstance(candidate, dict) or not str(candidate.get("key") or "").strip():
+        raise IntakeError(f"{relative(HANDOFF_PATH)} has no candidate with a key")
+    candidate.setdefault("source", "handoff")
+    return candidate
+
+
+def write_handoff(candidate: dict) -> Path:
+    facts = candidate.get("facts") if isinstance(candidate.get("facts"), dict) else build_facts(candidate)
+    candidate_with_facts = {**candidate, "facts": facts}
+    HANDOFF_PATH.parent.mkdir(parents=True, exist_ok=True)
+    HANDOFF_PATH.write_text(
+        json.dumps(
+            {
+                "candidate_key": candidate["key"],
+                "created": datetime.now().isoformat(timespec="seconds"),
+                "candidate": candidate_with_facts,
+                "schema": DRAFT_SCHEMA,
+                "prompt": build_prompt(candidate_with_facts),
+                "instructions": (
+                    "Write one JSON object in this schema, plus \"candidate_key\": "
+                    f"\"{candidate['key']}\", to data/intake/authored.json, then run "
+                    "tools/daily_publish.py again. The payload is validated before publishing."
+                ),
+            },
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    return HANDOFF_PATH
+
+
+def scanned_candidate(ledger: dict) -> dict | None:
+    try:
+        items = gather_candidates()
+    except Exception as exc:  # missing databases, an unreadable table, a broken path
+        raise IntakeError(
+            f"the local scan cannot run ({type(exc).__name__}: {exc})"
+        ) from exc
+    return next(
+        (
+            item for item in items
+            if item["key"] not in ledger["done"]
+            and ledger["attempts"].get(item["key"], 0) < MAX_ATTEMPTS
+        ),
+        None,
+    )
 
 
 def weekly_auto_commits() -> int:
@@ -317,12 +403,17 @@ def discard_local_entry() -> None:
 
 
 def publish(candidate: dict, dry_run: bool, draft_path: Path | None = None) -> int:
+    # A handoff candidate already carries the facts it was written with; keep them
+    # and only fill in what the local workspace can still contribute.
+    provided = candidate.get("facts") if isinstance(candidate.get("facts"), dict) else {}
     facts = build_facts(candidate)
+    facts.update({key: value for key, value in provided.items() if value})
     candidate = {**candidate, "facts": facts}
     INTAKE_DIR.mkdir(parents=True, exist_ok=True)
     candidate_path = INTAKE_DIR / "candidate.json"
     candidate_path.write_text(json.dumps(candidate, indent=2) + "\n", encoding="utf-8")
-    log(f"candidate {candidate['key']}: {candidate.get('title') or '(untitled)'} "
+    origin = "handoff payload" if candidate.get("source") == "handoff" else "intake scan"
+    log(f"candidate {candidate['key']} from the {origin}: {candidate.get('title') or '(untitled)'} "
         f"({len(candidate.get('memory_ids', []))} memories, "
         f"{len(candidate.get('conversation_ids', []))} conversations, "
         f"{len(facts['images'])} images)")
@@ -355,10 +446,15 @@ def publish(candidate: dict, dry_run: bool, draft_path: Path | None = None) -> i
     log(f"changed paths: {', '.join(changed)}")
     run(["git", "add", "docs", "assets", "tools/expected_entries.json", "portfolio-data.js"])
     message = f"Add {candidate.get('title') or candidate['key']} to the portfolio [auto-entry]"
-    body = (f"Generated from {len(candidate['memory_ids'])} memories and "
-            f"{len(candidate['conversation_ids'])} conversations in "
-            f"{candidate.get('workspace') or 'an unknown workspace'}.\n\n"
-            f"Candidate {candidate['key']}; revert this commit if the entry is wrong.")
+    if candidate.get("source") == "handoff":
+        body = ("Generated from the session-authored handoff payload for "
+                f"{candidate.get('workspace') or 'an unknown workspace'}.\n\n"
+                f"Candidate {candidate['key']}; revert this commit if the entry is wrong.")
+    else:
+        body = (f"Generated from {len(candidate.get('memory_ids', []))} memories and "
+                f"{len(candidate.get('conversation_ids', []))} conversations in "
+                f"{candidate.get('workspace') or 'an unknown workspace'}.\n\n"
+                f"Candidate {candidate['key']}; revert this commit if the entry is wrong.")
     if run(["git", "commit", "-m", message, "-m", body]).returncode != 0:
         discard_local_entry()
         return 1
@@ -411,69 +507,63 @@ def main() -> int:
             log("could not update from origin/main; not publishing")
             return 1
         if not args.dry_run and weekly_auto_commits() >= WEEKLY_LIMIT:
-            log(f"skipped: {WEEKLY_LIMIT} auto entries already published this week")
+            log(f"skipped: the configured cap of {WEEKLY_LIMIT} auto entries this week is reached")
             return 0
 
         ledger = load_ledger()
         if args.candidate:
             candidate = json.loads(Path(args.candidate).read_text(encoding="utf-8"))
             if not candidate.get("key"):
-                log("candidate file has no key; refusing")
+                log("ERROR: no entry produced: the candidate file has no key")
                 return 1
         else:
-            candidate = next(
-                (
-                    item for item in gather_candidates()
-                    if item["key"] not in ledger["done"]
-                    and ledger["attempts"].get(item["key"], 0) < MAX_ATTEMPTS
-                ),
-                None,
-            )
+            try:
+                candidate = load_handoff()
+                if candidate is None:
+                    candidate = scanned_candidate(ledger)
+                elif candidate["key"] in ledger["done"]:
+                    log(f"the handoff candidate {candidate['key']} is already published; ignoring it")
+                    candidate = scanned_candidate(ledger)
+                else:
+                    log(f"using the handoff payload as the candidate ({candidate['key']})")
+            except IntakeError as exc:
+                log(f"ERROR: no entry produced: {exc}")
+                return 1
         if not candidate:
-            log("no unpublished candidates")
-            return 0
+            log(
+                "ERROR: no entry produced: data/intake/handoff.json is missing and the local "
+                "scan found nothing undocumented to publish"
+            )
+            return 1
 
         INTAKE_DIR.mkdir(parents=True, exist_ok=True)
-        handoff_path = INTAKE_DIR / "handoff.json"
-        authored_path = INTAKE_DIR / "authored.json"
         draft_path = None
-        if authored_path.exists():
+        if AUTHORED_PATH.exists():
             try:
-                payload = json.loads(authored_path.read_text(encoding="utf-8"))
-            except json.JSONDecodeError:
-                payload = {}
-            if str(payload.get("candidate_key") or "") == candidate["key"]:
-                draft_path = authored_path
+                payload = json.loads(AUTHORED_PATH.read_text(encoding="utf-8"))
+            except json.JSONDecodeError as exc:
+                log(f"ERROR: no entry produced: data/intake/authored.json is not valid JSON: {exc}")
+                return 1
+            authored_key = str(payload.get("candidate_key") or "")
+            if authored_key == candidate["key"]:
+                draft_path = AUTHORED_PATH
                 log("using the session-authored payload")
             else:
-                log("ignoring an authored payload written for a different candidate")
+                log(
+                    f"authored payload is for candidate {authored_key or '(none)'}, "
+                    f"not {candidate['key']}; not using it"
+                )
 
         key_present = bool(os.environ.get("OPENAI_API_KEY", "").strip())
         if draft_path is None and not key_present and not args.dry_run:
-            facts = build_facts(candidate)
-            candidate_with_facts = {**candidate, "facts": facts}
-            handoff_path.write_text(
-                json.dumps(
-                    {
-                        "candidate_key": candidate["key"],
-                        "created": datetime.now().isoformat(timespec="seconds"),
-                        "candidate": candidate_with_facts,
-                        "schema": DRAFT_SCHEMA,
-                        "prompt": build_prompt(candidate_with_facts),
-                        "instructions": (
-                            "Write one JSON object in this schema, plus \"candidate_key\": "
-                            f"\"{candidate['key']}\", to data/intake/authored.json, then run "
-                            "tools/daily_publish.py again. The payload is validated before publishing."
-                        ),
-                    },
-                    indent=2,
-                )
-                + "\n",
-                encoding="utf-8",
+            handoff_path = write_handoff(candidate)
+            log(f"wrote {relative(handoff_path)} with the facts, prompt and schema")
+            log(
+                "ERROR: no entry produced: OPENAI_API_KEY is not set and there is no authored "
+                f"payload for candidate {candidate['key']}; author data/intake/authored.json "
+                "with that candidate_key and re-run"
             )
-            log(f"no key and no authored payload: wrote {handoff_path.relative_to(PORTFOLIO_ROOT).as_posix()}")
-            log("author the payload, then re-run; nothing was published")
-            return 0
+            return 1
 
         code = publish(candidate, args.dry_run, draft_path)
         if code == 0 and not args.dry_run:
@@ -481,7 +571,7 @@ def main() -> int:
                 "date": datetime.now(timezone.utc).isoformat(timespec="seconds"),
                 "workspace": candidate.get("workspace", ""),
             }
-            for path in (handoff_path, authored_path):
+            for path in (HANDOFF_PATH, AUTHORED_PATH):
                 path.unlink(missing_ok=True)
         elif code != 0:
             ledger["attempts"][candidate["key"]] = ledger["attempts"].get(candidate["key"], 0) + 1
