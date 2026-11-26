@@ -51,6 +51,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from auto_entry import DRAFT_SCHEMA, build_prompt  # noqa: E402
+from frontmatter import FrontmatterError, split_document  # noqa: E402
 
 PORTFOLIO_ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = PORTFOLIO_ROOT / "data"
@@ -244,6 +245,65 @@ def normalize_path(raw: str) -> str:
     return text
 
 
+def name_tokens(text: str) -> set[str]:
+    """lowercase words from an id or folder name, splitting CamelCase."""
+    spaced = re.sub(r"(?<=[a-z0-9])(?=[A-Z])", " ", str(text or ""))
+    return {token for token in re.findall(r"[a-z0-9]+", spaced.lower()) if len(token) >= 2}
+
+
+def squash_name(text: str) -> str:
+    return re.sub(r"[^a-z0-9]", "", str(text or "").lower())
+
+
+def documented_projects() -> list[tuple[set[str], set[str], str]]:
+    """Every entry's names, as (name tokens, squashed names, entry id).
+
+    Read from docs/ rather than the local manifest so the check still works on a
+    checkout that has never built: an entry that is committed is an entry whose
+    project is published. Vault docs are included, because a project documented
+    only in the vault must not be offered as a public entry either.
+    """
+    documented = []
+    docs_root = PORTFOLIO_ROOT / "docs"
+    if not docs_root.exists():
+        return documented
+    for path in sorted(docs_root.rglob("*.md")):
+        try:
+            meta, _body = split_document(path.read_text(encoding="utf-8", errors="replace"),
+                                         str(path.relative_to(PORTFOLIO_ROOT)))
+        except (OSError, UnicodeDecodeError, FrontmatterError):
+            continue
+        ident = str(meta.get("id") or path.stem).strip()
+        title = str(meta.get("title") or "").strip()
+        tokens = name_tokens(ident) | name_tokens(title)
+        squashed = {squash_name(ident), squash_name(title)} - {""}
+        if ident:
+            documented.append((tokens, squashed, ident))
+    return documented
+
+
+def documented_label(folder_name: str, documented: list[tuple[set[str], set[str], str]]) -> str | None:
+    """The entry id this folder's project is already published as, if any.
+
+    Two ways to recognise the same project without a recorded path: its words are
+    all words of an entry's id or title (ChickenFeeder -> automatic-chicken-feeder),
+    or its squashed name appears in one (hydrohavoc -> hydro-havoc). Casing and
+    '-' vs '_' do not matter. Names with no word of four letters or more are not
+    matched by words at all, so a folder called 'AI' cannot swallow half the
+    portfolio, and squashed names shorter than five characters are ignored.
+    """
+    tokens = name_tokens(folder_name)
+    if not any(len(token) >= 4 for token in tokens):
+        tokens = set()
+    squashed = squash_name(folder_name)
+    for entry_tokens, entry_names, label in documented:
+        if tokens and tokens <= entry_tokens:
+            return label
+        if len(squashed) >= 5 and squashed in entry_names:
+            return label
+    return None
+
+
 def file_uri_to_path(raw: str) -> str:
     return urllib.parse.unquote(str(raw or "")).replace("file:///", "").replace("file://", "")
 
@@ -339,6 +399,9 @@ def gather_candidates() -> list[dict]:
         item["latest"] = max(item["latest"], modified)
 
     if PROJECTS_ROOT.exists():
+        documented = documented_projects()
+        skipped_by_path = 0
+        skipped_by_name = 0
         for folder in sorted(PROJECTS_ROOT.iterdir()):
             if not folder.is_dir() or folder.name.lower().replace("-", "_") in IGNORE_FOLDERS:
                 continue
@@ -347,6 +410,15 @@ def gather_candidates() -> list[dict]:
             # folder is documented. A recorded parent (the projects root itself)
             # must not hide every folder under it.
             if any(known == norm or known.startswith(norm + "/") for known in known_paths):
+                skipped_by_path += 1
+                continue
+            # An entry can describe a project without recording where it lived, so
+            # fall back to the project name. Otherwise the same project is offered
+            # as new work every morning and the scheduled run fails on it forever.
+            label = documented_label(folder.name, documented)
+            if label:
+                log(f"intake: {folder.name} is already published as {label}; skipping it")
+                skipped_by_name += 1
                 continue
             readme = read_readme(folder)
             if not readme:
@@ -357,6 +429,10 @@ def gather_candidates() -> list[dict]:
             item["latest"] = item["earliest"] = datetime.fromtimestamp(
                 folder.stat().st_mtime
             ).strftime("%Y-%m-%dT%H:%M:%S")
+        log(
+            f"intake: skipped {skipped_by_path} folder(s) recorded in an entry's paths "
+            f"and {skipped_by_name} by project name"
+        )
 
     result = []
     for key, item in candidates.items():
