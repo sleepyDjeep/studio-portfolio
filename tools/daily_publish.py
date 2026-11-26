@@ -73,10 +73,11 @@ IGNORE_DIRS = {
     "__pycache__", ".cache", "target", "bin", "obj",
 }
 IMAGE_SUFFIXES = {".png", ".jpg", ".jpeg", ".webp"}
-# Lowercase: matched against folder.name.lower(), so every casing of a portfolio
-# checkout (this repo is both Studio_Portfolio and studio-portfolio on this disk)
-# is excluded. A stale second clone is not studio work and must not become an entry.
-IGNORE_FOLDERS = {"studio_portfolio", "_shared_library", "new folder"}
+# Matched against folder.name.lower() with '-' folded to '_', so every casing and
+# spelling of a portfolio checkout (this repo is both Studio_Portfolio and
+# studio-portfolio on this disk) is excluded. A stale second clone is not studio
+# work and must not become an entry.
+IGNORE_FOLDERS = {"studio_portfolio", "_shared_library", "new_folder"}
 
 
 def load_env() -> None:
@@ -339,7 +340,7 @@ def gather_candidates() -> list[dict]:
 
     if PROJECTS_ROOT.exists():
         for folder in sorted(PROJECTS_ROOT.iterdir()):
-            if not folder.is_dir() or folder.name.lower() in IGNORE_FOLDERS:
+            if not folder.is_dir() or folder.name.lower().replace("-", "_") in IGNORE_FOLDERS:
                 continue
             norm = normalize_path(str(folder))
             # Only a path recorded for this folder, or one inside it, means the
